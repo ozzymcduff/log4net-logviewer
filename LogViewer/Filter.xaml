@@ -1,0 +1,38 @@
+﻿<Window x:Class="LogViewer.Filter"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Filter" Height="300" Width="300">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+            <GradientStop Color="#FF5A6DCD" Offset="0"/>
+            <GradientStop Color="#FF5A6DCD" Offset="0.4"/>
+            <GradientStop Color="#FF293262" Offset="0.6"/>
+            <GradientStop Color="#FF293262" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <DockPanel Margin="4,4,8,4">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Right">
+            <Button Height="23" Name="buttonClear" Width="76" Click="buttonClear_Click">Clear</Button>
+            <Button Height="23" Name="buttonOK" Width="75" Click="buttonOK_Click">OK</Button>
+            <Button Height="23" Name="buttonCancel" Width="75" Click="buttonCancel_Click">Cancel</Button>
+        </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90" />
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Grid.Row="0" Height="28" Name="label1" Foreground="White">UserName:</Label>
+            <TextBox Grid.Column="1" Grid.Row="0" Height="23" Name="textBoxUserName" />
+            <Label Grid.Column="0" Grid.Row="1" Height="28" Name="label2" Foreground="White">Level:</Label>
+            <ComboBox Grid.Column="1" Grid.Row="1" Height="23" Name="comboBoxLevel" />
+            <Label Grid.Column="0" Grid.Row="2" Name="label3" Foreground="White">Message:</Label>
+            <TextBox Grid.Column="1" Grid.Row="2" Height="23" Name="textBoxMessage" />
+        </Grid>
+    </DockPanel>
+</Window>
