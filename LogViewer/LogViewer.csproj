@@ -116,7 +116,7 @@
     <Compile Include="Filter.xaml.cs">
       <DependentUpon>Filter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LogEntry.cs" />
+    <Compile Include="ImageRepositoy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
