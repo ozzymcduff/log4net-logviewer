@@ -62,7 +62,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LogTests.cs" />
+    <Compile Include="Log4JTests.cs" />
+    <Compile Include="Log4NetTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

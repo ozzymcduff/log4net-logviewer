@@ -17,16 +17,27 @@ namespace Core
       DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0);
       int iIndex = 1;
 
-      var doc = XDocument.Parse("<doc xmlns:log4j=\"http://jakarta.apache.org/log4j/\">" + buffer + "</doc>");
+      var doc = XDocument.Parse("<doc xmlns:log4j=\"http://jakarta.apache.org/log4j/\" xmlns:log4net=\"http://logging.apache.org/log4net/\">" + buffer + "</doc>");
       foreach (var xElement in doc.Root.Elements())
       {
         LogEntry logentry = new LogEntry();
 
         logentry.Item = iIndex;
 
-        double dSeconds = Convert.ToDouble(xElement.Attribute("timestamp").Value);
-        logentry.TimeStamp = dt.AddMilliseconds(dSeconds).ToLocalTime();
+        string timestamp = xElement.Attribute("timestamp").Value;
+        double dSeconds;
+        if (Double.TryParse(timestamp, out dSeconds))
+        {
+          logentry.TimeStamp = dt.AddMilliseconds(dSeconds).ToLocalTime();
+        }
+        else
+        {
+          logentry.TimeStamp = DateTime.Parse(timestamp).ToLocalTime();
+        }
         logentry.Thread = xElement.Attribute("thread").Value;
+
+        if (null != xElement.Attribute("domain"))
+          logentry.App = xElement.Attribute("domain").Value;
 
         #region get level
 
@@ -75,7 +86,8 @@ namespace Core
                 break;
               }
 
-            case ("throwable"):
+            case "throwable":
+            case "exception":
               {
                 logentry.Throwable = element.Value;
                 break;
