@@ -18,49 +18,23 @@
                     <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Menu Grid.Column="0" Name="menu1" Height="22" HorizontalAlignment="Stretch">
-                    <MenuItem Header="File" Foreground="White">
-                        <MenuItem Header="Open" Click="MenuFileOpen_Click" />
+                <Menu Grid.Column="0" Name="menu1" Height="22" HorizontalAlignment="Stretch" IsMainMenu="True">
+                    <MenuItem Header="_File" Foreground="White">
+                        <MenuItem Header="_Open" Click="MenuFileOpen_Click" />
                         <Separator BorderThickness="1" />
                         <local:RecentFileList x:Name="RecentFileList"/>
                         <Separator BorderThickness="1" />
-                        <MenuItem Header="Exit" Click="MenuFileExit_Click"/>
+                        <MenuItem Header="_Exit" Click="MenuFileExit_Click"/>
                     </MenuItem>
-                    <MenuItem Header="Refresh" Click="MenuRefresh_Click" Foreground="White"/>
-                    <MenuItem Header="Filter" Click="MenuFilter_Click" Foreground="White"/>
-                    <MenuItem Header="About" Click="MenuAbout_Click" Foreground="White"/>
+                    <MenuItem Header="_Refresh" Click="MenuRefresh_Click" Foreground="White" InputGestureText="F5"/>
+                    <MenuItem Header="_About" Click="MenuAbout_Click" Foreground="White"/>
                 </Menu>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Background="{DynamicResource Brush_HeaderBackground}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="10"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                    </Grid>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal">
-                        <Image x:Name="imageError" Height="16" Width="16" Visibility="Hidden" VerticalAlignment="Center"/>
-                        <Label x:Name="labelErrorCount" Visibility="Hidden" VerticalAlignment="Center" />
-                    </StackPanel>
-                    <StackPanel Grid.Column="2" Orientation="Horizontal">
-                        <Image x:Name="imageInfo" Height="16" Width="16" Visibility="Hidden" VerticalAlignment="Center"/>
-                        <Label x:Name="labelInfoCount" Visibility="Hidden" VerticalAlignment="Center"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="3" Orientation="Horizontal">
-                        <Image x:Name="imageWarn" Height="16" Width="16" Visibility="Hidden" VerticalAlignment="Center"/>
-                        <Label x:Name="labelWarnCount" Visibility="Hidden" VerticalAlignment="Center"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="4" Orientation="Horizontal">
-                        <Image x:Name="imageDebug" Height="16" Width="16" Visibility="Hidden"/>
-                        <Label x:Name="labelDebugCount" Visibility="Hidden" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </StackPanel>
+                
             </Grid>
             <Grid Grid.Row="1">
                 <Grid>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
@@ -79,7 +53,7 @@
                            HorizontalAlignment="Stretch"
                            Background="Transparent"                       
                            BorderThickness="0"
-                           Margin="2,2,2,2" Width="400" />
+                           Margin="2,2,2,2" Width="400" Text="{Binding Value}" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Image Name="image2" Width="16" Height="16" Margin="2" Source="/LogViewer;component/Resources/Images/find.png" VerticalAlignment="Center"/>
@@ -100,7 +74,7 @@
                         </Button.Template>
                     </Button>
                 </StackPanel>
-                
+                <local:CountPanel Grid.Column="2" x:Name="countpanel" Orientation="Horizontal" HorizontalAlignment="Right" />
             </Grid>
         </Grid>        
         <StatusBar Height="23" DockPanel.Dock="Bottom" Foreground="#FFE9EEF0" Background="{DynamicResource Brush_StatusBarBackground}">
@@ -177,67 +151,8 @@
                 </ListView>
             </Border>
             <!-- Data Fields and Tab Control  -->
-            <Grid Grid.Row="1" Margin="15,0,15,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="10"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="10"/>
-                </Grid.RowDefinitions>
-
-                <!-- Row 1-->
-                <Image Name="image1" Width="16" Height="16" Grid.Column="0" Grid.Row="1" />
-                <TextBox Name="textBoxLevel" Height="23" Grid.Column="1" Grid.Row="1" />
-                <Label Name="label1" Height="28" Grid.Column="2" Grid.Row="1">Time Stamp</Label>
-                <TextBox Name="textBoxTimeStamp" Height="23" Grid.Column="3" Grid.Row="1" />
-                <Label Name="label2" Height="28" Grid.Column="4" Grid.Row="1">Machine Name</Label>
-                <TextBox Name="textBoxMachineName" Height="23" Grid.Column="5" Grid.Row="1" />
-                <Label Name="labelThread" Grid.Column="6" Grid.Row="1">Thread</Label>
-                <TextBox Name="textBoxThread" Grid.Column="7" Grid.Row="1"/>
-
-                <!-- Row 2 -->
-                <Label Name="labelItem" Height="28" Grid.Column="0" Grid.Row="2">Item</Label>
-                <TextBox Name="textBoxItem" Height="23" Grid.Column="1" Grid.Row="2" />
-                <Label Name="label4" Height="28" Grid.Column="2" Grid.Row="2">Host Name</Label>
-                <TextBox Name="textBoxHostName" Height="23" Grid.Column="3" Grid.Row="2"/>
-                <Label Name="label5" Height="28" Grid.Column="4" Grid.Row="2">User Name</Label>
-                <TextBox Name="textBoxUserName" Height="23" Grid.Column="5" Grid.Row="2"/>
-                <Label Name="label6" Height="28" Grid.Column="6" Grid.Row="2">App</Label>
-                <TextBox Name="textBoxApp" Height="23" Grid.Column="7" Grid.Row="2"/>
-
-                <!-- Row 3-->
-                <Label Name="label7" Height="28" Grid.Column="0" Grid.Row="3">Class</Label>
-                <TextBox Name="textBoxClass" Height="23" Grid.Column="1" Grid.Row="3"/>
-                <Label Name="label8" Height="28" Grid.Column="2" Grid.Row="3">Method</Label>
-                <TextBox Name="textBoxMethod" Height="23" Grid.Column="3" Grid.Row="3"/>
-                <Label Name="label9" Height="28" Grid.Column="4" Grid.Row="3">Line</Label>
-                <TextBox Name="textBoxLine" Height="23" Grid.Column="5" Grid.Row="3"/>
-
-                <!-- Row 4-->
-                <Label Name="labelFile" Height="23" Grid.Column="0" Grid.Row="4">File</Label>
-                <TextBox Name="textBoxfile" Height="28" Grid.Column="1" Grid.ColumnSpan="7" Grid.Row="4"/>
-
-            </Grid>
-            <TabControl Name="tabControl1" Grid.Row="2" Margin="15,0,15,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <TabItem Header="Message">
-                    <TextBox Name="textBoxMessage" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" BorderThickness="0" />
-                </TabItem>
-                <TabItem Header="Throwable">
-                    <TextBox Name="textBoxThrowable" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" BorderThickness="0"/>
-                </TabItem>
-            </TabControl>
+            <local:LogItemViewer Grid.Row="1" x:Name="logitemviewer"/>
+            
         </Grid>
     </DockPanel>
 </Window>

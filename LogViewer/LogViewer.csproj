@@ -82,18 +82,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Filter.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Resource Include="Resources\Skins\OfficeBlueSkin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Resource>
+    <Page Include="CountPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LogItemViewer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Window1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -113,6 +115,17 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BoolToVisibilityConverter.cs" />
+    <Compile Include="CountPanel.xaml.cs">
+      <DependentUpon>CountPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FileLogEntryController.cs" />
+    <Compile Include="LogEntryCounter.cs" />
+    <Compile Include="LogEntryLevelCount.cs" />
+    <Compile Include="LogItemViewer.xaml.cs">
+      <DependentUpon>LogItemViewer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Observable.cs" />
     <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -122,10 +135,7 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Filter.xaml.cs">
-      <DependentUpon>Filter.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ImageRepositoy.cs" />
+    <Compile Include="ImageTypeToImageSourceConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
