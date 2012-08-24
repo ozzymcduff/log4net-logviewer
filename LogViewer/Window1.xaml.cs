@@ -36,6 +36,22 @@ namespace LogViewer
       set
       {
         _FileName = value;
+        Dispatcher.BeginInvoke(
+              DispatcherPriority.Background,
+              new VoidDelegate(delegate { 
+                  LoadFile();
+                  if (_watcher != null)
+                  {
+                      _watcher.Dispose();
+                      _watcher = null;
+                  }
+                  
+                    _watcher = new FileSystemWatcher {Path =  System.IO.Path.GetDirectoryName(FileName)};
+                    _watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
+                    _watcher.Changed += FileHasChanged;
+                    _watcher.EnableRaisingEvents = true;
+              })
+              );
         RecentFileList.InsertFile(value);
       }
     }
@@ -83,7 +99,6 @@ namespace LogViewer
     private void OpenFile(string fileName)
     {
       FileName = fileName;
-      LoadFile();
     }
 
     private void LoadFile()
@@ -205,7 +220,15 @@ namespace LogViewer
       this.listView1.ItemsSource = _Entries;
     }
 
-    #region ListView Events
+      private void FileHasChanged(object sender, FileSystemEventArgs e)
+      {
+          if (e.Name.Equals(FileName, StringComparison.InvariantCultureIgnoreCase))
+          {
+              LoadFile();
+          }
+      }
+
+      #region ListView Events
     ////////////////////////////////////////////////////////////////////////////////
     private void listView1_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -268,10 +291,6 @@ namespace LogViewer
           if (a != null)
           {
             FileName = a.GetValue(0).ToString();
-            Dispatcher.BeginInvoke(
-                DispatcherPriority.Background,
-                new VoidDelegate(delegate { LoadFile(); })
-                );
           }
         }
         catch (Exception ex)
@@ -297,7 +316,6 @@ namespace LogViewer
       if (oOpenFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
       {
         FileName = oOpenFileDialog.FileName;
-        LoadFile();
       }
     }
 
@@ -377,7 +395,9 @@ namespace LogViewer
     }
 
     private int CurrentIndex = 0;
-    private void Find(int Direction)
+      private FileSystemWatcher _watcher;
+
+      private void Find(int Direction)
     {
       if (textBoxFind.Text.Length > 0)
       {
