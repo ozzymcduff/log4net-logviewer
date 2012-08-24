@@ -2,20 +2,10 @@
 using System.IO;
 using System.Linq;
 using Core;
+using LogViewer;
 
 namespace LogTail
 {
-    class FileUtil
-    {
-        public static string ReadAllText(string path)
-        {
-            using (var file = new FileStream(path,FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (var reader = new StreamReader(file))
-            {
-                return reader.ReadToEnd();
-            }
-        }
-    }
     class Program
     {
         static void Main(string[] args)

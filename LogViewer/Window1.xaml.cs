@@ -101,101 +101,101 @@ namespace LogViewer
 
       try
       {
-        FileStream oFileStream = new FileStream(FileName, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
-        StreamReader oStreamReader = new StreamReader(oFileStream);
-        var txt = oStreamReader.ReadToEnd();
-        var parser = new LogEntryParser();
-        #region Read File Buffer
+          string txt = FileUtil.ReadAllText(FileName);
+          var parser = new LogEntryParser();
 
-        Entries = parser.Parse(txt).ToList();
-        {
+          #region Read File Buffer
 
+          Entries = parser.Parse(txt).ToList();
           {
 
-         
-            #region Show Counts
-            ////////////////////////////////////////////////////////////////////////////////
-            int ErrorCount =
-            (
-                from entry in Entries
-                where entry.Level == "ERROR"
-                select entry
-            ).Count();
+              {
+                  #region Show Counts
 
-            if (ErrorCount > 0)
-            {
-              labelErrorCount.Content = string.Format("{0:#,#}  ", ErrorCount);
-              labelErrorCount.Visibility = Visibility.Visible;
-              imageError.Visibility = Visibility.Visible;
-            }
-            else
-            {
-              labelErrorCount.Visibility = Visibility.Hidden;
-              imageError.Visibility = Visibility.Hidden;
-            }
+                  ////////////////////////////////////////////////////////////////////////////////
+                  int ErrorCount =
+                      (
+                          from entry in Entries
+                          where entry.Level == "ERROR"
+                          select entry
+                      ).Count();
 
-            int InfoCount =
-            (
-                from entry in Entries
-                where entry.Level == "INFO"
-                select entry
-            ).Count();
+                  if (ErrorCount > 0)
+                  {
+                      labelErrorCount.Content = string.Format("{0:#,#}  ", ErrorCount);
+                      labelErrorCount.Visibility = Visibility.Visible;
+                      imageError.Visibility = Visibility.Visible;
+                  }
+                  else
+                  {
+                      labelErrorCount.Visibility = Visibility.Hidden;
+                      imageError.Visibility = Visibility.Hidden;
+                  }
 
-            if (InfoCount > 0)
-            {
-              labelInfoCount.Content = string.Format("{0:#,#}  ", InfoCount);
-              labelInfoCount.Visibility = Visibility.Visible;
-              imageInfo.Visibility = Visibility.Visible;
-            }
-            else
-            {
-              labelInfoCount.Visibility = Visibility.Hidden;
-              imageInfo.Visibility = Visibility.Hidden;
-            }
+                  int InfoCount =
+                      (
+                          from entry in Entries
+                          where entry.Level == "INFO"
+                          select entry
+                      ).Count();
 
-            int WarnCount =
-            (
-                from entry in Entries
-                where entry.Level == "WARN"
-                select entry
-            ).Count();
+                  if (InfoCount > 0)
+                  {
+                      labelInfoCount.Content = string.Format("{0:#,#}  ", InfoCount);
+                      labelInfoCount.Visibility = Visibility.Visible;
+                      imageInfo.Visibility = Visibility.Visible;
+                  }
+                  else
+                  {
+                      labelInfoCount.Visibility = Visibility.Hidden;
+                      imageInfo.Visibility = Visibility.Hidden;
+                  }
 
-            if (WarnCount > 0)
-            {
-              labelWarnCount.Content = string.Format("{0:#,#}  ", WarnCount);
-              labelWarnCount.Visibility = Visibility.Visible;
-              imageWarn.Visibility = Visibility.Visible;
-            }
-            else
-            {
-              labelWarnCount.Visibility = Visibility.Hidden;
-              imageWarn.Visibility = Visibility.Hidden;
-            }
+                  int WarnCount =
+                      (
+                          from entry in Entries
+                          where entry.Level == "WARN"
+                          select entry
+                      ).Count();
 
-            int DebugCount =
-            (
-                from entry in Entries
-                where entry.Level == "DEBUG"
-                select entry
-            ).Count();
+                  if (WarnCount > 0)
+                  {
+                      labelWarnCount.Content = string.Format("{0:#,#}  ", WarnCount);
+                      labelWarnCount.Visibility = Visibility.Visible;
+                      imageWarn.Visibility = Visibility.Visible;
+                  }
+                  else
+                  {
+                      labelWarnCount.Visibility = Visibility.Hidden;
+                      imageWarn.Visibility = Visibility.Hidden;
+                  }
 
-            if (DebugCount > 0)
-            {
-              labelDebugCount.Content = string.Format("{0:#,#}  ", DebugCount);
-              labelDebugCount.Visibility = Visibility.Visible;
-              imageDebug.Visibility = Visibility.Visible;
-            }
-            else
-            {
-              labelDebugCount.Visibility = Visibility.Hidden;
-              labelDebugCount.Visibility = Visibility.Hidden;
-            }
-            ////////////////////////////////////////////////////////////////////////////////
-            #endregion
+                  int DebugCount =
+                      (
+                          from entry in Entries
+                          where entry.Level == "DEBUG"
+                          select entry
+                      ).Count();
+
+                  if (DebugCount > 0)
+                  {
+                      labelDebugCount.Content = string.Format("{0:#,#}  ", DebugCount);
+                      labelDebugCount.Visibility = Visibility.Visible;
+                      imageDebug.Visibility = Visibility.Visible;
+                  }
+                  else
+                  {
+                      labelDebugCount.Visibility = Visibility.Hidden;
+                      labelDebugCount.Visibility = Visibility.Hidden;
+                  }
+                  ////////////////////////////////////////////////////////////////////////////////
+
+                  #endregion
+              }
           }
-        }
-        ////////////////////////////////////////////////////////////////////////////////
-        #endregion
+          ////////////////////////////////////////////////////////////////////////////////
+
+          #endregion
       }
       catch (Exception ex)
       {

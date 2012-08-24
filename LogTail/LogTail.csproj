@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Core\FileUtil.cs">
+      <Link>FileUtil.cs</Link>
+    </Compile>
     <Compile Include="..\Core\LogEntry.cs">
       <Link>LogEntry.cs</Link>
     </Compile>
