@@ -21,26 +21,54 @@ namespace LogViewer
         private readonly ObservableCollection<LogEntry> Entries;
         public Observable<LogEntryLevelCount> Count { get; private set; }
 
-        private int GetOrZero(IEnumerable<KeyValuePair<string, int>> c,string key)
-        {
-            return c.FirstOrDefault(p => p.Key == key).Value;
-        }
-        private LogEntryLevelCount GetCount(IEnumerable<LogEntry> entries) 
+
+        private LogEntryLevelCount GetCount(IEnumerable<LogEntry> entries)
         {
             var counts = entries.GroupBy(e => e.Level).Select(g => new KeyValuePair<string, int>(g.Key, g.Count()));
-            return new LogEntryLevelCount() 
-            { 
-                Error = GetOrZero(counts,"ERROR"),
-                Info = GetOrZero(counts, "INFO"),
-                Warn = GetOrZero(counts, "WARN"),
-                Debug = GetOrZero(counts, "Debug"),
-                Total = counts.Select(c=>c.Value).Sum()
-            };
+            return new LogEntryLevelCount(counts);
         }
         private void Entries_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Count.Value = GetCount(Entries);
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    {
+                        var newItems = new List<LogEntry>();
+                        foreach (LogEntry item in e.NewItems)
+                        {
+                            newItems.Add(item);
+                        }
+
+                        Count.Value += GetCount(newItems);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    {
+                        var removeItems = new List<LogEntry>();
+                        foreach (LogEntry item in e.OldItems)
+                        {
+                            removeItems.Add(item);
+                        }
+
+                        Count.Value -= GetCount(removeItems);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    {
+                        throw new NotImplementedException();
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    {
+                        Count.Value = GetCount(Entries);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
-       
+
     }
 }
