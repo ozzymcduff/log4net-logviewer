@@ -10,15 +10,19 @@ namespace LogTail
     {
         static void Main(string[] args)
         {
-            var entries = new LogEntryParser().Parse(FileUtil.ReadAllText(args[0]));
-            var tailnum = 10;
-            if (args.Length >= 2 && !string.IsNullOrEmpty(args[1])) 
+            using (var file = FileUtil.OpenReadOnly(FileUtil.ReadAllText(args[0])))
             {
-                tailnum = Int32.Parse(args[1]);
-            }
-            foreach (var logEntry in entries.Skip(entries.Count()-tailnum))
-            {
-                Console.WriteLine(logEntry.Message);
+                var items = new LogEntryParser().Parse(file)
+                    .ToArray();
+                var tailnum = 10;
+                if (args.Length >= 2 && !string.IsNullOrEmpty(args[1]))
+                {
+                    tailnum = Int32.Parse(args[1]);
+                }
+                foreach (var logEntry in items.Skip(items.Count() - tailnum))
+                {
+                    Console.WriteLine(logEntry.Message);
+                }
             }
         }
     }

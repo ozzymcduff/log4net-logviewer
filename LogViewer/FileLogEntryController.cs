@@ -55,17 +55,16 @@ namespace LogViewer
 
         private void ReadFile()
         {
-            string txt = null;
-            using (var file = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (var reader = new StreamReader(file))
-            {
-                txt = reader.ReadToEnd();
-            }
             Entries.Clear();
-            foreach (var item in parser.Parse(txt).ToList())
+            using (var file = FileUtil.OpenReadOnly(FileName))
             {
-                Entries.Add(item);
+                var items = parser.Parse(file);
+                foreach (var item in items)
+                {
+                    Entries.Add(item);
+                }
             }
+           
         }
 
         private void InitWatcher()

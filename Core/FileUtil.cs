@@ -12,5 +12,11 @@ namespace LogViewer
                 return reader.ReadToEnd();
             }
         }
+
+
+        public static FileStream OpenReadOnly(string fileName)
+        {
+            return new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        }
     }
 }
