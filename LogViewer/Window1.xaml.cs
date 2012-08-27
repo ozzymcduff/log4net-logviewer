@@ -34,12 +34,14 @@ namespace LogViewer
         private FileLogEntryController filec;
         private LogEntryCounter lcount;
         private RecentFileList recentFileList;
+        //private App app { get { return ((App)App.Current); } }
         private string fileName
         {
             get { return filec.FileName; }
             set
             {
                 filec.FileName = value;
+                ((App)App.Current).AddFilenameToRecent(value);
                 recentFileList.AddFilenameToRecent(value);
             }
         }
@@ -74,6 +76,8 @@ namespace LogViewer
 
             recentFileList.MenuClick += (s, e) => OpenFile(e.Filepath);
             Title = string.Format("LogViewer  v.{0}", Assembly.GetExecutingAssembly().GetName().Version);
+            
+            this.Loaded+=new RoutedEventHandler(Window1_Loaded);
         }
 
 
@@ -82,6 +86,13 @@ namespace LogViewer
             this.fileName = fileName;
         }
 
+        private void Window1_Loaded(object sender, RoutedEventArgs args) 
+        {
+            if (((App)App.Current).Args.Any() && File.Exists(((App)App.Current).Args.First()))
+            {
+                fileName = ((App)App.Current).Args.First();
+            }
+        }
 
         private void listView1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
