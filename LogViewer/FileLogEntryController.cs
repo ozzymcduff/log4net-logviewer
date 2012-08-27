@@ -20,6 +20,8 @@ namespace LogViewer
         }
         private FileSystemWatcher _watcher;
         private string fileName;
+        private long lastposition = 0;
+        private int itemindex = 1;
         public Observable<string> ObservableFileName { get; private set; }
         public string FileName
         {
@@ -36,6 +38,8 @@ namespace LogViewer
                 if (null == oldf && newf != null
                     || !Path.GetFullPath(newf).Equals(Path.GetFullPath(oldf), StringComparison.InvariantCultureIgnoreCase))
                 {
+                    lastposition = 0;
+                    itemindex = 1;
                     Dispatcher.BeginInvoke(DispatcherPriority.Background,
                       new ThreadStart(() =>
                       {
@@ -55,16 +59,20 @@ namespace LogViewer
 
         private void ReadFile()
         {
-            Entries.Clear();
+            //Entries.Clear();
             using (var file = FileUtil.OpenReadOnly(FileName))
             {
-                var items = parser.Parse(file);
-                foreach (var item in items)
+                if (lastposition > 0) 
                 {
+                    file.Position = lastposition;
+                }
+                foreach (var item in  parser.Parse(file))
+                {
+                    item.Item = itemindex++;
                     Entries.Add(item);
                 }
+                lastposition = file.Position;
             }
-           
         }
 
         private void InitWatcher()

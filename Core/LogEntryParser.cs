@@ -27,12 +27,10 @@ namespace Core
             settings.ConformanceLevel = ConformanceLevel.Fragment;
 
             var xmlreader = XmlReader.Create(s, settings, context);
-            int iIndex = 1;
-
+            
             while (xmlreader.Read())
             {
                 LogEntry logentry = ParseElement(doc.ReadNode(xmlreader));
-                logentry.Item = iIndex++;
                 yield return logentry;
             }
         }

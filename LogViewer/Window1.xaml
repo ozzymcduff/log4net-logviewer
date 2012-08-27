@@ -9,6 +9,7 @@
     Closing="Window_Closing">
     <DockPanel Background="{DynamicResource Brush_HeaderBackground}">
         <Grid DockPanel.Dock="Top">
+
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -21,15 +22,25 @@
                 <Menu Grid.Column="0" Name="menu1" Height="22" HorizontalAlignment="Stretch" IsMainMenu="True">
                     <MenuItem Header="_File" Foreground="White">
                         <MenuItem Header="_Open" Click="MenuFileOpen_Click" />
-                        <Separator BorderThickness="1" />
-                        <local:RecentFileList x:Name="RecentFileList"/>
-                        <Separator BorderThickness="1" />
+                        <MenuItem Header="_Recent" ItemsSource="{Binding Path=RecentFiles}">
+                            <MenuItem.Resources>
+                                <Style TargetType="{x:Type MenuItem}">
+                                    <EventSetter Event="Click" Handler="RecentMenuItem_Click"/>
+                                </Style>
+
+                                <HierarchicalDataTemplate DataType="{x:Type local:RecentFile}">
+                                    <ContentPresenter
+                    Content="{Binding Path=DisplayName}"
+                    RecognizesAccessKey="True" />
+                                </HierarchicalDataTemplate>
+
+                            </MenuItem.Resources>
+                        </MenuItem>
                         <MenuItem Header="_Exit" Click="MenuFileExit_Click"/>
                     </MenuItem>
-                    <MenuItem Header="_Refresh" Click="MenuRefresh_Click" Foreground="White" InputGestureText="F5"/>
                     <MenuItem Header="_About" Click="MenuAbout_Click" Foreground="White"/>
                 </Menu>
-                
+
             </Grid>
             <Grid Grid.Row="1">
                 <Grid>
@@ -76,7 +87,7 @@
                 </StackPanel>
                 <local:CountPanel Grid.Column="2" x:Name="countpanel" Orientation="Horizontal" HorizontalAlignment="Right" />
             </Grid>
-        </Grid>        
+        </Grid>
         <StatusBar Height="23" DockPanel.Dock="Bottom" Foreground="#FFE9EEF0" Background="{DynamicResource Brush_StatusBarBackground}">
             <StatusBarItem Content="Ready"/>
         </StatusBar>
@@ -152,7 +163,7 @@
             </Border>
             <!-- Data Fields and Tab Control  -->
             <local:LogItemViewer Grid.Row="1" x:Name="logitemviewer"/>
-            
+
         </Grid>
     </DockPanel>
 </Window>

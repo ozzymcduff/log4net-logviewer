@@ -8,9 +8,9 @@ namespace LogViewer
         private IEnumerable<KeyValuePair<string, int>> counts;
         public LogEntryLevelCount(IEnumerable<KeyValuePair<string, int>> counts)
         {
-            Error = GetOrZero(counts, "ERROR");
-            Info = GetOrZero(counts, "INFO");
-            Warn = GetOrZero(counts, "WARN");
+            Error = GetOrZero(counts, "Error");
+            Info = GetOrZero(counts, "Info");
+            Warn = GetOrZero(counts, "Warn");
             Debug = GetOrZero(counts, "Debug");
             Total = counts.Select(c => c.Value).Sum();
             this.counts = counts;
@@ -26,8 +26,8 @@ namespace LogViewer
             var newcounts = new List<KeyValuePair<string, int>>();
             foreach (var key in GetKeys(x.counts, y.counts))
             {
-                newcounts.Add(new KeyValuePair<string,int>(key,
-                    GetOrZero(x.counts, key)+GetOrZero(y.counts, key)));
+                newcounts.Add(new KeyValuePair<string, int>(key,
+                    GetOrZero(x.counts, key) + GetOrZero(y.counts, key)));
             }
             return new LogEntryLevelCount(newcounts);
         }
@@ -43,7 +43,7 @@ namespace LogViewer
         }
         private static int GetOrZero(IEnumerable<KeyValuePair<string, int>> c, string key)
         {
-            return c.FirstOrDefault(p => p.Key == key).Value;
+            return c.FirstOrDefault(p => p.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase)).Value;
         }
         private static IEnumerable<string> GetKeys(IEnumerable<KeyValuePair<string, int>> x, IEnumerable<KeyValuePair<string, int>> y)
         {

@@ -30,5 +30,49 @@ namespace IntegrationTests
                 Assert.That(entry.File, Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
             }
         }
+
+        [Test]
+        public void ParseStreamAtPosition()
+        {
+            long p = 0;
+            var path = Path.GetTempFileName();
+            using (var s = new FileStream(path, 
+                FileMode.Truncate,
+                FileAccess.ReadWrite))
+            using (var w = new StreamWriter(s))
+            {
+                w.Write(_buffer);
+                w.Flush();
+                s.Position = 0;
+                var entry = new LogEntryParser().Parse(s).Single();// read written entry
+                p = s.Position;
+            }
+            using (var s = new FileStream(path, 
+                FileMode.Append,
+                FileAccess.Write))
+            using (var w = new StreamWriter(s))
+            {
+                w.Write(_buffer);
+                w.Flush();
+            }
+
+            using (var s = new FileStream(path,
+                FileMode.Open,
+                FileAccess.Read))
+            {
+                s.Position = p;
+                System.Console.WriteLine(p);
+                var entry = new LogEntryParser().Parse(s).Single();
+                Assert.That(entry.Level, Is.EqualTo("ERROR"));
+                Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
+                Assert.That(entry.App, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
+                Assert.That(entry.Message, Is.EqualTo("msg"));
+                Assert.That(entry.Class, Is.EqualTo("IntegrationTests.LogTests"));
+                Assert.That(entry.Method, Is.EqualTo("TestLog"));
+                Assert.That(entry.Line, Is.EqualTo("19"));
+                Assert.That(entry.File, Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
+            }
+        }
+
     }
 }

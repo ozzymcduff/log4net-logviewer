@@ -33,13 +33,14 @@ namespace LogViewer
     {
         private FileLogEntryController filec;
         private LogEntryCounter lcount;
+        private RecentFileList recentFileList;
         private string fileName
         {
             get { return filec.FileName; }
             set
             {
                 filec.FileName = value;
-                RecentFileList.InsertFile(value);
+                recentFileList.AddFilenameToRecent(value);
             }
         }
         public Observable<string> ObservableFileName
@@ -55,20 +56,23 @@ namespace LogViewer
         {
             get { return lcount.Count; }
         }
-
+        public ObservableCollection<RecentFile> RecentFiles
+        {
+            get { return recentFileList.FileList; }
+        }
         public Window1()
         {
             filec = new FileLogEntryController();
             lcount = new LogEntryCounter(filec.Entries);
-
+            recentFileList = new RecentFileList(new XmlPersister(ApplicationAttributes.Get()));
             InitializeComponent();
+            menu1.DataContext = this;
             listView1.ItemsSource = Entries;
             countpanel.DataContext = Count;
             textboxFileName.DataContext = filec.ObservableFileName;
             listView1.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ListView1_HeaderClicked));
-            RecentFileList.UseXmlPersister();
-            RecentFileList.MenuClick += (s, e) => OpenFile(e.Filepath);
 
+            recentFileList.MenuClick += (s, e) => OpenFile(e.Filepath);
             Title = string.Format("LogViewer  v.{0}", Assembly.GetExecutingAssembly().GetName().Version);
         }
 
@@ -78,8 +82,7 @@ namespace LogViewer
             this.fileName = fileName;
         }
 
-        #region ListView Events
-        ////////////////////////////////////////////////////////////////////////////////
+
         private void listView1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             LogEntry logentry = this.listView1.SelectedItem as LogEntry;
@@ -103,11 +106,7 @@ namespace LogViewer
             dataView.SortDescriptions.Add(description);
             dataView.Refresh();
         }
-        ////////////////////////////////////////////////////////////////////////////////
-        #endregion
 
-        #region DragDrop
-        ////////////////////////////////////////////////////////////////////////////////
         private void listView1_Drop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -127,11 +126,6 @@ namespace LogViewer
             }
         }
 
-        ////////////////////////////////////////////////////////////////////////////////
-        #endregion
-
-        #region Menu Events
-        ////////////////////////////////////////////////////////////////////////////////
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (null != _watcher)
@@ -148,20 +142,6 @@ namespace LogViewer
             {
                 fileName = oOpenFileDialog.FileName;
             }
-        }
-
-        private void MenuRefresh_Click(object sender, RoutedEventArgs e)
-        {
-            //LoadFile();
-            listView1.SelectedIndex = listView1.Items.Count - 1;
-            if (listView1.Items.Count > 4)
-            {
-                listView1.SelectedIndex -= 3;
-            }
-            listView1.ScrollIntoView(listView1.SelectedItem);
-            ListViewItem lvi = listView1.ItemContainerGenerator.ContainerFromIndex(listView1.SelectedIndex) as ListViewItem;
-            lvi.BringIntoView();
-            lvi.Focus();
         }
 
         private void MenuFileExit_Click(object sender, RoutedEventArgs e)
@@ -239,8 +219,14 @@ namespace LogViewer
                 }
             }
         }
-        ////////////////////////////////////////////////////////////////////////////////
-        #endregion
 
+        private void RecentMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var context = ((System.Windows.Controls.MenuItem)sender).DataContext as RecentFile;
+            if (null != context)
+            {
+                fileName = context.Filepath;
+            }
+        }
     }
 }

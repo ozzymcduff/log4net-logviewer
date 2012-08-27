@@ -62,7 +62,7 @@ namespace LogViewer
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     {
-                        Count.Value = GetCount(Entries);
+                        Count.Value = GetCount(new LogEntry[0]);
                     }
                     break;
                 default:
