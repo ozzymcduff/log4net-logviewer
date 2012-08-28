@@ -12,7 +12,7 @@ namespace Core
         public IEnumerable<LogEntry> Parse(Stream s)
         {
             //todo? http://www.hanselman.com/blog/XmlAndTheNametable.aspx
-            var doc = new XmlDocument { XmlResolver = null };
+            var doc = new XmlDocument { XmlResolver = null, };
             var nt = new NameTable();
             var nsmgr = new XmlNamespaceManager(nt);
             nsmgr.AddNamespace("log4j", "http://jakarta.apache.org/log4j/");
@@ -28,8 +28,8 @@ namespace Core
                 XmlResolver = null,
                 DtdProcessing = DtdProcessing.Ignore
             };
-            //new StreamReader(s, Encoding.GetEncoding("ISO-8859-1"))
-            var xmlreader = XmlReader.Create(s, settings, context);
+            var encoding = Encoding.UTF8;
+            var xmlreader = XmlReader.Create(new StreamReader(s, encoding), settings, context);
 
             while (xmlreader.Read())
             {
