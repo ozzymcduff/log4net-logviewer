@@ -59,20 +59,26 @@ namespace LogViewer
 
         private void ReadFile()
         {
-            //Entries.Clear();
-            using (var file = FileUtil.OpenReadOnly(FileName))
+            try
             {
-                if (lastposition > 0) 
+                using (var file = FileUtil.OpenReadOnly(FileName, lastposition))
                 {
-                    file.Position = lastposition;
+                    foreach (var item in parser.Parse(file))
+                    {
+                        item.Item = itemindex++;
+                        Entries.Add(item);
+                    }
+                    lastposition = file.Position;
                 }
-                foreach (var item in  parser.Parse(file))
-                {
-                    item.Item = itemindex++;
-                    Entries.Add(item);
-                }
-                lastposition = file.Position;
             }
+            catch (OutOfBoundsException)
+            {
+                lastposition = 0;
+                Entries.Clear();
+                itemindex = 1;
+                ReadFile();
+            }
+        
         }
 
         private void InitWatcher()

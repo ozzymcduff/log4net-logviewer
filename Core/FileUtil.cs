@@ -1,4 +1,5 @@
 using System.IO;
+using System;
 
 namespace LogViewer
 {
@@ -14,9 +15,18 @@ namespace LogViewer
         }
 
 
-        public static FileStream OpenReadOnly(string fileName)
+        public static FileStream OpenReadOnly(string fileName, long position=0)
         {
-            return new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var s = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            if (position < s.Length)
+            {
+                s.Position = position;
+            }
+            else 
+            {
+                throw new OutOfBoundsException();
+            }
+            return s;
         }
         // This method is taken from Joe Woodbury's article at: http://www.codeproject.com/KB/cs/mrutoolstripmenu.aspx
 
@@ -136,5 +146,8 @@ namespace LogViewer
             return pathname;
         }
 
+    }
+    public class OutOfBoundsException : Exception
+    {
     }
 }

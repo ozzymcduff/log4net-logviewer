@@ -2,6 +2,7 @@
 using Core;
 using NUnit.Framework;
 using System.IO;
+using LogViewer;
 
 namespace IntegrationTests
 {
@@ -56,12 +57,8 @@ namespace IntegrationTests
                 w.Flush();
             }
 
-            using (var s = new FileStream(path,
-                FileMode.Open,
-                FileAccess.Read))
+            using (var s = FileUtil.OpenReadOnly(path,position:p))
             {
-                s.Position = p;
-                System.Console.WriteLine(p);
                 var entry = new LogEntryParser().Parse(s).Single();
                 Assert.That(entry.Level, Is.EqualTo("ERROR"));
                 Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
@@ -73,6 +70,29 @@ namespace IntegrationTests
                 Assert.That(entry.File, Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
             }
         }
-
+        [Test]
+        public void ParseStreamAtPositionShouldThrowException()
+        {
+            long p = 0;
+            var path = Path.GetTempFileName();
+            using (var s = new FileStream(path,
+                FileMode.Truncate,
+                FileAccess.ReadWrite))
+            using (var w = new StreamWriter(s))
+            {
+                w.Write(_buffer);
+                w.Flush();
+                s.Position = 0;
+                var entry = new LogEntryParser().Parse(s).Single();// read written entry
+                p = s.Position;
+            }
+            Assert.Throws<OutOfBoundsException>(() =>
+            {
+                using (var s = FileUtil.OpenReadOnly(path, position: p * 10))
+                {
+                    new LogEntryParser().Parse(s);
+                }
+            });
+        }
     }
 }
