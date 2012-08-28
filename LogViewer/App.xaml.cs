@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Shell;
+using System.Windows.Threading;
+using log4net;
 
 namespace LogViewer
 {
@@ -13,6 +12,7 @@ namespace LogViewer
     /// </summary>
     public partial class App : Application
     {
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public IEnumerable<string> Args { get; private set; }
 
         internal void AddFilenameToRecent(string filename)
@@ -22,8 +22,13 @@ namespace LogViewer
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            this.Args = e.Args;
+        }
 
-            this.Args = e.Args != null ? e.Args : new string[0];
+        private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            e.Handled = false;
+            _log.Error(e.Exception);
         }
     }
 }
