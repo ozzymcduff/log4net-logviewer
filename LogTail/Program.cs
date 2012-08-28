@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using Core;
 using LogViewer;
@@ -10,7 +9,7 @@ namespace LogTail
     {
         static void Main(string[] args)
         {
-            using (var file = FileUtil.OpenReadOnly(FileUtil.ReadAllText(args[0])))
+            using (var file = FileUtil.OpenReadOnly(args[0]))
             {
                 var items = new LogEntryParser().Parse(file)
                     .ToArray();
