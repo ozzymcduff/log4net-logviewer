@@ -89,29 +89,31 @@ namespace LogViewer
         public ObservableCollection<LogEntry> Entries { get; set; }
         private LogEntryParser parser = new LogEntryParser();
         private Timer filetimer;
-
+        private readonly Object _readfilelock = new Object();
         private void ReadFile()
         {
-            try
+            lock (_readfilelock)
             {
-                using (var file = FileUtil.OpenReadOnly(FileName, lastposition))
+                try
                 {
-                    foreach (var item in parser.Parse(file))
+                    using (var file = FileUtil.OpenReadOnly(FileName, lastposition))
                     {
-                        item.Item = itemindex++;
-                        Entries.Add(item);
+                        foreach (var item in parser.Parse(file))
+                        {
+                            item.Item = itemindex++;
+                            Entries.Add(item);
+                        }
+                        lastposition = file.Position;
                     }
-                    lastposition = file.Position;
+                }
+                catch (OutOfBoundsException)
+                {
+                    lastposition = 0;
+                    Entries.Clear();
+                    itemindex = 1;
+                    ReadFile();
                 }
             }
-            catch (OutOfBoundsException)
-            {
-                lastposition = 0;
-                Entries.Clear();
-                itemindex = 1;
-                ReadFile();
-            }
-
         }
 
         private void InitWatcher()
