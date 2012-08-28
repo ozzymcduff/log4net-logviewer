@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml;
-using System.Xml.Linq;
 using LogViewer;
 
 namespace Core
@@ -14,43 +12,45 @@ namespace Core
         public IEnumerable<LogEntry> Parse(Stream s)
         {
             //todo? http://www.hanselman.com/blog/XmlAndTheNametable.aspx
-            var doc = new XmlDocument();
-            NameTable nt = new NameTable();
-            XmlNamespaceManager nsmgr = new XmlNamespaceManager(nt);
+            var doc = new XmlDocument { XmlResolver = null };
+            var nt = new NameTable();
+            var nsmgr = new XmlNamespaceManager(nt);
             nsmgr.AddNamespace("log4j", "http://jakarta.apache.org/log4j/");
             nsmgr.AddNamespace("log4net", "http://logging.apache.org/log4net/");
             // Create the XmlParserContext.
-            XmlParserContext context = new XmlParserContext(null, nsmgr, null, XmlSpace.None);
+            var context = new XmlParserContext(null, nsmgr, null, XmlSpace.None);
 
             // Create the reader. 
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.ConformanceLevel = ConformanceLevel.Fragment;
-
+            var settings = new XmlReaderSettings
+            {
+                ConformanceLevel = ConformanceLevel.Fragment,
+                CheckCharacters = false,
+                XmlResolver = null,
+                DtdProcessing = DtdProcessing.Ignore
+            };
+            //new StreamReader(s, Encoding.GetEncoding("ISO-8859-1"))
             var xmlreader = XmlReader.Create(s, settings, context);
-            
+
             while (xmlreader.Read())
             {
                 LogEntry logentry = ParseElement(doc.ReadNode(xmlreader));
                 yield return logentry;
             }
         }
-        private readonly DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+        private readonly DateTime _dt = new DateTime(1970, 1, 1, 0, 0, 0, 0);
 
         private LogEntry ParseElement(XmlNode xElement)
         {
-            LogEntry logentry = new LogEntry();
-
-            string timestamp = xElement.Attributes["timestamp"].Value;
-            double dSeconds;
-            if (Double.TryParse(timestamp, out dSeconds))
+            var logentry = new LogEntry();
+            var timestamp = xElement.Attributes["timestamp"] == null ? string.Empty : xElement.Attributes["timestamp"].Value;
+            if (!string.IsNullOrEmpty(timestamp))
             {
-                logentry.TimeStamp = dt.AddMilliseconds(dSeconds).ToLocalTime();
+                double dSeconds;
+                logentry.TimeStamp = Double.TryParse(timestamp, out dSeconds)
+                                         ? _dt.AddMilliseconds(dSeconds).ToLocalTime()
+                                         : DateTime.Parse(timestamp).ToLocalTime();
             }
-            else
-            {
-                logentry.TimeStamp = DateTime.Parse(timestamp).ToLocalTime();
-            }
-            logentry.Thread = xElement.Attributes["thread"].Value;
+            logentry.Thread = xElement.Attributes["thread"] == null ? string.Empty : xElement.Attributes["thread"].Value;
 
             if (null != xElement.Attributes["domain"])
                 logentry.App = xElement.Attributes["domain"].Value;
@@ -58,7 +58,7 @@ namespace Core
             #region get level
 
             ////////////////////////////////////////////////////////////////////////////////
-            logentry.Level = xElement.Attributes["level"].Value;
+            logentry.Level = xElement.Attributes["level"] == null ? string.Empty : xElement.Attributes["level"].Value;
             logentry.Image = ParseImageType(logentry.Level);
             ////////////////////////////////////////////////////////////////////////////////
 

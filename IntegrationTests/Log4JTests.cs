@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Core;
+using LogViewer;
 using log4net;
 using NUnit.Framework;
 using System.IO;
@@ -60,6 +61,16 @@ namespace IntegrationTests
                 Assert.That(entry.Line, Is.EqualTo("18"));
                 Assert.That(entry.File, Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
 
+            }
+        }
+        [Test]
+        public void ParseFaulty()
+        {
+            using (var s = FileUtil.OpenReadOnly("test.xml"))
+            {
+                var entry = new LogEntryParser().Parse(s).Single();
+                Assert.That(entry.Message, Is.EqualTo("Translation for 'Detta ska jag göra...' in module Todo for culture sv-SE does not exist."));
+                
             }
         }
     }
