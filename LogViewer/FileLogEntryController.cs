@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Timers;
 using Core;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Threading;
 using System.Threading;
+using Timer = System.Timers.Timer;
 
 namespace LogViewer
 {
@@ -17,6 +19,7 @@ namespace LogViewer
         {
             Entries = new ObservableCollection<LogEntry>();
             ObservableFileName = new Observable<string>();
+            InitPoll();
         }
         private FileSystemWatcher _watcher;
         private string fileName;
@@ -54,8 +57,38 @@ namespace LogViewer
                       }));
             }
         }
+
+        private void InitPoll()
+        {
+            filetimer = new Timer(10000);
+
+            // Hook up the Elapsed event for the timer.
+            filetimer.Elapsed += PollFile;
+            filetimer.Interval = 2000;
+            filetimer.Enabled = true;
+        }
+
+        private void PollFile(object sender, ElapsedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(FileName))
+            {
+                using (var file = FileUtil.OpenReadOnly(FileName))
+                {
+                    if (file.Length > lastposition)
+                    {
+                        Dispatcher.BeginInvoke(DispatcherPriority.Background,
+                        new ThreadStart(() =>
+                         {
+                             ReadFile();
+                         }));
+                    }
+                }
+            }
+        }
+
         public ObservableCollection<LogEntry> Entries { get; set; }
         private LogEntryParser parser = new LogEntryParser();
+        private Timer filetimer;
 
         private void ReadFile()
         {
@@ -78,7 +111,7 @@ namespace LogViewer
                 itemindex = 1;
                 ReadFile();
             }
-        
+
         }
 
         private void InitWatcher()
