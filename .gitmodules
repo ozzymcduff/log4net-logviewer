@@ -1,0 +1,3 @@
+[submodule "ndesk-options-mirror"]
+	path = ndesk-options-mirror
+	url = git://github.com/chakrit/ndesk-options-mirror.git
