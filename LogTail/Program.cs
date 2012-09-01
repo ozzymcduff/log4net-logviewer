@@ -15,17 +15,19 @@ namespace LogTail
         class Poller
         {
             private readonly FileWithPosition file;
+            private LogEntryParser parser;
             private Timer filetimer;
             private long duration;
             public Poller(string file, long duration)
             {
-                this.file = new FileWithPosition(file,new LogEntryParser());
+                this.file = new FileWithPosition(file);
                 this.duration = duration;
             }
 
             public void Init()
             {
-                foreach (var item in file.Read())
+                parser = new LogEntryParser();
+                foreach (var item in file.Read(parser))
                 {
                     Console.WriteLine(item.Message);
                 }
@@ -35,7 +37,7 @@ namespace LogTail
             {
                 if (file.FileHasBecomeLarger())
                 {
-                    foreach (var item in file.Read())
+                    foreach (var item in file.Read(parser))
                     {
                         Console.WriteLine(item.Message);
                     }

@@ -2,21 +2,13 @@ using System.IO;
 using System;
 using Core;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace LogViewer
 {
     public class FileUtil
     {
-        public static string ReadAllText(string path)
-        {
-            using (var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (var reader = new StreamReader(file))
-            {
-                return reader.ReadToEnd();
-            }
-        }
-
-
         public static FileStream OpenReadOnly(string fileName, long position=0)
         {
             var s = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -147,7 +139,22 @@ namespace LogViewer
             }
             return pathname;
         }
-
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        public static extern int GetLongPathName(
+            [MarshalAs(UnmanagedType.LPTStr)]
+        string path,
+            [MarshalAs(UnmanagedType.LPTStr)]
+        StringBuilder longPath,
+            int longPathLength
+            );
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        public static extern int GetShortPathName(
+            [MarshalAs(UnmanagedType.LPTStr)]
+        string path,
+            [MarshalAs(UnmanagedType.LPTStr)]
+        StringBuilder shortPath,
+            int shortPathLength
+            );
     }
     public class OutOfBoundsException : Exception
     {
@@ -156,14 +163,12 @@ namespace LogViewer
     {
         public string FileName { get; private set; }
         private long position = 0;
-        private readonly LogEntryParser parser;
-        public FileWithPosition(string filename, LogEntryParser parser)
+        public FileWithPosition(string filename)
         {
             this.FileName = filename;
-            this.parser = parser;
         }
 
-        public IEnumerable<LogEntry> Read()
+        public IEnumerable<LogEntry> Read(LogEntryParser parser)
         {
             using (var file = FileUtil.OpenReadOnly(FileName, position))
             {
@@ -182,16 +187,22 @@ namespace LogViewer
                 return (f.Length > position);
             }
         }
+
         public bool FileNameMatch(string otherFileName) 
         {
             return !string.IsNullOrEmpty(otherFileName) && Path.GetFullPath(otherFileName).Equals(Path.GetFullPath(this.FileName), 
                 StringComparison.InvariantCultureIgnoreCase);
         }
-
+        public bool FileNameInFolder(string folder) 
+        {
+            return System.IO.Path.GetFullPath(folder).Equals(System.IO.Path.GetFullPath(FileName),
+                StringComparison.InvariantCultureIgnoreCase);
+        }
         public void ResetPosition()
         {
             this.position = 0;
         }
+
         public bool Exists() 
         {
             return System.IO.File.Exists(FileName);

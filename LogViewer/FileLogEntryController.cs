@@ -84,7 +84,7 @@ namespace LogViewer
             {
                 try
                 {
-                    foreach (var item in file.Read())
+                    foreach (var item in file.Read(parser))
                     {
                         item.Item = itemindex++;
                         Entries.Add(item);
@@ -119,7 +119,7 @@ namespace LogViewer
 
         private void FileHasChanged(object sender, FileSystemEventArgs e)
         {
-            if (e.FullPath.Equals(System.IO.Path.GetFullPath(FileName), StringComparison.InvariantCultureIgnoreCase))
+            if (file.FileNameInFolder(e.FullPath))
             {
                 Dispatcher.BeginInvoke(DispatcherPriority.Background,
                      new ThreadStart(() =>
