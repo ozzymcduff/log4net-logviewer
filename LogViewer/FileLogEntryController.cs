@@ -22,26 +22,20 @@ namespace LogViewer
             InitPoll();
         }
         private FileSystemWatcher _watcher;
-        private string fileName;
-        private long lastposition = 0;
+        private FileWithPosition file=null;
         private int itemindex = 1;
         public Observable<string> ObservableFileName { get; private set; }
         public string FileName
         {
             get
             {
-                return fileName;
+                return (file != null ? file.FileName : null);
             }
             set
             {
-                var oldf = fileName;
-                var newf = value;
-                fileName = value;
-                ObservableFileName.Value = fileName;
-                if (null == oldf && newf != null
-                    || !Path.GetFullPath(newf).Equals(Path.GetFullPath(oldf), StringComparison.InvariantCultureIgnoreCase))
+                ObservableFileName.Value = value;
+                if (null == file || !file.FileNameMatch(value))
                 {
-                    lastposition = 0;
                     itemindex = 1;
                     Dispatcher.BeginInvoke(DispatcherPriority.Background,
                       new ThreadStart(() =>
@@ -70,19 +64,13 @@ namespace LogViewer
 
         private void PollFile(object sender, ElapsedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(FileName))
+            if (null != file && file.FileHasBecomeLarger())
             {
-                using (var file = FileUtil.OpenReadOnly(FileName))
-                {
-                    if (file.Length > lastposition)
-                    {
-                        Dispatcher.BeginInvoke(DispatcherPriority.Background,
-                        new ThreadStart(() =>
-                         {
-                             ReadFile();
-                         }));
-                    }
-                }
+                Dispatcher.BeginInvoke(DispatcherPriority.Background,
+                new ThreadStart(() =>
+                 {
+                     ReadFile();
+                 }));
             }
         }
 
@@ -96,19 +84,15 @@ namespace LogViewer
             {
                 try
                 {
-                    using (var file = FileUtil.OpenReadOnly(FileName, lastposition))
+                    foreach (var item in file.Read())
                     {
-                        foreach (var item in parser.Parse(file))
-                        {
-                            item.Item = itemindex++;
-                            Entries.Add(item);
-                        }
-                        lastposition = file.Position;
+                        item.Item = itemindex++;
+                        Entries.Add(item);
                     }
                 }
                 catch (OutOfBoundsException)
                 {
-                    lastposition = 0;
+                    file.ResetPosition();
                     Entries.Clear();
                     itemindex = 1;
                     ReadFile();
@@ -123,7 +107,7 @@ namespace LogViewer
                 _watcher.Dispose();
                 _watcher = null;
             }
-            if (string.IsNullOrEmpty(fileName) || !System.IO.File.Exists(FileName))
+            if (null == file || !file.Exists())
             {
                 return;
             }

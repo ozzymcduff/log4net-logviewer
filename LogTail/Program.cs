@@ -56,12 +56,10 @@ namespace LogTail
         static void Main(string[] args)
         {
             var files = new List<string>();
-            bool watch = false;
             int monitor = 0;
             int lines = 10;
             var p = new OptionSet() {
                 { "f|file=",   v => { files.Add (v); } },
-            //    { "w|watch", v=> { watch=true;}},
                 { "m|monitor=", v=> { monitor=Int32.Parse(v);}},
                 { "l|lines=", v=> { lines=Int32.Parse(v);}}
             };

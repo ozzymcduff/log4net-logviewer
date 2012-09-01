@@ -154,18 +154,18 @@ namespace LogViewer
     }
     public class FileWithPosition
     {
-        public string filename { get; private set; }
+        public string FileName { get; private set; }
         private long position = 0;
         private readonly LogEntryParser parser;
         public FileWithPosition(string filename, LogEntryParser parser)
         {
-            this.filename = filename;
+            this.FileName = filename;
             this.parser = parser;
         }
 
         public IEnumerable<LogEntry> Read()
         {
-            using (var file = FileUtil.OpenReadOnly(filename, position))
+            using (var file = FileUtil.OpenReadOnly(FileName, position))
             {
                 foreach (var item in parser.Parse(file))
                 {
@@ -175,12 +175,26 @@ namespace LogViewer
             }
         }
 
-        internal bool FileHasBecomeLarger()
+        public bool FileHasBecomeLarger()
         {
-            using (var f = FileUtil.OpenReadOnly(filename))
+            using (var f = FileUtil.OpenReadOnly(FileName))
             {
                 return (f.Length > position);
             }
+        }
+        public bool FileNameMatch(string otherFileName) 
+        {
+            return !string.IsNullOrEmpty(otherFileName) && Path.GetFullPath(otherFileName).Equals(Path.GetFullPath(this.FileName), 
+                StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public void ResetPosition()
+        {
+            this.position = 0;
+        }
+        public bool Exists() 
+        {
+            return System.IO.File.Exists(FileName);
         }
     }
 }
