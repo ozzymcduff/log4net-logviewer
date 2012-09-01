@@ -60,7 +60,7 @@ namespace LogViewer
 
         private void InitPoll()
         {
-            filetimer = new Timer(10000);
+            filetimer = new System.Timers.Timer(10000);
 
             // Hook up the Elapsed event for the timer.
             filetimer.Elapsed += PollFile;

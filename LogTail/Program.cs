@@ -5,44 +5,50 @@ using System.Linq;
 using Core;
 using LogViewer;
 using NDesk.Options;
+using System.Threading;
 
 namespace LogTail
 {
+    
     class Program
     {
-        class Watchers
+        class Poller
         {
-            private readonly IEnumerable<string> _files;
-            private List<FileSystemWatcher> watchers;
-
-            public Watchers(IEnumerable<string> files)
+            private readonly FileWithPosition file;
+            private Timer filetimer;
+            private long duration;
+            public Poller(string file, long duration)
             {
-                _files = files;
+                this.file = new FileWithPosition(file,new LogEntryParser());
+                this.duration = duration;
             }
 
             public void Init()
             {
-                watchers = new List<FileSystemWatcher>();
-                foreach (var path in _files.Select(Path.GetDirectoryName).Distinct())
+                foreach (var item in file.Read())
                 {
-                    var watcher = new FileSystemWatcher
-                                       {
-                                           Path = path,
-                                           NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                                       };
-                    watcher.Changed += FileHasChanged;
-                    watchers.Add(watcher);
+                    Console.WriteLine(item.Message);
+                }
+                filetimer = new Timer(PollFile, null, (long)0, duration);
+            }
+            private void PollFile(Object stateInfo)
+            {
+                if (file.FileHasBecomeLarger())
+                {
+                    foreach (var item in file.Read())
+                    {
+                        Console.WriteLine(item.Message);
+                    }
                 }
             }
-            private void FileHasChanged(object sender, FileSystemEventArgs e)
+
+
+            internal void Stop()
             {
-                foreach (var fileName in _files)
+                if (filetimer != null)
                 {
-                    if (Path.GetFullPath(e.FullPath).Equals(Path.GetFullPath(fileName),
-                                          StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        throw new NotImplementedException();
-                    }
+                    filetimer.Dispose();
+                    filetimer = null;
                 }
             }
         }
@@ -50,12 +56,13 @@ namespace LogTail
         static void Main(string[] args)
         {
             var files = new List<string>();
-            bool watch = false, monitor = false;
+            bool watch = false;
+            int monitor = 0;
             int lines = 10;
             var p = new OptionSet() {
                 { "f|file=",   v => { files.Add (v); } },
-                { "w|watch=", v=> { watch=true;}},
-                { "m|monitor=", v=> { monitor=true;}},
+            //    { "w|watch", v=> { watch=true;}},
+                { "m|monitor=", v=> { monitor=Int32.Parse(v);}},
                 { "l|lines=", v=> { lines=Int32.Parse(v);}}
             };
 
@@ -65,13 +72,9 @@ namespace LogTail
             }
 
             p.Parse(args);
-            if (watch)
+            if (monitor>0)
             {
-                InitWatch(files);
-            }
-            else if (monitor)
-            {
-                InitMonitor(files);
+                DoMonitor(files, monitor);
             }
             else
             {
@@ -80,9 +83,16 @@ namespace LogTail
 
         }
 
-        private static void InitMonitor(List<string> files)
+        private static void DoMonitor(List<string> files, int duration)
         {
-            throw new NotImplementedException();
+            var w = new Poller(files.Single(), duration);
+            bool keepAlive = true;
+            Thread workerThread = new Thread(w.Init);
+            Console.CancelKeyPress += (o, e) => { w.Stop(); keepAlive = false; };
+            workerThread.Start();
+            while (keepAlive) ;
+
+            workerThread.Join();
         }
 
         private static void TailFiles(int lines, List<string> files)
@@ -100,13 +110,5 @@ namespace LogTail
                 }
             }
         }
-
-        private static void InitWatch(List<string> files)
-        {
-            var w = new Watchers(files);
-            w.Init();
-        }
-
-        
     }
 }

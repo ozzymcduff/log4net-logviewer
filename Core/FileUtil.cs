@@ -1,5 +1,7 @@
 using System.IO;
 using System;
+using Core;
+using System.Collections.Generic;
 
 namespace LogViewer
 {
@@ -149,5 +151,36 @@ namespace LogViewer
     }
     public class OutOfBoundsException : Exception
     {
+    }
+    public class FileWithPosition
+    {
+        public string filename { get; private set; }
+        private long position = 0;
+        private readonly LogEntryParser parser;
+        public FileWithPosition(string filename, LogEntryParser parser)
+        {
+            this.filename = filename;
+            this.parser = parser;
+        }
+
+        public IEnumerable<LogEntry> Read()
+        {
+            using (var file = FileUtil.OpenReadOnly(filename, position))
+            {
+                foreach (var item in parser.Parse(file))
+                {
+                    yield return item;
+                }
+                position = file.Position;
+            }
+        }
+
+        internal bool FileHasBecomeLarger()
+        {
+            using (var f = FileUtil.OpenReadOnly(filename))
+            {
+                return (f.Length > position);
+            }
+        }
     }
 }
