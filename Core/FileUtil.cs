@@ -195,7 +195,9 @@ namespace LogViewer
         }
         public bool FileNameInFolder(string folder) 
         {
-            return System.IO.Path.GetFullPath(folder).Equals(System.IO.Path.GetFullPath(FileName),
+            var fullpath = System.IO.Path.GetFullPath(System.IO.Path.GetDirectoryName(folder));
+            var filepath = System.IO.Path.GetFullPath(System.IO.Path.GetDirectoryName(FileName));
+            return fullpath.Equals(filepath,
                 StringComparison.InvariantCultureIgnoreCase);
         }
         public void ResetPosition()
