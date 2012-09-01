@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace LogTail
 {
-    
+
     class Program
     {
         class Poller
@@ -54,15 +54,60 @@ namespace LogTail
                 }
             }
         }
+        class Watcher
+        {
+            private readonly FileWithPosition file;
+            private LogEntryParser parser;
+            private FileSystemWatcher _watcher;
+            public Watcher(string file)
+            {
+                this.file = new FileWithPosition(file);
+            }
 
+            public void Init()
+            {
+                parser = new LogEntryParser();
+                foreach (var item in file.Read(parser))
+                {
+                    Console.WriteLine(item.Message);
+                }
+                _watcher = new FileSystemWatcher { Path = System.IO.Path.GetDirectoryName(file.FileName) };
+                _watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
+                _watcher.Changed += FileHasChanged;
+                _watcher.EnableRaisingEvents = true;
+            }
+
+            private void FileHasChanged(object sender, FileSystemEventArgs e)
+            {
+                if (file.FileNameInFolder(e.FullPath))
+                {
+                    foreach (var item in file.Read(parser))
+                    {
+                        Console.WriteLine(item.Message);
+                    }
+                }
+            }
+
+
+            internal void Stop()
+            {
+                if (_watcher != null)
+                {
+                    _watcher.Dispose();
+                    _watcher = null;
+                }
+            }
+        }
         static void Main(string[] args)
         {
             var files = new List<string>();
             int monitor = 0;
             int lines = 10;
+            var watch = false;
             var p = new OptionSet() {
                 { "f|file=",   v => { files.Add (v); } },
                 { "m|monitor=", v=> { monitor=Int32.Parse(v);}},
+                { "w|watch", v=> { watch = true;}},
                 { "l|lines=", v=> { lines=Int32.Parse(v);}}
             };
 
@@ -72,7 +117,11 @@ namespace LogTail
             }
 
             p.Parse(args);
-            if (monitor>0)
+            if (watch)
+            {
+                DoWatch(files);
+            }
+            else if (monitor > 0)
             {
                 DoMonitor(files, monitor);
             }
@@ -86,6 +135,17 @@ namespace LogTail
         private static void DoMonitor(List<string> files, int duration)
         {
             var w = new Poller(files.Single(), duration);
+            bool keepAlive = true;
+            Thread workerThread = new Thread(w.Init);
+            Console.CancelKeyPress += (o, e) => { w.Stop(); keepAlive = false; };
+            workerThread.Start();
+            while (keepAlive) ;
+
+            workerThread.Join();
+        }
+        private static void DoWatch(List<string> files)
+        {
+            var w = new Watcher(files.Single());
             bool keepAlive = true;
             Thread workerThread = new Thread(w.Init);
             Console.CancelKeyPress += (o, e) => { w.Stop(); keepAlive = false; };

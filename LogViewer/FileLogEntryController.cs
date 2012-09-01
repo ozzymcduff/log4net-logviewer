@@ -19,7 +19,6 @@ namespace LogViewer
         {
             Entries = new ObservableCollection<LogEntry>();
             ObservableFileName = new Observable<string>();
-            InitPoll();
         }
         private FileSystemWatcher _watcher;
         private FileWithPosition file=null;
@@ -37,6 +36,7 @@ namespace LogViewer
                 if (null == file || !file.FileNameMatch(value))
                 {
                     itemindex = 1;
+                    file = new FileWithPosition(value);
                     Dispatcher.BeginInvoke(DispatcherPriority.Background,
                       new ThreadStart(() =>
                       {
@@ -52,31 +52,8 @@ namespace LogViewer
             }
         }
 
-        private void InitPoll()
-        {
-            filetimer = new System.Timers.Timer(10000);
-
-            // Hook up the Elapsed event for the timer.
-            filetimer.Elapsed += PollFile;
-            filetimer.Interval = 2000;
-            filetimer.Enabled = true;
-        }
-
-        private void PollFile(object sender, ElapsedEventArgs e)
-        {
-            if (null != file && file.FileHasBecomeLarger())
-            {
-                Dispatcher.BeginInvoke(DispatcherPriority.Background,
-                new ThreadStart(() =>
-                 {
-                     ReadFile();
-                 }));
-            }
-        }
-
         public ObservableCollection<LogEntry> Entries { get; set; }
         private LogEntryParser parser = new LogEntryParser();
-        private Timer filetimer;
         private readonly Object _readfilelock = new Object();
         private void ReadFile()
         {
