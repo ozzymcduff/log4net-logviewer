@@ -3,10 +3,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
-using LogViewer;
 
-namespace Core
+namespace LogViewer
 {
+    public static class XmlExtension
+    {
+        public static string GetOrDefault(this XmlAttributeCollection self, string name)
+        {
+            var val = self[name];
+            if (null == val) { return default(string); }
+            return val.Value;
+        }
+    }
+
     public class LogEntryParser
     {
         public IEnumerable<LogEntry> Parse(Stream s)
@@ -30,19 +39,28 @@ namespace Core
             };
             var encoding = Encoding.UTF8;
             var xmlreader = XmlReader.Create(new StreamReader(s, encoding), settings, context);
-
+#if !yield
+            var list = new List<LogEntry>();
+#endif
             while (xmlreader.Read())
             {
                 LogEntry logentry = ParseElement(doc.ReadNode(xmlreader));
+#if !yield
+                list.Add(logentry);
+#else
                 yield return logentry;
+#endif
             }
+#if !yield
+            return list;
+#endif
         }
         private readonly DateTime _dt = new DateTime(1970, 1, 1, 0, 0, 0, 0);
 
         private LogEntry ParseElement(XmlNode xElement)
         {
             var logentry = new LogEntry();
-            var timestamp = xElement.Attributes["timestamp"] == null ? string.Empty : xElement.Attributes["timestamp"].Value;
+            var timestamp = xElement.Attributes.GetOrDefault("timestamp");
             if (!string.IsNullOrEmpty(timestamp))
             {
                 double dSeconds;
@@ -50,15 +68,15 @@ namespace Core
                                          ? _dt.AddMilliseconds(dSeconds).ToLocalTime()
                                          : DateTime.Parse(timestamp).ToLocalTime();
             }
-            logentry.Thread = xElement.Attributes["thread"] == null ? string.Empty : xElement.Attributes["thread"].Value;
+            logentry.Thread = xElement.Attributes.GetOrDefault("thread");
 
-            if (null != xElement.Attributes["domain"])
-                logentry.App = xElement.Attributes["domain"].Value;
+
+            logentry.App = xElement.Attributes.GetOrDefault("domain");
 
             #region get level
 
             ////////////////////////////////////////////////////////////////////////////////
-            logentry.Level = xElement.Attributes["level"] == null ? string.Empty : xElement.Attributes["level"].Value;
+            logentry.Level = xElement.Attributes.GetOrDefault("level");
             logentry.Image = ParseImageType(logentry.Level);
             ////////////////////////////////////////////////////////////////////////////////
 
@@ -69,7 +87,14 @@ namespace Core
             var elements = xElement.ChildNodes;
             foreach (XmlNode element in elements)
             {
-                switch (element.Name.Split(':')[1])
+                var name = element.Name;
+                if (element.NodeType == XmlNodeType.Text)
+                {
+                    continue;
+                }
+                var split = name.Split(':');
+                if (split.Length <= 1) { throw new Exception("Name: " + name); }
+                switch (split[1])
                 {
                     case "message":
                         {
@@ -84,19 +109,19 @@ namespace Core
                                 switch (property.Attributes["name"].Value)
                                 {
                                     case ("log4jmachinename"):
-                                        logentry.MachineName = property.Attributes["value"].Value;
+                                        logentry.MachineName = property.Attributes.GetOrDefault("value");
                                         break;
                                     case ("log4net:HostName"):
-                                        logentry.HostName = property.Attributes["value"].Value;
+                                        logentry.HostName = property.Attributes.GetOrDefault("value");
                                         break;
                                     case ("log4net:UserName"):
-                                        logentry.UserName = property.Attributes["value"].Value;
+                                        logentry.UserName = property.Attributes.GetOrDefault("value");
                                         break;
                                     case ("log4japp"):
-                                        logentry.App = property.Attributes["value"].Value;
+                                        logentry.App = property.Attributes.GetOrDefault("value");
                                         break;
                                     default:
-                                        throw new NotImplementedException(property.Attributes["name"].Value);
+                                        throw new NotImplementedException(property.Attributes.GetOrDefault("name"));
                                 }
 
                             break;
@@ -110,10 +135,10 @@ namespace Core
                         }
                     case ("locationInfo"):
                         {
-                            logentry.Class = element.Attributes["class"].Value;
-                            logentry.Method = element.Attributes["method"].Value;
-                            logentry.File = element.Attributes["file"].Value;
-                            logentry.Line = element.Attributes["line"].Value;
+                            logentry.Class = element.Attributes.GetOrDefault("class");
+                            logentry.Method = element.Attributes.GetOrDefault("method");
+                            logentry.File = element.Attributes.GetOrDefault("file");
+                            logentry.Line = element.Attributes.GetOrDefault("line");
                             break;
                         }
                     default:

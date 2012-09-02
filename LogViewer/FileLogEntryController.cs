@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Timers;
-using Core;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Threading;
@@ -15,95 +14,72 @@ namespace LogViewer
 {
     class FileLogEntryController : DispatcherObject
     {
+        class WrappedDispatcher : IInvoker
+        {
+            private readonly Dispatcher Dispatcher;
+            public WrappedDispatcher(Dispatcher dispatcher)
+            {
+                this.Dispatcher = dispatcher;
+            }
+
+            public void Invoke(Action threadStart)
+            {
+                Dispatcher.BeginInvoke(DispatcherPriority.Background,
+                       threadStart);
+            }
+        }
         public FileLogEntryController()
         {
             Entries = new ObservableCollection<LogEntry>();
             ObservableFileName = new Observable<string>();
+            wrappedDispatcher = new WrappedDispatcher(this.Dispatcher);
         }
-        private FileSystemWatcher _watcher;
-        private FileWithPosition file=null;
+        private WrappedDispatcher wrappedDispatcher;
+
+        private Watcher watcher = null;
         private int itemindex = 1;
         public Observable<string> ObservableFileName { get; private set; }
         public string FileName
         {
             get
             {
-                return (file != null ? file.FileName : null);
+                return (watcher != null ? watcher.File.FileName : null);
             }
             set
             {
                 ObservableFileName.Value = value;
-                if (null == file || !file.FileNameMatch(value))
+                if (null == watcher || !watcher.File.FileNameMatch(value))
                 {
                     itemindex = 1;
-                    file = new FileWithPosition(value);
+                    if (watcher != null)
+                    {
+                        watcher.Dispose();
+                        watcher = null;
+                    }
+                    watcher = new Watcher(new FileWithPosition(value), parser, wrappedDispatcher);
+                    watcher.logentry = AddToEntries;
+                    watcher.outOfBounds = OutOfBounds;
                     Dispatcher.BeginInvoke(DispatcherPriority.Background,
                       new ThreadStart(() =>
                       {
                           Entries.Clear();
                       }));
-                    InitWatcher();
+                    watcher.Init();
                 }
-                Dispatcher.BeginInvoke(DispatcherPriority.Background,
-                      new ThreadStart(() =>
-                      {
-                          ReadFile();
-                      }));
             }
         }
-
+        private void AddToEntries(LogEntry entry)
+        {
+            Entries.Add(entry);
+        }
         public ObservableCollection<LogEntry> Entries { get; set; }
         private LogEntryParser parser = new LogEntryParser();
-        private readonly Object _readfilelock = new Object();
-        private void ReadFile()
+        private void OutOfBounds() 
         {
-            lock (_readfilelock)
-            {
-                try
-                {
-                    foreach (var item in file.Read(parser))
-                    {
-                        item.Item = itemindex++;
-                        Entries.Add(item);
-                    }
-                }
-                catch (OutOfBoundsException)
-                {
-                    file.ResetPosition();
-                    Entries.Clear();
-                    itemindex = 1;
-                    ReadFile();
-                }
-            }
-        }
-
-        private void InitWatcher()
-        {
-            if (_watcher != null)
-            {
-                _watcher.Dispose();
-                _watcher = null;
-            }
-            if (null == file || !file.Exists())
-            {
-                return;
-            }
-            _watcher = new FileSystemWatcher { Path = System.IO.Path.GetDirectoryName(FileName) };
-            _watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
-            _watcher.Changed += FileHasChanged;
-            _watcher.EnableRaisingEvents = true;
-        }
-
-        private void FileHasChanged(object sender, FileSystemEventArgs e)
-        {
-            if (file.FileNameInFolder(e.FullPath))
-            {
-                Dispatcher.BeginInvoke(DispatcherPriority.Background,
-                     new ThreadStart(() =>
-                     {
-                         ReadFile();
-                     }));
-            }
+            watcher.Reset();
+            Entries.Clear();
+            itemindex = 1;
+            watcher.Read();
         }
     }
 }

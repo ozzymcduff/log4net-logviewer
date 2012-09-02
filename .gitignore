@@ -1,7 +1,11 @@
 *.orig
 *.suo
 *.user
+*.pidb
+test-results
 *.*~
+*.swp
+*.userprefs
 bin/
 obj/
 _ReSharper*/

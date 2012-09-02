@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Core;
 using NUnit.Framework;
 using System.IO;
 using LogViewer;

@@ -1,6 +1,5 @@
 using System.IO;
 using System;
-using Core;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -139,22 +138,22 @@ namespace LogViewer
             }
             return pathname;
         }
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        public static extern int GetLongPathName(
-            [MarshalAs(UnmanagedType.LPTStr)]
-        string path,
-            [MarshalAs(UnmanagedType.LPTStr)]
-        StringBuilder longPath,
-            int longPathLength
-            );
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        public static extern int GetShortPathName(
-            [MarshalAs(UnmanagedType.LPTStr)]
-        string path,
-            [MarshalAs(UnmanagedType.LPTStr)]
-        StringBuilder shortPath,
-            int shortPathLength
-            );
+        //[DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        //public static extern int GetLongPathName(
+        //    [MarshalAs(UnmanagedType.LPTStr)]
+        //string path,
+        //    [MarshalAs(UnmanagedType.LPTStr)]
+        //StringBuilder longPath,
+        //    int longPathLength
+        //    );
+        //[DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        //public static extern int GetShortPathName(
+        //    [MarshalAs(UnmanagedType.LPTStr)]
+        //string path,
+        //    [MarshalAs(UnmanagedType.LPTStr)]
+        //StringBuilder shortPath,
+        //    int shortPathLength
+        //    );
     }
     public class OutOfBoundsException : Exception
     {

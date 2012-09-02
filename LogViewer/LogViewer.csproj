@@ -79,6 +79,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\Core\Invoker.cs">
+      <Link>Invoker.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Watcher.cs">
+      <Link>Watcher.cs</Link>
+    </Compile>
     <Compile Include="Infrastructure\ApplicationAttributes.cs" />
     <Compile Include="History\RecentFile.cs" />
     <Compile Include="History\IPersist.cs" />

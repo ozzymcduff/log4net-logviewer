@@ -65,7 +65,7 @@ namespace LogViewer
             string text =
 @"<log4net>
   <appender name=""RollingFileAppender"" type=""log4net.Appender.RollingFileAppender"">
-    <file type=""log4net.Util.PatternString"" value=""c:\log\log.xml"" />
+    <watcher type=""log4net.Util.PatternString"" value=""c:\log\log.xml"" />
     <appendToFile value=""true"" />
     <datePattern value=""yyyyMMdd"" />
     <rollingStyle value=""Date"" />

@@ -19,7 +19,6 @@ using System.Windows.Threading;
 using System.ComponentModel;
 using System.Windows.Interop;
 using System.Reflection;
-using Core;
 using System.Threading;
 using System.Collections.ObjectModel;
 
@@ -139,11 +138,6 @@ namespace LogViewer
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (null != _watcher)
-            {
-                _watcher.Dispose();
-                _watcher = null;
-            }
         }
 
         private void MenuFileOpen_Click(object sender, RoutedEventArgs e)
@@ -167,7 +161,6 @@ namespace LogViewer
         }
 
         private int CurrentIndex = 0;
-        private FileSystemWatcher _watcher;
 
         private void Find(int Direction)
         {
