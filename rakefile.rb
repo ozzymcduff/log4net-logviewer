@@ -8,5 +8,14 @@ namespace :mono do
     msb.verbosity = 'quiet'
     msb.solution = "LogTail.sln"
   end
+
+  task :test => :build do
+    # does not work for some reason 
+    assemblies = "Tests.dll"
+    cd "./Tests/bin/Debug" do
+      sh "nunit-console4 #{assemblies}"
+    end
+  end
+  
 end
 

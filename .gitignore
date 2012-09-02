@@ -9,4 +9,5 @@ test-results
 bin/
 obj/
 _ReSharper*/
+TestResult.xml
 

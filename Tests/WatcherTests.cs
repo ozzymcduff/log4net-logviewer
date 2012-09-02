@@ -29,7 +29,7 @@ namespace IntegrationTests
                 watcher.Init();
                 Assert.That(files.Count, Is.EqualTo(1));
                 File.AppendAllText(file, _buffer);
-                Thread.Sleep(100);
+                Thread.Sleep(100/*750*3*/);
                 Assert.That(files.Count, Is.EqualTo(2));
             }
         }
@@ -51,7 +51,7 @@ namespace IntegrationTests
                 watcher.Init();
 
                 File.WriteAllText(file, "");
-                Thread.Sleep(100);
+                Thread.Sleep(100/*750*3*/);
                 Assert.That(outofbounds, Is.EqualTo(1));
             }
         }
