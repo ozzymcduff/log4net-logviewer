@@ -32,11 +32,11 @@ namespace LogTail
             p.Parse(args);
             if (watch)
             {
-                Do(new Watcher(new FileWithPosition(files.Single())){logentry= l => Console.WriteLine(l)});
+                Do(new Watcher(new FileWithPosition(files.Single())) { logentry = l => Console.WriteLine(l.Message) });
             }
             else if (monitor > 0)
             {
-                Do(new Poller(new FileWithPosition(files.Single()), monitor){logentry= l => Console.WriteLine(l)});
+                Do(new Poller(new FileWithPosition(files.Single()), monitor) { logentry = l => Console.WriteLine(l.Message) });
             }
             else
             {

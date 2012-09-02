@@ -10,6 +10,7 @@ namespace LogViewer
     {
         public static string GetOrDefault(this XmlAttributeCollection self, string name)
         {
+            if (null == self) { return default(string); }
             var val = self[name];
             if (null == val) { return default(string); }
             return val.Value;
