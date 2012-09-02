@@ -6,172 +6,285 @@ using System.Xml;
 
 namespace LogViewer
 {
-    public static class XmlExtension
-    {
-        public static string GetOrDefault(this XmlAttributeCollection self, string name)
-        {
-            if (null == self) { return default(string); }
-            var val = self[name];
-            if (null == val) { return default(string); }
-            return val.Value;
-        }
-    }
+	public class LogEntryParser
+	{
+		private static readonly DateTime _dt = new DateTime (1970, 1, 1, 0, 0, 0, 0);
 
-    public class LogEntryParser
-    {
-        public IEnumerable<LogEntry> Parse(Stream s)
-        {
-            //todo? http://www.hanselman.com/blog/XmlAndTheNametable.aspx
-            var doc = new XmlDocument { XmlResolver = null, };
-            var nt = new NameTable();
-            var nsmgr = new XmlNamespaceManager(nt);
-            nsmgr.AddNamespace("log4j", "http://jakarta.apache.org/log4j/");
-            nsmgr.AddNamespace("log4net", "http://logging.apache.org/log4net/");
-            // Create the XmlParserContext.
-            var context = new XmlParserContext(null, nsmgr, null, XmlSpace.None);
+		public static LogEntry.ImageType ParseImageType (string level)
+		{
+			switch (level) {
+			case "ERROR":
+				return LogEntry.ImageType.Error;
+			case "INFO":
+				return LogEntry.ImageType.Info;
+			case "DEBUG":
+				return LogEntry.ImageType.Debug;
+			case "WARN":
+				return LogEntry.ImageType.Warn;
+			case "FATAL":
+				return LogEntry.ImageType.Fatal;
+			default:
+				return LogEntry.ImageType.Custom;
+			}
+		}
+	
+		class Names
+		{
+			public Object @event;
+			public Object message;
+			public Object properties;
+			public Object data ;
+			public Object name ;
+			public Object @value;
+			public Object throwable;
+			public Object exception ;
+			public Object timestamp ;
+			public Object thread ;
+			public Object domain ;
+			public Object level ;
+			public Object logger;
+			public Object locationinfo;
+			public Object @class ;
+			public Object method ;
+			public Object file ;
+			public Object line ;
+			public Object username;
+		}
 
-            // Create the reader. 
-            var settings = new XmlReaderSettings
+		public IEnumerable<LogEntry> Parse (Stream s)
+		{
+			var nt = new NameTable ();
+			var nsmgr = new XmlNamespaceManager (nt);
+			nsmgr.AddNamespace ("log4j", "http://jakarta.apache.org/log4j/");
+			nsmgr.AddNamespace ("log4net", "http://logging.apache.org/log4net/");
+			// Create the XmlParserContext.
+			var context = new XmlParserContext (null, nsmgr, null, XmlSpace.None);
+
+			// Create the reader. 
+			var settings = new XmlReaderSettings
             {
                 ConformanceLevel = ConformanceLevel.Fragment,
                 CheckCharacters = false,
                 XmlResolver = null,
                 DtdProcessing = DtdProcessing.Ignore
             };
-            var encoding = Encoding.UTF8;
-            var xmlreader = XmlReader.Create(new StreamReader(s, encoding), settings, context);
-#if !yield
-            var list = new List<LogEntry>();
-#endif
-            while (xmlreader.Read())
-            {
-                LogEntry logentry = ParseElement(doc.ReadNode(xmlreader));
-#if !yield
-                list.Add(logentry);
-#else
-                yield return logentry;
-#endif
-            }
-#if !yield
-            return list;
-#endif
-        }
-        private readonly DateTime _dt = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+			var list = new List<LogEntry> ();
+			var encoding = Encoding.UTF8;
+			var xmlreader = XmlReader.Create (new StreamReader (s, encoding), settings, context);
+			
+			Names names = new Names{
+			 @event = xmlreader.NameTable.Add ("event"),
+			 message = xmlreader.NameTable.Add ("message"),
+			 properties = xmlreader.NameTable.Add ("properties"),
+			 data = xmlreader.NameTable.Add ("data"),
+			 name = xmlreader.NameTable.Add ("name"),
+			 @value = xmlreader.NameTable.Add ("value"),
+			 throwable = xmlreader.NameTable.Add ("throwable"),
+			 exception = xmlreader.NameTable.Add ("exception"),
+			 timestamp = xmlreader.NameTable.Add ("timestamp"),
+			 thread = xmlreader.NameTable.Add ("thread"),
+			 domain = xmlreader.NameTable.Add ("domain"),
+			 level = xmlreader.NameTable.Add ("level"),
+			 logger = xmlreader.NameTable.Add ("logger"),
+			 locationinfo = xmlreader.NameTable.Add ("locationInfo"),
+			 @class = xmlreader.NameTable.Add ("class"),
+			 method = xmlreader.NameTable.Add ("method"),
+			 file = xmlreader.NameTable.Add ("file"),
+			 line = xmlreader.NameTable.Add ("line"),
+			 username = xmlreader.NameTable.Add ("username")};
+			
+			while (xmlreader.Read()) {
+				switch (xmlreader.NodeType) {
+				case XmlNodeType.Whitespace:
+					break;
+				case XmlNodeType.Element:
+					if (Object.ReferenceEquals (xmlreader.LocalName, names.@event)) {
+						LogEntry logentry = null;
+						logentry = new LogEntry ();
+						if (xmlreader.HasAttributes) {
+							while (xmlreader.MoveToNextAttribute()) {
+								if (Object.ReferenceEquals (xmlreader.LocalName, names.timestamp)) {
+									var timestamp = xmlreader.Value;
+									if (!string.IsNullOrEmpty (timestamp)) {
+										double dSeconds;
+										logentry.TimeStamp = Double.TryParse (timestamp, out dSeconds)
+                                         ? _dt.AddMilliseconds (dSeconds).ToLocalTime ()
+                                         : DateTime.Parse (timestamp).ToLocalTime ();
+									}
+								} else if (Object.ReferenceEquals (xmlreader.LocalName, names.thread)) {
+									logentry.Thread = xmlreader.Value;
+								} else if (Object.ReferenceEquals (xmlreader.LocalName, names.domain)) {
+									logentry.App = xmlreader.Value;
+								} else if (Object.ReferenceEquals (xmlreader.LocalName, names.level)) {
+									logentry.Level = xmlreader.Value;
+									logentry.Image = LogEntryParser.ParseImageType (logentry.Level);
+								} else if (Object.ReferenceEquals (xmlreader.LocalName, names.logger)) {
+									logentry.Logger = xmlreader.Value;
+								} else if (Object.ReferenceEquals (xmlreader.LocalName, names.username)) {
+									logentry.UserName = xmlreader.Value;
+								} else {
+									throw new NotImplementedException (xmlreader.LocalName);
+								}
+							}
+							xmlreader.MoveToElement ();
+						}
+						
+						EventChildren (xmlreader, names, logentry);
+						list.Add (logentry);
+					} else {
+						Console.WriteLine (xmlreader.NodeType + ", " + xmlreader.Name + ": " + xmlreader.Value);
+						throw new NotImplementedException ();
+					}
+					break;					
+				default:
+					Console.WriteLine (xmlreader.NodeType + ", " + xmlreader.Name + ": " + xmlreader.Value);
+					throw new NotImplementedException (xmlreader.NodeType.ToString ());
+				}
+			}
+			return list;
+		}
+		
+		private void EventChildren (XmlReader xmlreader, Names names, LogEntry logentry)
+		{
+			while (xmlreader.Read()) {
+				switch (xmlreader.NodeType) {
+				case XmlNodeType.Whitespace:
+					break;
+				case XmlNodeType.Element:
+					if (Object.ReferenceEquals (xmlreader.LocalName, names.message)) {
+						logentry.Message = xmlreader.ReadInnerXml ();
+					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.throwable)
+							|| Object.ReferenceEquals (xmlreader.LocalName, names.exception)) {
+						logentry.Throwable = xmlreader.ReadInnerXml ();
+					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.properties)) {
+						ReadProperties (xmlreader, names, logentry);
+					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.locationinfo)) {
+						ReadLocationInfo (xmlreader, names, logentry);
+					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.data)) {
+						ReadDataAttributes (xmlreader, names, logentry);	
+					} else {
+						throw new NotImplementedException ("1! " + xmlreader.Name);
+					}
+					break;
+				case XmlNodeType.EndElement:
+					if (Object.ReferenceEquals (xmlreader.LocalName, names.@event)) {
+						return;
+					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.message)
+							|| Object.ReferenceEquals (xmlreader.LocalName, names.throwable)
+							|| Object.ReferenceEquals (xmlreader.LocalName, names.exception)
+							|| Object.ReferenceEquals (xmlreader.LocalName, names.properties)
+						) {
+						//Ignore it
+					} else {
+						throw new NotImplementedException ("3! " + xmlreader.Name);
+					}
+					break;
+				default:
+					throw new NotImplementedException ("2! " + xmlreader.NodeType);
+				//break;
+				}
+			}
+			
+		}
 
-        private LogEntry ParseElement(XmlNode xElement)
-        {
-            var logentry = new LogEntry();
-            var timestamp = xElement.Attributes.GetOrDefault("timestamp");
-            if (!string.IsNullOrEmpty(timestamp))
-            {
-                double dSeconds;
-                logentry.TimeStamp = Double.TryParse(timestamp, out dSeconds)
-                                         ? _dt.AddMilliseconds(dSeconds).ToLocalTime()
-                                         : DateTime.Parse(timestamp).ToLocalTime();
-            }
-            logentry.Thread = xElement.Attributes.GetOrDefault("thread");
+		private void ReadLocationInfo (XmlReader xmlreader, Names names, LogEntry logentry)
+		{
+			if (xmlreader.HasAttributes) {
+				while (xmlreader.MoveToNextAttribute()) {
+					if (Object.ReferenceEquals (xmlreader.LocalName, names.@class)) {
+						logentry.Class = xmlreader.Value;
+					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.method)) {
+						logentry.Method = xmlreader.Value;
+					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.file)) {
+						logentry.File = xmlreader.Value;
+					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.line)) {
+						logentry.Line = xmlreader.Value;
+					} else {
+						throw new NotImplementedException (xmlreader.LocalName);
+					}
+				}
+				xmlreader.MoveToElement ();
+			}
+			
+			while (xmlreader.Read()) {
+				switch (xmlreader.NodeType) {
+				case XmlNodeType.Whitespace:
+					break;
+				case XmlNodeType.EndElement:
+					if (Object.ReferenceEquals (xmlreader.LocalName, names.locationinfo)) {
+						return;
+					}
+					break;
+				default:
+					throw new NotImplementedException ("2! " + xmlreader.NodeType);
+				}
+			}
+		}
 
+		private void ReadProperties (XmlReader xmlreader, Names names, LogEntry logentry)
+		{
+			while (xmlreader.Read()) {
+				switch (xmlreader.NodeType) {
+				case XmlNodeType.Whitespace:
+					break;
+				case XmlNodeType.Element:
+					if (Object.ReferenceEquals (xmlreader.LocalName, names.data)) {
+						ReadDataAttributes (xmlreader, names, logentry);				
+					} else {
+						throw new NotImplementedException ("!");
+					}
+					break;
+				case XmlNodeType.EndElement:
+					if (Object.ReferenceEquals (xmlreader.LocalName, names.data)) {
+						
+					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.properties)) {
+						return;
+					} else {
+						throw new NotImplementedException ("! " + xmlreader.Name);
+					}
+					break;
+				default:
+					throw new NotImplementedException ("! " + xmlreader.NodeType);
+				}
+			} 
+		}
 
-            logentry.App = xElement.Attributes.GetOrDefault("domain");
+		private void ReadDataAttributes (XmlReader xmlreader, Names names, LogEntry logentry)
+		{
+			var name = string.Empty;
+			var val = string.Empty;
+			if (xmlreader.HasAttributes) {
+				while (xmlreader.MoveToNextAttribute()) {
+					if (Object.ReferenceEquals (xmlreader.LocalName, names.name)) {
+						name = xmlreader.Value;
+					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.value)) {
+						val = xmlreader.Value;
+					} else {
+						throw new NotImplementedException (xmlreader.LocalName);
+					}
+				}
 
-            #region get level
-
-            ////////////////////////////////////////////////////////////////////////////////
-            logentry.Level = xElement.Attributes.GetOrDefault("level");
-            logentry.Image = ParseImageType(logentry.Level);
-            ////////////////////////////////////////////////////////////////////////////////
-
-            #endregion
-
-            #region read xml
-
-            var elements = xElement.ChildNodes;
-            foreach (XmlNode element in elements)
-            {
-                var name = element.Name;
-                if (element.NodeType == XmlNodeType.Text)
-                {
-                    continue;
-                }
-                var split = name.Split(':');
-                if (split.Length <= 1) { throw new Exception("Name: " + name); }
-                switch (split[1])
-                {
-                    case "message":
-                        {
-                            logentry.Message = element.InnerText;
-                            break;
-                        }
-                    case "properties":
-                        {
-                            var properties = element.ChildNodes;
-
-                            foreach (XmlNode property in properties)
-                                switch (property.Attributes["name"].Value)
-                                {
-                                    case ("log4jmachinename"):
-                                        logentry.MachineName = property.Attributes.GetOrDefault("value");
-                                        break;
-                                    case ("log4net:HostName"):
-                                        logentry.HostName = property.Attributes.GetOrDefault("value");
-                                        break;
-                                    case ("log4net:UserName"):
-                                        logentry.UserName = property.Attributes.GetOrDefault("value");
-                                        break;
-                                    case ("log4japp"):
-                                        logentry.App = property.Attributes.GetOrDefault("value");
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(property.Attributes.GetOrDefault("name"));
-                                }
-
-                            break;
-                        }
-
-                    case "throwable":
-                    case "exception":
-                        {
-                            logentry.Throwable = element.InnerText;
-                            break;
-                        }
-                    case ("locationInfo"):
-                        {
-                            logentry.Class = element.Attributes.GetOrDefault("class");
-                            logentry.Method = element.Attributes.GetOrDefault("method");
-                            logentry.File = element.Attributes.GetOrDefault("file");
-                            logentry.Line = element.Attributes.GetOrDefault("line");
-                            break;
-                        }
-                    default:
-                        throw new NotImplementedException(element.Name);
-                }
-
-            }
-
-            #endregion
-
-            return logentry;
-        }
-
-
-
-        public static LogEntry.ImageType ParseImageType(string level)
-        {
-            switch (level)
-            {
-                case "ERROR":
-                    return LogEntry.ImageType.Error;
-                case "INFO":
-                    return LogEntry.ImageType.Info;
-                case "DEBUG":
-                    return LogEntry.ImageType.Debug;
-                case "WARN":
-                    return LogEntry.ImageType.Warn;
-                case "FATAL":
-                    return LogEntry.ImageType.Fatal;
-                default:
-                    return LogEntry.ImageType.Custom;
-            }
-        }
-    }
+				// move back to the element node that contains
+				// the attributes we just traversed
+				xmlreader.MoveToElement ();
+				switch (name) {
+				case ("log4jmachinename"):
+					logentry.MachineName = val;
+					break;
+				case ("log4net:HostName"):
+					logentry.HostName = val;
+					break;
+				case ("log4net:UserName"):
+					logentry.UserName = val;
+					break;
+				case ("log4japp"):
+					logentry.App = val;
+					break;
+				default:
+					throw new NotImplementedException (name);
+				}
+			}
+			
+		}
+	}
 }
