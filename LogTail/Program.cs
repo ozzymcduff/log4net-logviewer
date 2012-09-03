@@ -15,36 +15,80 @@ namespace LogTail
         {
             var files = new List<string>();
             int monitor = 0;
-            int lines = 10;
+            int? lines = null;
             var watch = false;
+			var help = false;
             var p = new OptionSet() {
-                { "f|file=",   v => { files.Add (v); } },
-                { "m|monitor=", v=> { monitor=Int32.Parse(v);}},
-                { "w|watch", v=> { watch = true;}},
-                { "l|lines=", v=> { lines=Int32.Parse(v);}}
+                { "f|file=",   v => { files.Add(v); } },
+				{ "m|monitor=", v => { monitor=Int32.Parse(v);}},
+                { "w|watch", v => { watch = true;}},
+                { "l|lines=", v => { lines=Int32.Parse(v);}},
+				{ "h|?|help", v => { help = true;}},
             };
-
-            if (args.Length > 0 && !(args[0].StartsWith("-") || args[0].StartsWith("/")))
-            {
-                files.Add(args[0]);
-            }
+			var detectedFiles = args
+				.Where(a=>!(a.StartsWith("-") || a.StartsWith("/")))
+			    .Where(a=> Uri.IsWellFormedUriString(a, UriKind.RelativeOrAbsolute))
+				.Where(a=> File.Exists(a));
+            files.AddRange(detectedFiles);
 
             p.Parse(args);
+			if (help)
+			{
+				Console.WriteLine(@"Usage:
+-f|file={a filename}
+	The file to watch, monitor or 
+
+-l|lines={tail x lines}	
+	Display the last x lines. Defaults to 10 lines. 
+
+-h|?|help
+	Display help
+
+For instance to :
+LogTail.exe logfile.xml
+LogTail.exe -file=logfile.xml
+");
+				return;
+			}
+			
             if (watch)
             {
-                Do(new Watcher(new FileWithPosition(files.Single())) { logentry = l => Console.WriteLine(l.Message) });
+                Do(new Watcher(new FileWithPosition(files.Single())) 
+				{ 
+					logentry = l => Console.WriteLine(l.Message) 
+				});
+				return;
             }
-            else if (monitor > 0)
+            if (monitor > 0)
             {
-                Do(new Poller(new FileWithPosition(files.Single()), monitor) { logentry = l => Console.WriteLine(l.Message) });
+                Do(new Poller(new FileWithPosition(files.Single()), monitor) 
+				{
+					logentry = l => Console.WriteLine(l.Message) 
+				});
+				return;
             }
-            else
-            {
-                TailFiles(lines, files);
-            }
+            
+            if (files.Any()){
+				TailFiles(lines??10, files);
+				return;
+			}
+			else
+			{
+				using (Stream stdin = Console.OpenStandardInput())
+				using (Stream stdout = Console.OpenStandardOutput())
+				using (StreamWriter writer = new  StreamWriter(stdout))
+				{
+					var items = new LogEntryParser().Parse(stdin).ToArray();
+					foreach (var logEntry in items.Skip(items.Count() - (lines??10)))
+                    {
+                        writer.WriteLine(logEntry.Message);
+                    }
+				}
+				return;
+			}
         }
 
-        private static void Do(ILogFileReader w) //int duration)
+        private static void Do(ILogFileReader w)
         {
             bool keepAlive = true;
             Thread workerThread = new Thread(w.Init);
