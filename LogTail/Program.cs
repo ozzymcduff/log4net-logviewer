@@ -58,6 +58,8 @@ namespace LogTail
 -l|lines={tail x lines}	
 	Display the last x lines. Defaults to 10 lines. 
 
+-y|layout={pattern layout syntax as defined in log4net.Layout.PatternLayout}
+
 -h|?|help
 	Display help
 
