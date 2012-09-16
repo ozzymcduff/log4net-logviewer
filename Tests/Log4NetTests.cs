@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using System.IO;
 using LogViewer;
+using log4net.Core;
+using log4net.Layout;
 
 namespace IntegrationTests
 {
@@ -44,18 +47,19 @@ username=""AWESOMEMACHINE\Administrator"">
                 Assert.That(entry.File, Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
             }
         }
-		[Test]
-		public void Parse3 ()
-		{
-			using (var s = new MemoryStream())
-			using (var w = new StreamWriter(s)) {
+        [Test]
+        public void Parse3()
+        {
+            using (var s = new MemoryStream())
+            using (var w = new StreamWriter(s))
+            {
 
-				w.Write(_buffer);
-				w.Flush ();
-				s.Position = 0;
-   
-				var entry = new LogEntryParser().Parse(s).Single ();
-				Assert.That(entry.Level, Is.EqualTo("ERROR"));
+                w.Write(_buffer);
+                w.Flush();
+                s.Position = 0;
+
+                var entry = new LogEntryParser().Parse(s).Single();
+                Assert.That(entry.Level, Is.EqualTo("ERROR"));
                 Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
                 Assert.That(entry.App, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
                 Assert.That(entry.Message, Is.EqualTo("msg"));
@@ -63,14 +67,14 @@ username=""AWESOMEMACHINE\Administrator"">
                 Assert.That(entry.Method, Is.EqualTo("TestLog"));
                 Assert.That(entry.Line, Is.EqualTo("19"));
                 Assert.That(entry.File, Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
-			}
-		}
+            }
+        }
         [Test]
         public void ParseStreamAtPosition()
         {
             long p = 0;
             var path = Path.GetTempFileName();
-            using (var s = new FileStream(path, 
+            using (var s = new FileStream(path,
                 FileMode.Truncate,
                 FileAccess.ReadWrite))
             using (var w = new StreamWriter(s))
@@ -81,7 +85,7 @@ username=""AWESOMEMACHINE\Administrator"">
                 var entry = new LogEntryParser().Parse(s).Single();// read written entry
                 p = s.Position;
             }
-            using (var s = new FileStream(path, 
+            using (var s = new FileStream(path,
                 FileMode.Append,
                 FileAccess.Write))
             using (var w = new StreamWriter(s))
@@ -90,7 +94,7 @@ username=""AWESOMEMACHINE\Administrator"">
                 w.Flush();
             }
 
-            using (var s = FileUtil.OpenReadOnly(path,position:p))
+            using (var s = FileUtil.OpenReadOnly(path, position: p))
             {
                 var entry = new LogEntryParser().Parse(s).Single();
                 Assert.That(entry.Level, Is.EqualTo("ERROR"));
@@ -126,6 +130,24 @@ username=""AWESOMEMACHINE\Administrator"">
                     new LogEntryParser().Parse(s);
                 }
             });
+        }
+        [Test]
+        public void Test()
+        {
+            var layout = new PatternLayout("%date [%thread] %-5level %logger - %message%newline");
+
+            var stringWriter = new StringWriter();
+            layout.Format(stringWriter, new LoggingEvent(new LoggingEventData
+                                                             {
+                                                                 Level = Level.Error,
+                                                                 Domain = "Domain",
+                                                                 Message = "msg",
+                                                                 ThreadName = "thread",
+                                                                 LoggerName = "logger",
+                                                                 TimeStamp = new DateTime(2001, 1, 1)
+                                                             }));
+            stringWriter.Flush();
+            Assert.That(stringWriter.ToString(), Is.EqualTo("2001-01-01 00:00:00,000 [thread] ERROR logger - msg" + Environment.NewLine));
         }
     }
 }

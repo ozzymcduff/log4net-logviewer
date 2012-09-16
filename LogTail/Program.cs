@@ -3,8 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LogViewer;
+#if NDESK_OPTIONS
 using NDesk.Options;
+#else
+using Mono.Options;
+#endif
 using System.Threading;
+using log4net.Core;
+using log4net.Layout;
 
 namespace LogTail
 {
@@ -17,6 +23,7 @@ namespace LogTail
             int monitor = 0;
             int? lines = null;
             var watch = false;
+            PatternLayout layout=null;
 			var help = false;
             var p = new OptionSet() {
                 { "f|file=",   v => { files.Add(v); } },
@@ -24,6 +31,7 @@ namespace LogTail
                 { "w|watch", v => { watch = true;}},
                 { "l|lines=", v => { lines=Int32.Parse(v);}},
 				{ "h|?|help", v => { help = true;}},
+                { "y|layout=",v=> { layout=new PatternLayout(v);}}
             };
 			var detectedFiles = args
 				.Where(a=>!(a.StartsWith("-") || a.StartsWith("/")))
@@ -32,6 +40,15 @@ namespace LogTail
             files.AddRange(detectedFiles);
 
             p.Parse(args);
+            Action<LogEntry> showentry;
+            if (null != layout)
+            {
+                showentry = l => layout.Format(Console.Out, new LoggingEvent(l.GetData()));
+            }
+            else
+            {
+                showentry = l => Console.WriteLine(l.Message);
+            }
 			if (help)
 			{
 				Console.WriteLine(@"Usage:
@@ -55,7 +72,7 @@ LogTail.exe -file=logfile.xml
             {
                 Do(new Watcher(new FileWithPosition(files.Single())) 
 				{ 
-					logentry = l => Console.WriteLine(l.Message) 
+					logentry = showentry 
 				});
 				return;
             }
@@ -63,13 +80,13 @@ LogTail.exe -file=logfile.xml
             {
                 Do(new Poller(new FileWithPosition(files.Single()), monitor) 
 				{
-					logentry = l => Console.WriteLine(l.Message) 
+					logentry = showentry 
 				});
 				return;
             }
             
             if (files.Any()){
-				TailFiles(lines??10, files);
+                TailFiles(lines ?? 10, files, showentry);
 				return;
 			}
 			else
@@ -99,7 +116,7 @@ LogTail.exe -file=logfile.xml
             workerThread.Join();
         }
 
-        private static void TailFiles(int lines, List<string> files)
+        private static void TailFiles(int lines, List<string> files, Action<LogEntry> showentry)
         {
             foreach (var fileName in files)
             {
@@ -109,7 +126,7 @@ LogTail.exe -file=logfile.xml
                         .ToArray();
                     foreach (var logEntry in items.Skip(items.Count() - lines))
                     {
-                        Console.WriteLine(logEntry.Message);
+                        showentry(logEntry);
                     }
                 }
             }

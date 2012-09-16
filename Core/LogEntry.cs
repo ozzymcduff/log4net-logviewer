@@ -1,4 +1,5 @@
 ﻿using System;
+using log4net.Core;
 
 namespace LogViewer
 {
@@ -65,6 +66,42 @@ namespace LogViewer
 			TimeStamp = new DateTime (1970, 1, 1, 0, 0, 0, 0);
 			Item = 0;
 		}
+        public LoggingEventData GetData()
+        {
+            return new LoggingEventData
+            {
+                Domain = App,
+                ExceptionString = Throwable,
+                UserName = UserName,
+                Level = GetLevel(Level),
+                LocationInfo = new LocationInfo (Class,Method,File,Line),
+                Message = Message,
+                TimeStamp = TimeStamp,
+                ThreadName = Thread, 
+                LoggerName = Logger, 
+                //Identity = ,
+                //Properties = 
+            };
+        }
 
+	    private Level GetLevel(string level)
+	    {
+            //Ugly
+            switch (level.ToUpper())
+            {
+                case "ERROR":
+                    return log4net.Core.Level.Error;
+                case "INFO":
+                    return log4net.Core.Level.Info;
+                case "DEBUG":
+                    return log4net.Core.Level.Debug;
+                case "WARN":
+                    return log4net.Core.Level.Warn;
+                case "FATAL":
+                    return log4net.Core.Level.Fatal;
+                default:
+                    throw new NotImplementedException(level);
+            }
+	    }
 	}
 }
