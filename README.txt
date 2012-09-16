@@ -32,3 +32,22 @@ The format of the log files are something like:
   <log4j:throwable>System.Exception: test</log4j:throwable>
   <log4j:locationInfo class="IntegrationTests.LogTests" method="TestLog" file="C:\projects\LogViewer\IntegrationTests\LogTests.cs" line="27" />
 </log4j:event>
+
+I've also made a small console application LogTail.exe. Usage:
+-f|file={a filename}
+  The file to watch, monitor or 
+
+-l|lines={tail x lines}	
+	Display the last x lines. Defaults to 10 lines. 
+
+-y|layout={pattern layout syntax as defined in log4net.Layout.PatternLayout}
+  For example: LogTail.exe logfile.xml -y="%date [%thread] %-5level %logger - %message%newline"
+
+-h|?|help
+	Display help
+
+For instance to :
+LogTail.exe logfile.xml
+LogTail.exe -file=logfile.xml
+
+
