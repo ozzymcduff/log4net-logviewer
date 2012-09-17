@@ -1,8 +1,6 @@
 using System.IO;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace LogViewer
 {
@@ -11,13 +9,16 @@ namespace LogViewer
         public static FileStream OpenReadOnly(string fileName, long position=0)
         {
             var s = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            if (position < s.Length)
+            if (position > 0)
             {
-                s.Position = position;
-            }
-            else 
-            {
-                throw new OutOfBoundsException();
+                if (position < s.Length)
+                {
+                    s.Position = position;
+                }
+                else
+                {
+                    throw new OutOfBoundsException();
+                }
             }
             return s;
         }
