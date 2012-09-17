@@ -37,6 +37,7 @@ namespace LogTail
 				.Where(a=>!(a.StartsWith("-") || a.StartsWith("/")))
 			    .Where(a=> Uri.IsWellFormedUriString(a, UriKind.RelativeOrAbsolute))
 				.Where(a=> File.Exists(a));
+            // does not seem to work. add tests
             files.AddRange(detectedFiles);
 
             p.Parse(args);
@@ -64,7 +65,7 @@ namespace LogTail
 	Display help
 
 For instance to :
-LogTail.exe logfile.xml
+LogTail.exe -f=logfile.xml
 LogTail.exe -file=logfile.xml
 ");
 				return;
@@ -93,6 +94,7 @@ LogTail.exe -file=logfile.xml
 			}
 			else
 			{
+                Console.WriteLine("No files, listening to standard input.");
 				using (Stream stdin = Console.OpenStandardInput())
 				using (Stream stdout = Console.OpenStandardOutput())
 				using (StreamWriter writer = new  StreamWriter(stdout))

@@ -205,20 +205,6 @@ namespace LogViewer
 				}
 				xmlreader.MoveToElement ();
 			}
-			
-			while (xmlreader.Read()) {
-				switch (xmlreader.NodeType) {
-				case XmlNodeType.Whitespace:
-					break;
-				case XmlNodeType.EndElement:
-					if (Object.ReferenceEquals (xmlreader.LocalName, names.locationinfo)) {
-						return;
-					}
-					break;
-				default:
-					throw new NotImplementedException ("2! " + xmlreader.NodeType);
-				}
-			}
 		}
 
 		private void ReadProperties (XmlReader xmlreader, Names names, LogEntry logentry)
