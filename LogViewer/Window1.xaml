@@ -95,7 +95,8 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="300"/>
                 <RowDefinition Height="130" />
-                <RowDefinition />
+                <RowDefinition Height="0*" />
+                <RowDefinition Height="256*" />
             </Grid.RowDefinitions>
             <GridSplitter Name="gridSplitter1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Grid.Row="0" Height="4">
                 <GridSplitter.Background>
@@ -162,7 +163,7 @@
                 </ListView>
             </Border>
             <!-- Data Fields and Tab Control  -->
-            <local:LogItemViewer Grid.Row="1" x:Name="logitemviewer"/>
+            <local:LogItemViewer Grid.Row="1" x:Name="logitemviewer" Margin="0,0,0,-1" Grid.RowSpan="3" />
 
         </Grid>
     </DockPanel>
