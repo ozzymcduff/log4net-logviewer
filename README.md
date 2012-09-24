@@ -31,8 +31,4 @@ For example:
     -h|?|help
 Display help
 
-For instance to :
-    LogTail.exe "logfile.xml"
-    LogTail.exe -file="logfile.xml"
-
 
