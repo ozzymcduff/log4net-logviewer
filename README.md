@@ -17,20 +17,22 @@ Refactored version of [logviewer](http://www.codeproject.com/KB/cs/logviewer.asp
 CLI usage
 ---------
 I've also made a small console application [LogTail.exe](./tree/master/LogTail). Usage:
--f|file={a filename}
-  The file to watch, monitor or 
 
--l|lines={tail x lines}	
-	Display the last x lines. Defaults to 10 lines. 
+    -f|file={a filename}
+The file to watch, monitor or 
 
--y|layout={pattern layout syntax as defined in log4net.Layout.PatternLayout}
-  For example: LogTail.exe logfile.xml -y="%date [%thread] %-5level %logger - %message%newline"
+    -l|lines={tail x lines}	
+Display the last x lines. Defaults to 10 lines. 
 
--h|?|help
-	Display help
+    -y|layout={pattern layout syntax as defined in log4net.Layout.PatternLayout}
+For example: 
+    LogTail.exe logfile.xml -y="%date [%thread] %-5level %logger - %message%newline"
+
+    -h|?|help
+Display help
 
 For instance to :
-LogTail.exe "logfile.xml"
-LogTail.exe -file="logfile.xml"
+    LogTail.exe "logfile.xml"
+    LogTail.exe -file="logfile.xml"
 
 
