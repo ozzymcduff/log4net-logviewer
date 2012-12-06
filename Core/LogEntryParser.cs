@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using log4net.Core;
 
 namespace LogViewer
 {
@@ -107,22 +108,30 @@ namespace LogViewer
 									var timestamp = xmlreader.Value;
 									if (!string.IsNullOrEmpty (timestamp)) {
 										double dSeconds;
-										logentry.TimeStamp = Double.TryParse (timestamp, out dSeconds)
-                                         ? _dt.AddMilliseconds (dSeconds).ToLocalTime ()
-                                         : DateTime.Parse (timestamp).ToLocalTime ();
+									    logentry.Data.TimeStamp = Double.TryParse (timestamp, out dSeconds)
+									                                  ? _dt.AddMilliseconds (dSeconds).ToLocalTime ()
+									                                  : DateTime.Parse (timestamp).ToLocalTime ();
 									}
-								} else if (Object.ReferenceEquals (xmlreader.LocalName, names.thread)) {
-									logentry.Thread = xmlreader.Value;
-								} else if (Object.ReferenceEquals (xmlreader.LocalName, names.domain)) {
-									logentry.App = xmlreader.Value;
-								} else if (Object.ReferenceEquals (xmlreader.LocalName, names.level)) {
-									logentry.Level = xmlreader.Value;
-									logentry.Image = LogEntryParser.ParseImageType (logentry.Level);
-								} else if (Object.ReferenceEquals (xmlreader.LocalName, names.logger)) {
-									logentry.Logger = xmlreader.Value;
-								} else if (Object.ReferenceEquals (xmlreader.LocalName, names.username)) {
-									logentry.UserName = xmlreader.Value;
-								} else {
+								} else if (Object.ReferenceEquals (xmlreader.LocalName, names.thread))
+								{
+								    logentry.Data.ThreadName = xmlreader.Value;
+								}
+								else if (Object.ReferenceEquals (xmlreader.LocalName, names.domain))
+								{
+								    logentry.Data.Domain = xmlreader.Value;
+								}
+								else if (Object.ReferenceEquals (xmlreader.LocalName, names.level)) {
+								    logentry.Data.Level = LogEntry.GetLevel(xmlreader.Value);
+								    logentry.Image = LogEntryParser.ParseImageType (logentry.Data.Level.Name);
+								} else if (Object.ReferenceEquals (xmlreader.LocalName, names.logger))
+								{
+								    logentry.Data.LoggerName = xmlreader.Value;
+								}
+								else if (Object.ReferenceEquals (xmlreader.LocalName, names.username))
+								{
+								    logentry.Data.UserName = xmlreader.Value;
+								}
+								else {
 									throw new NotImplementedException (xmlreader.LocalName);
 								}
 							}
@@ -151,12 +160,16 @@ namespace LogViewer
 				case XmlNodeType.Whitespace:
 					break;
 				case XmlNodeType.Element:
-					if (Object.ReferenceEquals (xmlreader.LocalName, names.message)) {
-						logentry.Message = xmlreader.ReadInnerXml ();
-					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.throwable)
-							|| Object.ReferenceEquals (xmlreader.LocalName, names.exception)) {
-						logentry.Throwable = xmlreader.ReadInnerXml ();
-					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.properties)) {
+					if (Object.ReferenceEquals (xmlreader.LocalName, names.message))
+					{
+					    logentry.Data.Message = xmlreader.ReadInnerXml ();
+					}
+					else if (Object.ReferenceEquals (xmlreader.LocalName, names.throwable)
+							|| Object.ReferenceEquals (xmlreader.LocalName, names.exception))
+					{
+					    logentry.Data.ExceptionString = xmlreader.ReadInnerXml ();
+					}
+					else if (Object.ReferenceEquals (xmlreader.LocalName, names.properties)) {
 						ReadProperties (xmlreader, names, logentry);
 					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.locationinfo)) {
 						ReadLocationInfo (xmlreader, names, logentry);
@@ -189,20 +202,25 @@ namespace LogViewer
 
 		private void ReadLocationInfo (XmlReader xmlreader, Names names, LogEntry logentry)
 		{
+            var className = string.Empty;
+            var methodName = string.Empty;
+            var fileName = string.Empty;
+            var lineNumber = string.Empty;
 			if (xmlreader.HasAttributes) {
 				while (xmlreader.MoveToNextAttribute()) {
 					if (Object.ReferenceEquals (xmlreader.LocalName, names.@class)) {
-						logentry.Class = xmlreader.Value;
+						className = xmlreader.Value;
 					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.method)) {
-						logentry.Method = xmlreader.Value;
+						methodName = xmlreader.Value;
 					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.file)) {
-						logentry.File = xmlreader.Value;
+						fileName = xmlreader.Value;
 					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.line)) {
-						logentry.Line = xmlreader.Value;
+                        lineNumber = xmlreader.Value;
 					} else {
 						throw new NotImplementedException (xmlreader.LocalName);
 					}
 				}
+                logentry.Data.LocationInfo = new LocationInfo(className, methodName, fileName, lineNumber);
 				xmlreader.MoveToElement ();
 			}
 		}
@@ -261,11 +279,11 @@ namespace LogViewer
 					logentry.HostName = val;
 					break;
 				case ("log4net:UserName"):
-					logentry.UserName = val;
-					break;
+				        logentry.Data.UserName = val;
+				        break;
 				case ("log4japp"):
-					logentry.App = val;
-					break;
+				        logentry.Data.Domain = val;
+				        break;
 				default:
 					throw new NotImplementedException (name);
 				}

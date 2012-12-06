@@ -37,10 +37,10 @@ username=""AWESOMEMACHINE\Administrator"">
                 w.Flush();
                 s.Position = 0;
                 var entry = new LogEntryParser().Parse(s).Single();
-                Assert.That(entry.Level, Is.EqualTo("ERROR"));
+                Assert.That(entry.Data.Level.Name, Is.EqualTo("ERROR"));
                 Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
-                Assert.That(entry.App, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
-                Assert.That(entry.Message, Is.EqualTo("msg"));
+                Assert.That(entry.Data.Domain, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
+                Assert.That(entry.Data.Message, Is.EqualTo("msg"));
                 Assert.That(entry.Class, Is.EqualTo("IntegrationTests.LogTests"));
                 Assert.That(entry.Method, Is.EqualTo("TestLog"));
                 Assert.That(entry.Line, Is.EqualTo("19"));
@@ -59,10 +59,10 @@ username=""AWESOMEMACHINE\Administrator"">
                 s.Position = 0;
 
                 var entry = new LogEntryParser().Parse(s).Single();
-                Assert.That(entry.Level, Is.EqualTo("ERROR"));
+                Assert.That(entry.Data.Level.Name, Is.EqualTo("ERROR"));
                 Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
-                Assert.That(entry.App, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
-                Assert.That(entry.Message, Is.EqualTo("msg"));
+                Assert.That(entry.Data.Domain, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
+                Assert.That(entry.Data.Message, Is.EqualTo("msg"));
                 Assert.That(entry.Class, Is.EqualTo("IntegrationTests.LogTests"));
                 Assert.That(entry.Method, Is.EqualTo("TestLog"));
                 Assert.That(entry.Line, Is.EqualTo("19"));
@@ -97,10 +97,10 @@ username=""AWESOMEMACHINE\Administrator"">
             using (var s = FileUtil.OpenReadOnly(path, position: p))
             {
                 var entry = new LogEntryParser().Parse(s).Single();
-                Assert.That(entry.Level, Is.EqualTo("ERROR"));
+                Assert.That(entry.Data.Level.Name, Is.EqualTo("ERROR"));
                 Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
-                Assert.That(entry.App, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
-                Assert.That(entry.Message, Is.EqualTo("msg"));
+                Assert.That(entry.Data.Domain, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
+                Assert.That(entry.Data.Message, Is.EqualTo("msg"));
                 Assert.That(entry.Class, Is.EqualTo("IntegrationTests.LogTests"));
                 Assert.That(entry.Method, Is.EqualTo("TestLog"));
                 Assert.That(entry.Line, Is.EqualTo("19"));

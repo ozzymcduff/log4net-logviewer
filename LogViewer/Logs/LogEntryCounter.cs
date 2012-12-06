@@ -24,7 +24,7 @@ namespace LogViewer
 
         private LogEntryLevelCount GetCount(IEnumerable<LogEntry> entries)
         {
-            var counts = entries.GroupBy(e => e.Level).Select(g => new KeyValuePair<string, int>(g.Key, g.Count()));
+            var counts = entries.GroupBy(e => e.Data.Level.Name).Select(g => new KeyValuePair<string, int>(g.Key, g.Count()));
             return new LogEntryLevelCount(counts);
         }
         private void Entries_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

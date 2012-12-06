@@ -5,7 +5,9 @@ namespace LogViewer
 {
 	public class LogEntry
 	{
-		public enum ImageType
+	    public LoggingEventData Data;
+
+	    public enum ImageType
 		{
 			Debug = 0,
 			Error = 1,
@@ -18,73 +20,51 @@ namespace LogViewer
 
 		public int Item { get; set; }
 
-		public DateTime TimeStamp { get; set; }
+	    public ImageType Image { get; set; }
 
-		public ImageType Image { get; set; }
+	    public string MachineName { get; set; }
 
-		public string Level { get; set; }
+	    public string HostName { get; set; }
 
-		public string Thread { get; set; }
-
-		public string Message { get; set; }
-
-		public string MachineName { get; set; }
-
-		public string UserName { get; set; }
-
-		public string HostName { get; set; }
-
-		public string App { get; set; }
-
-		public string Throwable { get; set; }
-
-		public string Class { get; set; }
-
-		public string Method { get; set; }
-
-		public string File { get; set; }
-
-		public string Line { get; set; }
-
-		public string Logger{ get; set; }
-
-		public LogEntry ()
-		{
-			Line = string.Empty;
-			File = string.Empty;
-			Method = string.Empty;
-			Class = string.Empty;
-			Throwable = string.Empty;
-			App = string.Empty;
-			HostName = string.Empty;
-			UserName = string.Empty;
-			MachineName = string.Empty;
-			Message = string.Empty;
-			Thread = string.Empty;
-			Level = string.Empty;
-			Image = ImageType.Custom;
-			TimeStamp = new DateTime (1970, 1, 1, 0, 0, 0, 0);
-			Item = 0;
-		}
-        public LoggingEventData GetData()
+        public string Class
         {
-            return new LoggingEventData
-            {
-                Domain = App,
-                ExceptionString = Throwable,
-                UserName = UserName,
-                Level = GetLevel(Level),
-                LocationInfo = new LocationInfo (Class,Method,File,Line),
-                Message = Message,
-                TimeStamp = TimeStamp,
-                ThreadName = Thread, 
-                LoggerName = Logger, 
-                //Identity = ,
-                //Properties = 
-            };
+            get { return Data.LocationInfo.ClassName; }
         }
 
-	    private Level GetLevel(string level)
+        public string Method
+        {
+            get { return Data.LocationInfo.MethodName; }
+        }
+
+        public string File
+        {
+            get { return Data.LocationInfo.FileName; }
+        }
+
+        public string Line
+        {
+            get { return Data.LocationInfo.LineNumber; }
+        }
+
+	    public LogEntry ()
+		{
+            this.Data = new LoggingEventData();
+		    Data.ExceptionString = string.Empty;
+		    Data.Domain = string.Empty;
+		    Data.UserName = string.Empty;
+		    Data.Message = string.Empty;
+		    Data.ThreadName = string.Empty;
+
+		    Image = ImageType.Custom;
+            //Should be Data.Properties
+            MachineName = string.Empty;
+            HostName = string.Empty;
+
+		    Data.TimeStamp = new DateTime (1970, 1, 1, 0, 0, 0, 0);
+		    Item = 0;
+		}
+
+	    public static Level GetLevel(string level)
 	    {
             //Ugly
             switch (level.ToUpper())

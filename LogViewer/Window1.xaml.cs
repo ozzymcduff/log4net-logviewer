@@ -171,7 +171,7 @@ namespace LogViewer
                     for (int i = CurrentIndex + 1; i < listView1.Items.Count; i++)
                     {
                         LogEntry item = (LogEntry)listView1.Items[i];
-                        if (item.Message.Contains(textBoxFind.Text))
+                        if (item.Data.Message.Contains(textBoxFind.Text))
                         {
                             listView1.SelectedIndex = i;
                             listView1.ScrollIntoView(listView1.SelectedItem);
@@ -188,7 +188,7 @@ namespace LogViewer
                     for (int i = CurrentIndex - 1; i > 0 && i < listView1.Items.Count; i--)
                     {
                         LogEntry item = (LogEntry)listView1.Items[i];
-                        if (item.Message.Contains(textBoxFind.Text))
+                        if (item.Data.Message.Contains(textBoxFind.Text))
                         {
                             listView1.SelectedIndex = i;
                             listView1.ScrollIntoView(listView1.SelectedItem);

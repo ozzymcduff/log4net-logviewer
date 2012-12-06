@@ -44,11 +44,11 @@ namespace LogTail
             Action<LogEntry> showentry;
             if (null != layout)
             {
-                showentry = l => layout.Format(Console.Out, new LoggingEvent(l.GetData()));
+                showentry = l => layout.Format(Console.Out, new LoggingEvent(l.Data));
             }
             else
             {
-                showentry = l => Console.WriteLine(l.Message);
+                showentry = l => Console.WriteLine(l.Data.Message);
             }
 			if (help)
 			{
@@ -102,7 +102,7 @@ LogTail.exe -file=logfile.xml
 					var items = new LogEntryParser().Parse(stdin).ToArray();
 					foreach (var logEntry in items.Skip(items.Count() - (lines??10)))
                     {
-                        writer.WriteLine(logEntry.Message);
+                        writer.WriteLine(logEntry.Data.Message);
                     }
 				}
 				return;
