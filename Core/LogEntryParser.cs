@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using log4net.Core;
+using log4net.Util;
 
 namespace LogViewer
 {
@@ -271,21 +272,18 @@ namespace LogViewer
 				// move back to the element node that contains
 				// the attributes we just traversed
 				xmlreader.MoveToElement ();
+                if (logentry.Data.Properties == null)
+                {
+                    logentry.Data.Properties = new PropertiesDictionary();
+                }
+			    logentry.Data.Properties[name] = val;
 				switch (name) {
-				case ("log4jmachinename"):
-					logentry.MachineName = val;
-					break;
-				case ("log4net:HostName"):
-					logentry.HostName = val;
-					break;
 				case ("log4net:UserName"):
 				        logentry.Data.UserName = val;
 				        break;
 				case ("log4japp"):
 				        logentry.Data.Domain = val;
 				        break;
-				default:
-					throw new NotImplementedException (name);
 				}
 			}
 			

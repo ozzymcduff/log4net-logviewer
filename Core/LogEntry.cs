@@ -22,9 +22,27 @@ namespace LogViewer
 
 	    public ImageType Image { get; set; }
 
-	    public string MachineName { get; set; }
+        public string MachineName 
+        {
+            get
+            {
+                var n = "log4jmachinename";
+                if (Data.Properties!=null && Data.Properties.Contains(n))
+                    return Data.Properties[n].ToString();
+                return null;
+            }
+        }
 
-	    public string HostName { get; set; }
+        public string HostName
+        {
+            get
+            {
+                var n = "log4net:HostName";
+                if (Data.Properties != null && Data.Properties.Contains(n))
+                    return Data.Properties[n].ToString();
+                return null;
+            }
+        }
 
         public string Class
         {
@@ -56,9 +74,6 @@ namespace LogViewer
 		    Data.ThreadName = string.Empty;
 
 		    Image = ImageType.Custom;
-            //Should be Data.Properties
-            MachineName = string.Empty;
-            HostName = string.Empty;
 
 		    Data.TimeStamp = new DateTime (1970, 1, 1, 0, 0, 0, 0);
 		    Item = 0;
