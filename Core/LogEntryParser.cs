@@ -35,21 +35,22 @@ namespace LogViewer
 			public Object @event;
 			public Object message;
 			public Object properties;
-			public Object data ;
-			public Object name ;
+			public Object data;
+            public Object ndc;
+			public Object name;
 			public Object @value;
 			public Object throwable;
-			public Object exception ;
-			public Object timestamp ;
-			public Object thread ;
-			public Object domain ;
-			public Object level ;
+			public Object exception;
+			public Object timestamp;
+			public Object thread;
+			public Object domain;
+			public Object level;
 			public Object logger;
 			public Object locationinfo;
-			public Object @class ;
-			public Object method ;
-			public Object file ;
-			public Object line ;
+			public Object @class;
+			public Object method;
+			public Object file;
+			public Object line;
 			public Object username;
 		}
 
@@ -79,6 +80,7 @@ namespace LogViewer
 			 message = xmlreader.NameTable.Add ("message"),
 			 properties = xmlreader.NameTable.Add ("properties"),
 			 data = xmlreader.NameTable.Add ("data"),
+             ndc = xmlreader.NameTable.Add("NDC"),
 			 name = xmlreader.NameTable.Add ("name"),
 			 @value = xmlreader.NameTable.Add ("value"),
 			 throwable = xmlreader.NameTable.Add ("throwable"),
@@ -175,8 +177,10 @@ namespace LogViewer
 					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.locationinfo)) {
 						ReadLocationInfo (xmlreader, names, logentry);
 					} else if (Object.ReferenceEquals (xmlreader.LocalName, names.data)) {
-						ReadDataAttributes (xmlreader, names, logentry);	
-					} else {
+						ReadDataAttributes (xmlreader, names, logentry);
+                    } else if (Object.ReferenceEquals(xmlreader.LocalName, names.ndc)) {
+                        ReadNDC(xmlreader, names, logentry);
+                    } else {
 						throw new NotImplementedException ("1! " + xmlreader.Name);
 					}
 					break;
@@ -198,7 +202,6 @@ namespace LogViewer
 				//break;
 				}
 			}
-			
 		}
 
 		private void ReadLocationInfo (XmlReader xmlreader, Names names, LogEntry logentry)
@@ -288,5 +291,32 @@ namespace LogViewer
 			}
 			
 		}
+
+        private void ReadNDC(XmlReader xmlreader, Names names, LogEntry logentry)
+        {
+            if (xmlreader.Read()){
+                switch (xmlreader.NodeType){
+                    case XmlNodeType.Whitespace:
+                        break;
+                    case XmlNodeType.Element:
+                        if (Object.ReferenceEquals(xmlreader.LocalName, names.ndc)){
+                        }
+                        else{
+                            throw new NotImplementedException("!");
+                        }
+                        break;
+                    case XmlNodeType.EndElement:
+                        if (Object.ReferenceEquals(xmlreader.LocalName, names.ndc)){
+                            return;
+                        }
+                        else{
+                            throw new NotImplementedException("! " + xmlreader.Name);
+                        }
+                        break;
+                    default:
+                        throw new NotImplementedException("! " + xmlreader.NodeType);
+                }
+            }
+        }
 	}
 }

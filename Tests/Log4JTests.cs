@@ -83,8 +83,45 @@ level=""ERROR"" thread=""7"">
 				Assert.That (entry.File, Is.EqualTo (@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
 			}
 		}
-		
-		[Test]
+
+        [Test]
+        public void Parse_with_empty_ndc_should_not_crash_parser()
+        {
+            //<log4j:NDC></log4j:NDC>
+
+            using (var s = new MemoryStream())
+            using (var w = new StreamWriter(s))
+            {
+
+                var line =
+                    @"<log4j:event 
+logger=""IntegrationTests.LogTests"" 
+timestamp=""1300909721869"" 
+level=""ERROR"" thread=""7"">
+<log4j:NDC></log4j:NDC>
+<log4j:message>msg</log4j:message>
+<log4j:properties>
+	<log4j:data name=""log4net:UserName"" value=""AWESOMEMACHINE\Administrator"" />
+	<log4j:data name=""log4jmachinename"" value=""AWESOMEMACHINE"" />
+	<log4j:data name=""log4japp"" value=""IsolatedAppDomainHost: IntegrationTests"" />
+	<log4j:data name=""log4net:HostName"" value=""AWESOMEMACHINE"" />
+</log4j:properties>
+<log4j:throwable>System.Exception: test</log4j:throwable>
+<log4j:locationInfo 
+	class=""IntegrationTests.LogTests"" method=""TestLog"" 
+	file=""C:\projects\LogViewer\IntegrationTests\LogTests.cs"" 
+	line=""27"" /></log4j:event>";
+
+                w.Write(line);
+                w.Flush();
+                s.Position = 0;
+
+                var entry = new LogEntryParser().Parse(s).Single();
+                Assert.That(entry.Data.Level.Name, Is.EqualTo("ERROR"));
+            }
+        }
+
+	    [Test]
 		public void ParseStream ()
 		{
 			using (var s = new MemoryStream())
