@@ -309,10 +309,7 @@ namespace LogViewer
                         if (Object.ReferenceEquals(xmlreader.LocalName, names.ndc)){
                             return;
                         }
-                        else{
-                            throw new NotImplementedException("! " + xmlreader.Name);
-                        }
-                        break;
+                        throw new NotImplementedException("! " + xmlreader.Name);
                     default:
                         throw new NotImplementedException("! " + xmlreader.NodeType);
                 }
