@@ -6,7 +6,16 @@ namespace LogViewer
 	public class LogEntry
 	{
 	    public LoggingEventData Data;
-
+        public string Identity
+        {
+            get
+            {
+                var n = "log4net:Identity";
+                if (Data.Properties != null && Data.Properties.Contains(n))
+                    return Data.Properties[n].ToString();
+                return null;
+            }
+        }
 	    public enum ImageType
 		{
 			Debug = 0,
