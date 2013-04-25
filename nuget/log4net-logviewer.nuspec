@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>log4net-logviewer</id>
+    <title>log4net-logviewer</title>
+    <version>1.0.0</version>
+    <authors>Oskar Gewalli</authors>
+    <owners>Oskar Gewalli</owners>
+    <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/wallymathieu/log4net-logviewer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description></description>
+    <copyright>Copyright 2013</copyright>
+    <references>
+      <reference file="log4net-logviewer.core.dll" />
+    </references>
+  </metadata>
+</package>
