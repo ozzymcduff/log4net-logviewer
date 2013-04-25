@@ -9,10 +9,13 @@
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/wallymathieu/log4net-logviewer</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description></description>
+    <description>Library that provides helper classes to read log4net logs.</description>
     <copyright>Copyright 2013</copyright>
     <references>
       <reference file="log4net-logviewer.core.dll" />
     </references>
+    <dependencies>
+        <dependency id="log4net" version="1.2.10" />
+    </dependencies>
   </metadata>
 </package>
