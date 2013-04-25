@@ -11,3 +11,8 @@ obj/
 _ReSharper*/
 TestResult.xml
 
+nuget/lib/
+nuget/tools/
+nuget/*.nupkg
+
+packages/
