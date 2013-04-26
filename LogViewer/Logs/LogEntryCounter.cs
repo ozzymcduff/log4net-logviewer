@@ -5,12 +5,13 @@ using System.Text;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using LogViewer.Logs;
 
 namespace LogViewer
 {
     class LogEntryCounter
     {
-        public LogEntryCounter(ObservableCollection<LogEntry> entries)
+        public LogEntryCounter(ObservableCollection<LogEntryViewModel> entries)
         {
             this.Entries = entries;
             Entries.CollectionChanged += Entries_CollectionChanged;
@@ -18,13 +19,13 @@ namespace LogViewer
             Count.Value = GetCount(Entries);
         }
 
-        private readonly ObservableCollection<LogEntry> Entries;
+        private readonly ObservableCollection<LogEntryViewModel> Entries;
         public Observable<LogEntryLevelCount> Count { get; private set; }
 
 
-        private LogEntryLevelCount GetCount(IEnumerable<LogEntry> entries)
+        private LogEntryLevelCount GetCount(IEnumerable<LogEntryViewModel> entries)
         {
-            var counts = entries.GroupBy(e => e.Data.Level.Name).Select(g => new KeyValuePair<string, int>(g.Key, g.Count()));
+            var counts = entries.GroupBy(e => e.Level).Select(g => new KeyValuePair<string, int>(g.Key, g.Count()));
             return new LogEntryLevelCount(counts);
         }
         private void Entries_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -33,8 +34,8 @@ namespace LogViewer
             {
                 case NotifyCollectionChangedAction.Add:
                     {
-                        var newItems = new List<LogEntry>();
-                        foreach (LogEntry item in e.NewItems)
+                        var newItems = new List<LogEntryViewModel>();
+                        foreach (LogEntryViewModel item in e.NewItems)
                         {
                             newItems.Add(item);
                         }
@@ -46,8 +47,8 @@ namespace LogViewer
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     {
-                        var removeItems = new List<LogEntry>();
-                        foreach (LogEntry item in e.OldItems)
+                        var removeItems = new List<LogEntryViewModel>();
+                        foreach (LogEntryViewModel item in e.OldItems)
                         {
                             removeItems.Add(item);
                         }
@@ -62,7 +63,7 @@ namespace LogViewer
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     {
-                        Count.Value = GetCount(new LogEntry[0]);
+                        Count.Value = GetCount(new LogEntryViewModel[0]);
                     }
                     break;
                 default:

@@ -142,6 +142,7 @@
     </Compile>
     <Compile Include="Infrastructure\Observable.cs" />
     <Compile Include="History\RegistryPersister.cs" />
+    <Compile Include="Logs\LogEntryViewModel.cs" />
     <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
       <SubType>Code</SubType>

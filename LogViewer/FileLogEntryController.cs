@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Windows.Threading;
 using System.Threading;
 using Timer = System.Timers.Timer;
+using LogViewer.Logs;
 
 namespace LogViewer
 {
@@ -30,7 +31,7 @@ namespace LogViewer
         }
         public FileLogEntryController()
         {
-            Entries = new ObservableCollection<LogEntry>();
+            Entries = new ObservableCollection<LogEntryViewModel>();
             ObservableFileName = new Observable<string>();
             wrappedDispatcher = new WrappedDispatcher(this.Dispatcher);
         }
@@ -70,9 +71,9 @@ namespace LogViewer
         }
         private void AddToEntries(LogEntry entry)
         {
-            Entries.Add(entry);
+            Entries.Add(new LogEntryViewModel(entry));
         }
-        public ObservableCollection<LogEntry> Entries { get; set; }
+        public ObservableCollection<LogEntryViewModel> Entries { get; set; }
         private LogEntryParser parser = new LogEntryParser();
         private void OutOfBounds() 
         {

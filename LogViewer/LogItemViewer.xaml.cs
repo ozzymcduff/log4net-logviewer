@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogViewer.Logs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,9 @@ namespace LogViewer
     /// </summary>
     public partial class LogItemViewer : UserControl
     {
-        public LogEntry Selected
+        public LogEntryViewModel Selected
         {
-            get { return (LogEntry)this.DataContext; }
+            get { return (LogEntryViewModel)this.DataContext; }
             set { this.DataContext = value; }
         }
         public LogItemViewer()

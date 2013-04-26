@@ -21,6 +21,7 @@ using System.Windows.Interop;
 using System.Reflection;
 using System.Threading;
 using System.Collections.ObjectModel;
+using LogViewer.Logs;
 
 
 namespace LogViewer
@@ -49,7 +50,7 @@ namespace LogViewer
             get { return filec.ObservableFileName; }
         }
 
-        public ObservableCollection<LogEntry> Entries
+        public ObservableCollection<LogEntryViewModel> Entries
         {
             get { return filec.Entries; }
         }
@@ -95,7 +96,7 @@ namespace LogViewer
 
         private void listView1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            LogEntry logentry = this.listView1.SelectedItem as LogEntry;
+            LogEntryViewModel logentry = this.listView1.SelectedItem as LogEntryViewModel;
             if (null != logentry)
             {
                 logitemviewer.Selected = logentry;
