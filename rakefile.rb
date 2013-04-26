@@ -30,6 +30,12 @@ namespace :logviewer do
         sh "..\\.nuget\\NuGet.exe pack log4net-logviewer.nuspec"
       end
     end
+    desc "install missing nuget packages"
+    task :packages do
+      FileList["**/packages.config"].each { |filepath|
+        sh ".\\.nuget\\NuGet.exe i #{filepath} -o ./packages"
+      }
+    end
   end
 
 
