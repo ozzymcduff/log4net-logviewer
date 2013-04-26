@@ -7,7 +7,7 @@
     ResizeMode="CanResizeWithGrip" 
     AllowDrop="True"
     Closing="Window_Closing">
-    <DockPanel Background="{DynamicResource Brush_HeaderBackground}">
+    <DockPanel>
         <Grid DockPanel.Dock="Top">
 
             <Grid.RowDefinitions>
@@ -20,7 +20,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Menu Grid.Column="0" Name="menu1" Height="22" HorizontalAlignment="Stretch" IsMainMenu="True">
-                    <MenuItem Header="_File" Foreground="White">
+                    <MenuItem Header="_File">
                         <MenuItem Header="_Open" Click="MenuFileOpen_Click" />
                         <MenuItem Header="_Recent" ItemsSource="{Binding Path=RecentFiles}">
                             <MenuItem.Resources>
@@ -38,7 +38,7 @@
                         </MenuItem>
                         <MenuItem Header="_Exit" Click="MenuFileExit_Click"/>
                     </MenuItem>
-                    <MenuItem Header="_About" Click="MenuAbout_Click" Foreground="White"/>
+                    <MenuItem Header="_About" Click="MenuAbout_Click" />
                 </Menu>
 
             </Grid>
@@ -51,24 +51,16 @@
                     </Grid.ColumnDefinitions>
                 </Grid>
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
-                    <Label Foreground="#FFC3C9E9"
-                           FontWeight="Normal"
-                           FontSize="16"
-                           FontFamily="Calibri"
-                           Content="Path:"/>
+                    <Label Content="Path:"/>
                     <TextBox Name="textboxFileName"
-                           Foreground="Orange"
                            FontWeight="Normal"
-                           FontSize="16"
-                           FontFamily="Calibri"
                            HorizontalAlignment="Stretch"
-                           Background="Transparent"                       
                            BorderThickness="0"
                            Margin="2,2,2,2" Width="400" Text="{Binding Value}" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Image Name="image2" Width="16" Height="16" Margin="2" Source="/LogViewer;component/Resources/Images/find.png" VerticalAlignment="Center"/>
-                    <Label Name="label3" Foreground="#FFC3C9E9" Content="Find:" VerticalAlignment="Center"/>
+                    <Label Name="label3" Content="Find:" VerticalAlignment="Center"/>
                     <TextBox Height="20" Name="textBoxFind" Width="120" VerticalAlignment="Center" AcceptsReturn="False" KeyDown="textBoxFind_KeyDown" />
                     <Button Height="23" Name="buttonFindNext" Width="27" Click="buttonFindNext_Click" Cursor="Hand" VerticalAlignment="Center">
                         <Button.Template>
@@ -88,7 +80,7 @@
                 <local:CountPanel Grid.Column="2" x:Name="countpanel" Orientation="Horizontal" HorizontalAlignment="Right" />
             </Grid>
         </Grid>
-        <StatusBar Height="23" DockPanel.Dock="Bottom" Foreground="#FFE9EEF0" Background="{DynamicResource Brush_StatusBarBackground}">
+        <StatusBar Height="23" DockPanel.Dock="Bottom">
             <StatusBarItem Content="Ready"/>
         </StatusBar>
         <Grid>
