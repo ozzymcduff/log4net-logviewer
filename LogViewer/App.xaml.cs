@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Shell;
 using System.Windows.Threading;
 using log4net;
+using LogViewer.Logs;
 
 namespace LogViewer
 {
@@ -14,7 +15,6 @@ namespace LogViewer
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public IEnumerable<string> Args { get; private set; }
-
         internal void AddFilenameToRecent(string filename)
         {
             JumpList.AddToRecentCategory(new JumpPath() { Path = filename });

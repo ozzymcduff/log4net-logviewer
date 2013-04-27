@@ -26,15 +26,11 @@ using LogViewer.Logs;
 
 namespace LogViewer
 {
-    /// <summary>
-    /// Interaction logic for Window1.xaml
-    /// </summary>
-    public partial class Window1 : Window
+    public partial class OverviewWindow : Window
     {
         private FileLogEntryController filec;
         private LogEntryCounter lcount;
         private RecentFileList recentFileList;
-        //private App app { get { return ((App)App.Current); } }
         private string fileName
         {
             get { return filec.FileName; }
@@ -45,6 +41,28 @@ namespace LogViewer
                 recentFileList.AddFilenameToRecent(value);
             }
         }
+        private LogItemWindow _currentLogItemWindow { get; set; }
+        public LogEntryViewModel Selected
+        {
+            get
+            {
+                return _currentLogItemWindow.Selected;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    _currentLogItemWindow.Selected = value;
+                    _currentLogItemWindow.Visibility = Visibility.Visible;
+                    _currentLogItemWindow.Activate();
+                }
+                else
+                {
+                    _currentLogItemWindow.Visibility = Visibility.Hidden;
+                }
+            }
+        }
+
         public Observable<string> ObservableFileName
         {
             get { return filec.ObservableFileName; }
@@ -62,7 +80,7 @@ namespace LogViewer
         {
             get { return recentFileList.FileList; }
         }
-        public Window1()
+        public OverviewWindow()
         {
             filec = new FileLogEntryController();
             lcount = new LogEntryCounter(filec.Entries);
@@ -76,7 +94,9 @@ namespace LogViewer
 
             recentFileList.MenuClick += (s, e) => OpenFile(e.Filepath);
             Title = string.Format("LogViewer  v.{0}", Assembly.GetExecutingAssembly().GetName().Version);
-            
+            _currentLogItemWindow = new LogItemWindow();
+            _currentLogItemWindow.InitializeComponent();
+
             this.Loaded+=new RoutedEventHandler(Window1_Loaded);
         }
 
@@ -99,7 +119,7 @@ namespace LogViewer
             LogEntryViewModel logentry = this.listView1.SelectedItem as LogEntryViewModel;
             if (null != logentry)
             {
-                logitemviewer.Selected = logentry;
+                Selected = logentry;
             }
         }
 
@@ -139,6 +159,8 @@ namespace LogViewer
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            if (null != this._currentLogItemWindow)
+                this._currentLogItemWindow.Close();
         }
 
         private void MenuFileOpen_Click(object sender, RoutedEventArgs e)
@@ -165,8 +187,8 @@ namespace LogViewer
                 {
                     for (int i = CurrentIndex + 1; i < listView1.Items.Count; i++)
                     {
-                        LogEntry item = (LogEntry)listView1.Items[i];
-                        if (item.Data.Message.Contains(textBoxFind.Text))
+                        LogEntryViewModel item = (LogEntryViewModel)listView1.Items[i];
+                        if (item.Message.Contains(textBoxFind.Text))
                         {
                             listView1.SelectedIndex = i;
                             listView1.ScrollIntoView(listView1.SelectedItem);
@@ -182,8 +204,8 @@ namespace LogViewer
                 {
                     for (int i = CurrentIndex - 1; i > 0 && i < listView1.Items.Count; i--)
                     {
-                        LogEntry item = (LogEntry)listView1.Items[i];
-                        if (item.Data.Message.Contains(textBoxFind.Text))
+                        LogEntryViewModel item = (LogEntryViewModel)listView1.Items[i];
+                        if (item.Message.Contains(textBoxFind.Text))
                         {
                             listView1.SelectedIndex = i;
                             listView1.ScrollIntoView(listView1.SelectedItem);

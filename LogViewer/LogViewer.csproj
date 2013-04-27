@@ -99,7 +99,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Window1.xaml">
+    <Page Include="LogItemWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OverviewWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -123,6 +127,9 @@
       <DependentUpon>CountPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="FileLogEntryController.cs" />
+    <Compile Include="LogItemWindow.xaml.cs">
+      <DependentUpon>LogItemWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Logs\LogEntryCounter.cs" />
     <Compile Include="Logs\LogEntryLevelCount.cs" />
     <Compile Include="LogItemViewer.xaml.cs">
@@ -131,8 +138,8 @@
     <Compile Include="Infrastructure\Observable.cs" />
     <Compile Include="History\RegistryPersister.cs" />
     <Compile Include="Logs\LogEntryViewModel.cs" />
-    <Compile Include="Window1.xaml.cs">
-      <DependentUpon>Window1.xaml</DependentUpon>
+    <Compile Include="OverviewWindow.xaml.cs">
+      <DependentUpon>OverviewWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

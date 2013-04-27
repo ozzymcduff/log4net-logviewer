@@ -1,4 +1,4 @@
-﻿<Window x:Class="LogViewer.Window1"
+﻿<Window x:Class="LogViewer.OverviewWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:LogViewer"
@@ -84,21 +84,10 @@
         </StatusBar>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="300"/>
-                <RowDefinition Height="130" />
-                <RowDefinition Height="0*" />
-                <RowDefinition Height="256*" />
+                <RowDefinition MinHeight="300"/>
             </Grid.RowDefinitions>
-            <GridSplitter Name="gridSplitter1" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Grid.Row="0" Height="4">
-                <GridSplitter.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="LightGray" Offset="0"/>
-                        <GradientStop Color="DarkGray" Offset="1"/>
-                    </LinearGradientBrush>
-                </GridSplitter.Background>
-            </GridSplitter>
             <!-- List View -->
-            <Border BorderThickness="4,4,4,4" Margin="0,0,0,10">
+            <Border BorderThickness="4,4,4,4" Margin="0,0,0,0">
                 <ListView Name="listView1" 
                       Grid.Row="0" 
                       ItemsSource= "{Binding ElementName=Window1, Path=Entries}" 
@@ -153,8 +142,6 @@
                     </ListView.View>
                 </ListView>
             </Border>
-            <!-- Data Fields and Tab Control  -->
-            <local:LogItemViewer Grid.Row="1" x:Name="logitemviewer" Margin="0,0,0,-1" Grid.RowSpan="3" />
 
         </Grid>
     </DockPanel>
