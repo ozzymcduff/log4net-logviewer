@@ -155,12 +155,6 @@ namespace LogViewer
             this.Close();
         }
 
-        private void MenuAbout_Click(object sender, RoutedEventArgs e)
-        {
-            About about = new About();
-            about.ShowDialog();
-        }
-
         private int CurrentIndex = 0;
 
         private void Find(int Direction)
