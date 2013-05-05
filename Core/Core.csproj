@@ -42,12 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Invoker.cs" />
-    <Compile Include="FileUtil.cs" />
+    <Compile Include="Infrastructure\FileUtil.cs" />
     <Compile Include="LogEntryParser.cs" />
     <Compile Include="LogEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Watcher.cs" />
+    <Compile Include="Infrastructure\Watcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

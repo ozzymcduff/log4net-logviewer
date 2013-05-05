@@ -19,26 +19,43 @@ namespace LogViewer
     /// </summary>
     public partial class LabelAndText : UserControl
     {
+
         public LabelAndText()
         {
-            this.DataContext = this;
             InitializeComponent();
+            System.Windows.Controls.Label l = this.label;
         }
 
         public String Label
         {
-            get { return (String)this.GetValue(LabelProperty); }
-            set { this.SetValue(LabelProperty, value); }
+            get { return (String)this.GetValue(LabelAndText.LabelProperty); }
+            set { this.SetValue(LabelAndText.LabelProperty, value); }
         }
         public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(
-          "Label", typeof(String), typeof(LabelAndText), new PropertyMetadata("Label"));
+          "Label", typeof(String), typeof(LabelAndText), 
+          new FrameworkPropertyMetadata((object)string.Empty, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,
+              new PropertyChangedCallback(LabelAndText.OnLabelChanged)));
+
+        private static void OnLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            LabelAndText ctrl = (LabelAndText)d;
+            ctrl.label.Content = (string)e.NewValue;
+        }
 
         public String Text 
         {
-            get { return (String)this.GetValue(TextProperty); }
-            set { this.SetValue(TextProperty, value); }
+            get { return (String)this.GetValue(LabelAndText.TextProperty); }
+            set { this.SetValue(LabelAndText.TextProperty, value); }
         }
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-          "Text",typeof(String), typeof(LabelAndText), new PropertyMetadata("Text"));
+          "Text", typeof(String), typeof(LabelAndText),
+          new FrameworkPropertyMetadata((object)string.Empty, FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,
+              new PropertyChangedCallback(LabelAndText.OnTextChanged)));
+
+        private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            LabelAndText ctrl = (LabelAndText)d;
+            ctrl.text.Text = (string)e.NewValue;
+        }
     }
 }

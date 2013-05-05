@@ -6,6 +6,7 @@ using NUnit.Framework;
 using LogViewer;
 using System.IO;
 using System.Threading;
+using LogViewer.Infrastructure;
 namespace IntegrationTests
 {
     [TestFixture]

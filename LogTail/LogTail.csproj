@@ -45,20 +45,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Core\FileUtil.cs">
-      <Link>FileUtil.cs</Link>
+    <Compile Include="..\Core\Infrastructure\FileUtil.cs">
+      <Link>Infrastructure\FileUtil.cs</Link>
     </Compile>
-    <Compile Include="..\Core\Invoker.cs">
-      <Link>Invoker.cs</Link>
+    <Compile Include="..\Core\Infrastructure\Watcher.cs">
+      <Link>Infrastructure\Watcher.cs</Link>
     </Compile>
     <Compile Include="..\Core\LogEntry.cs">
       <Link>LogEntry.cs</Link>
     </Compile>
     <Compile Include="..\Core\LogEntryParser.cs">
       <Link>LogEntryParser.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Watcher.cs">
-      <Link>Watcher.cs</Link>
     </Compile>
     <Compile Include="..\ndesk-options-mirror\src\NDesk.Options\NDesk.Options\Options.cs">
       <Link>Options.cs</Link>

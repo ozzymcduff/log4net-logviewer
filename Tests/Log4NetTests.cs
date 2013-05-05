@@ -5,6 +5,7 @@ using System.IO;
 using LogViewer;
 using log4net.Core;
 using log4net.Layout;
+using LogViewer.Infrastructure;
 
 namespace IntegrationTests
 {

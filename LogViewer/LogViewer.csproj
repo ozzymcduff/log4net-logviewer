@@ -87,11 +87,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="..\Core\Invoker.cs">
-      <Link>Invoker.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Watcher.cs">
-      <Link>Watcher.cs</Link>
+    <Compile Include="..\Core\Infrastructure\Watcher.cs">
+      <Link>Infrastructure\Watcher.cs</Link>
     </Compile>
     <Compile Include="Infrastructure\ApplicationAttributes.cs" />
     <Compile Include="History\RecentFile.cs" />
@@ -113,14 +110,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="LogListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="OverviewWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="..\Core\FileUtil.cs">
-      <Link>FileUtil.cs</Link>
+    <Compile Include="..\Core\Infrastructure\FileUtil.cs">
+      <Link>Infrastructure\FileUtil.cs</Link>
     </Compile>
     <Compile Include="..\Core\LogEntry.cs">
       <Link>Logs\LogEntry.cs</Link>
@@ -136,21 +137,24 @@
     <Compile Include="CountPanel.xaml.cs">
       <DependentUpon>CountPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FileLogEntryController.cs" />
+    <Compile Include="Model\FileLogEntryController.cs" />
     <Compile Include="LabelAndText.xaml.cs">
       <DependentUpon>LabelAndText.xaml</DependentUpon>
     </Compile>
     <Compile Include="LogItemWindow.xaml.cs">
       <DependentUpon>LogItemWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Logs\LogEntryCounter.cs" />
-    <Compile Include="Logs\LogEntryLevelCount.cs" />
+    <Compile Include="LogListView.xaml.cs">
+      <DependentUpon>LogListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\LogEntryCounter.cs" />
+    <Compile Include="Model\LogEntryLevelCount.cs" />
     <Compile Include="LogItemViewer.xaml.cs">
       <DependentUpon>LogItemViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Observable.cs" />
     <Compile Include="History\RegistryPersister.cs" />
-    <Compile Include="Logs\LogEntryViewModel.cs" />
+    <Compile Include="Model\LogEntryViewModel.cs" />
     <Compile Include="OverviewWindow.xaml.cs">
       <DependentUpon>OverviewWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

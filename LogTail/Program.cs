@@ -11,6 +11,7 @@ using Mono.Options;
 using System.Threading;
 using log4net.Core;
 using log4net.Layout;
+using LogViewer.Infrastructure;
 
 namespace LogTail
 {

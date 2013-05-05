@@ -49,6 +49,5 @@ namespace LogViewer
         {
             return y.Select(c => c.Key).Union(x.Select(c => c.Key));
         }
-
     }
 }

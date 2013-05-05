@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.IO;
 
-namespace LogViewer
+namespace LogViewer.Infrastructure
 {
     public interface ILogFileReader : IDisposable
     {
@@ -14,6 +14,17 @@ namespace LogViewer
         void Init();
         void Read();
         void Reset();
+    }
+    public interface IInvoker
+    {
+        void Invoke(Action run);
+    }
+    public class DirectInvoker : IInvoker
+    {
+        public void Invoke(Action run)
+        {
+            run();
+        }
     }
     public abstract class LogFileReaderBase : ILogFileReader
     {
@@ -40,9 +51,16 @@ namespace LogViewer
         {
             invoker.Invoke(() =>
             {
-                foreach (var item in File.Read(parser))
+                try
                 {
-                    logentry(item);
+                    foreach (var item in File.Read(parser))
+                    {
+                        logentry(item);
+                    }
+                }
+                catch (OutOfBoundsException)
+                {
+                    outOfBounds();
                 }
             });
         }

@@ -56,21 +56,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileTests.cs" />
+    <Compile Include="Infrastructure\FileTests.cs" />
     <Compile Include="Log4JTests.cs" />
     <Compile Include="Log4NetTests.cs" />
+    <Compile Include="LogViewerGui\FileLogEntryControllerTests.cs" />
+    <Compile Include="LogViewerGui\LogEntryCounterTests.cs" />
+    <Compile Include="LogViewerGui\LogEntryLevelCountTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestExtensions.cs" />
     <Compile Include="WatcherTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{9A1C5199-FCDA-428F-9D2A-067CE8A02790}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Log4Net.config">
@@ -80,6 +77,12 @@
     <Content Include="test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LogViewer\LogViewer.csproj">
+      <Project>{9484e0f0-3ab8-4dca-8a91-8e0fac3f57e7}</Project>
+      <Name>LogViewer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

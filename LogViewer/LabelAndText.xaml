@@ -5,12 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="100"
-             DataContext="{Binding RelativeSource={RelativeSource Self}}"
              >
     <StackPanel Orientation="Horizontal">
-        <Label Name="label" Content="{Binding Path=Label}" />
+        <Label Name="label" TextElement.FontWeight="Bold" />
         <Grid>
-            <TextBlock Name="text" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding Path=Text}" />
+            <TextBlock Name="text" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
         </Grid>
     </StackPanel>
 </UserControl>
