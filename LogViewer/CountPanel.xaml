@@ -10,7 +10,7 @@
         <local:NonZeroToVisibilityConverter x:Key="NonZeroToVisConverter" />
     </UserControl.Resources>
 
-    <StackPanel x:Name="countpanel" Orientation="Horizontal" Background="{DynamicResource Brush_HeaderBackground}" Visibility="{Binding Value.Total, Converter={StaticResource NonZeroToVisConverter}}">
+    <StackPanel x:Name="countpanel" Orientation="Horizontal" Visibility="{Binding Value.Total, Converter={StaticResource NonZeroToVisConverter}}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10"/>
