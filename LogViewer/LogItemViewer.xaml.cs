@@ -29,7 +29,5 @@ namespace LogViewer
         {
             InitializeComponent();
         }
-        //    this.textBoxTimeStamp.Text = string.Format("{0} {1}", logentry.TimeStamp.ToShortDateString(), logentry.TimeStamp.ToShortTimeString());
-
     }
 }

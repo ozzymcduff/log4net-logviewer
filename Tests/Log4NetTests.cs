@@ -41,10 +41,10 @@ username=""AWESOMEMACHINE\Administrator"">
                 Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
                 Assert.That(entry.Data.Domain, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
                 Assert.That(entry.Data.Message, Is.EqualTo("msg"));
-                Assert.That(entry.Class, Is.EqualTo("IntegrationTests.LogTests"));
-                Assert.That(entry.Method, Is.EqualTo("TestLog"));
-                Assert.That(entry.Line, Is.EqualTo("19"));
-                Assert.That(entry.File, Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
+                Assert.That(entry.Class(), Is.EqualTo("IntegrationTests.LogTests"));
+                Assert.That(entry.Method(), Is.EqualTo("TestLog"));
+                Assert.That(entry.Line(), Is.EqualTo("19"));
+                Assert.That(entry.File(), Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
             }
         }
         [Test]
@@ -63,10 +63,10 @@ username=""AWESOMEMACHINE\Administrator"">
                 Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
                 Assert.That(entry.Data.Domain, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
                 Assert.That(entry.Data.Message, Is.EqualTo("msg"));
-                Assert.That(entry.Class, Is.EqualTo("IntegrationTests.LogTests"));
-                Assert.That(entry.Method, Is.EqualTo("TestLog"));
-                Assert.That(entry.Line, Is.EqualTo("19"));
-                Assert.That(entry.File, Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
+                Assert.That(entry.Class(), Is.EqualTo("IntegrationTests.LogTests"));
+                Assert.That(entry.Method(), Is.EqualTo("TestLog"));
+                Assert.That(entry.Line(), Is.EqualTo("19"));
+                Assert.That(entry.File(), Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
             }
         }
         [Test]
@@ -101,10 +101,10 @@ username=""AWESOMEMACHINE\Administrator"">
                 Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
                 Assert.That(entry.Data.Domain, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
                 Assert.That(entry.Data.Message, Is.EqualTo("msg"));
-                Assert.That(entry.Class, Is.EqualTo("IntegrationTests.LogTests"));
-                Assert.That(entry.Method, Is.EqualTo("TestLog"));
-                Assert.That(entry.Line, Is.EqualTo("19"));
-                Assert.That(entry.File, Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
+                Assert.That(entry.Class(), Is.EqualTo("IntegrationTests.LogTests"));
+                Assert.That(entry.Method(), Is.EqualTo("TestLog"));
+                Assert.That(entry.Line(), Is.EqualTo("19"));
+                Assert.That(entry.File(), Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
             }
         }
         [Test]

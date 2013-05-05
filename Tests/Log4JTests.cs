@@ -78,11 +78,11 @@ level=""ERROR"" thread=""7"">
                 Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
                 Assert.That(entry.Data.Domain, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
                 Assert.That(entry.Data.Message, Is.EqualTo("msg"));
-                Assert.That(entry.Class, Is.EqualTo("IntegrationTests.LogTests"));
+                Assert.That(entry.Class(), Is.EqualTo("IntegrationTests.LogTests"));
                 Assert.That(entry.Data.ExceptionString, Is.EqualTo("System.Exception: test"));
-                Assert.That(entry.Method, Is.EqualTo("TestLog"));
-                Assert.That(entry.Line, Is.EqualTo("27"));
-                Assert.That(entry.File, Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
+                Assert.That(entry.Method(), Is.EqualTo("TestLog"));
+                Assert.That(entry.Line(), Is.EqualTo("27"));
+                Assert.That(entry.File(), Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
             }
         }
 
@@ -169,11 +169,10 @@ level=""ERROR"" thread=""7"">
                 Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
                 Assert.That(entry.Data.Domain, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
                 Assert.That(entry.Data.Message, Is.EqualTo("test"));
-                Assert.That(entry.Class, Is.EqualTo("IntegrationTests.LogTests"));
-                Assert.That(entry.Method, Is.EqualTo("TestLog"));
-                Assert.That(entry.Line, Is.EqualTo("18"));
-                Assert.That(entry.File, Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
-
+                Assert.That(entry.Class(), Is.EqualTo("IntegrationTests.LogTests"));
+                Assert.That(entry.Method(), Is.EqualTo("TestLog"));
+                Assert.That(entry.Line(), Is.EqualTo("18"));
+                Assert.That(entry.File(), Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
             }
         }
 

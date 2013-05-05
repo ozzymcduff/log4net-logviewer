@@ -57,10 +57,7 @@ namespace LogViewer
                     }
                     break;
                 case NotifyCollectionChangedAction.Replace:
-                    {
                         throw new NotImplementedException();
-                    }
-                    break;
                 case NotifyCollectionChangedAction.Reset:
                     {
                         Count.Value = GetCount(new LogEntryViewModel[0]);

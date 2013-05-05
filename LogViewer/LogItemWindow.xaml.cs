@@ -21,6 +21,13 @@ namespace LogViewer
         public LogItemWindow()
         {
             InitializeComponent();
+            this.Closing +=LogItemWindow_Closing;
+        }
+
+        private void LogItemWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            this.Visibility = System.Windows.Visibility.Hidden;
         }
 
         public Logs.LogEntryViewModel Selected 

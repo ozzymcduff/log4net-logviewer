@@ -61,22 +61,8 @@
                     <Image Name="image2" Width="16" Height="16" Margin="2" Source="/LogViewer;component/Resources/Images/find.png" VerticalAlignment="Center"/>
                     <Label Name="label3" Content="Find:" VerticalAlignment="Center"/>
                     <TextBox Height="20" Name="textBoxFind" Width="120" VerticalAlignment="Center" AcceptsReturn="False" KeyDown="textBoxFind_KeyDown" />
-                    <Button Height="23" Name="buttonFindNext" Width="27" Click="buttonFindNext_Click" Cursor="Hand" VerticalAlignment="Center">
-                        <Button.Template>
-                            <ControlTemplate>
-                                <Image Width="16" Height="16" ToolTip="Find Next" Source="/LogViewer;component/Resources/Images/arrow_right.png" />
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-                    <Button Height="23" Name="buttonFindPrevious" Width="23" Click="buttonFindPrevious_Click" Cursor="Hand" VerticalAlignment="Center">
-                        <Button.Template>
-                            <ControlTemplate>
-                                <Image Width="16" Height="16" ToolTip="Find Previous" Source="/LogViewer;component/Resources/Images/arrow_left.png" />
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
+                    <local:CountPanel Grid.Column="2" x:Name="countpanel" Orientation="Horizontal" HorizontalAlignment="Right" />
                 </StackPanel>
-                <local:CountPanel Grid.Column="2" x:Name="countpanel" Orientation="Horizontal" HorizontalAlignment="Right" />
             </Grid>
         </Grid>
         <StatusBar Height="23" DockPanel.Dock="Bottom">
@@ -88,40 +74,40 @@
             </Grid.RowDefinitions>
             <!-- List View -->
             <Border BorderThickness="4,4,4,4" Margin="0,0,0,0">
-                <ListView Name="listView1" 
+                <ListView Name="logitemsView" 
                       Grid.Row="0" 
                       ItemsSource= "{Binding ElementName=Window1, Path=Entries}" 
                       AllowDrop="True"
-                      SelectionChanged="listView1_SelectionChanged" 
-                      Drop="listView1_Drop">
+                      SelectionChanged="logitems_SelectionChanged" 
+                      Drop="logitems_Drop">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="{x:Type ListViewItem}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Level}" Value="ERROR">
                                     <Setter Property="Background" Value="Red"/>
+                                    <Setter Property="Foreground" Value="White"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Level}" Value="INFO">
                                     <Setter Property="Background" Value="Green"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Level}" Value="DEBUG">
                                     <Setter Property="Background" Value="LightGray"/>
+                                    <Setter Property="Foreground" Value="Black"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Level}" Value="WARN">
                                     <Setter Property="Background" Value="Yellow"/>
+                                    <Setter Property="Foreground" Value="Black"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Level}" Value="FATAL">
                                     <Setter Property="Background" Value="Red"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Level}" Value="COMPRESSION">
-                                    <Setter Property="Background" Value="Gainsboro" />
+                                    <Setter Property="Foreground" Value="White"/>
                                 </DataTrigger>
                             </Style.Triggers>
                             <Setter Property="Height" Value="20"/>
                         </Style>
                     </ListView.ItemContainerStyle>
                     <ListView.View>
-                        <GridView x:Name="GridView1">
-                            <GridViewColumn Header="Item" DisplayMemberBinding="{Binding Item}"  />
+                        <GridView x:Name="LogItemsGrid">
                             <GridViewColumn Header="TimeStamp" DisplayMemberBinding="{Binding TimeStamp}"/>
                             <GridViewColumn Header="">
                                 <GridViewColumn.CellTemplate>
@@ -132,7 +118,7 @@
                             </GridViewColumn>
                             <GridViewColumn Header="Level" DisplayMemberBinding="{Binding Level}"/>
                             <GridViewColumn Header="Thread" DisplayMemberBinding="{Binding Thread}"/>
-                            <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Message}" Width="250" />
+                            <GridViewColumn Header="Message" DisplayMemberBinding="{Binding FirstPartOfMessage}" Width="250" />
                             <GridViewColumn Header="MachineName" DisplayMemberBinding="{Binding MachineName}"/>
                             <GridViewColumn Header="HostName" DisplayMemberBinding="{Binding HostName}"/>
                             <GridViewColumn Header="UserName" DisplayMemberBinding="{Binding UserName}"/>

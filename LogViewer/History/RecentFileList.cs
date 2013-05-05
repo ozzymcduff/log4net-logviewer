@@ -18,9 +18,7 @@ namespace LogViewer
 
         public int MaxNumberOfFiles { get; set; }
 
-
         public event EventHandler<MenuClickEventArgs> MenuClick;
-
 
         public RecentFileList(IPersist persister)
         {

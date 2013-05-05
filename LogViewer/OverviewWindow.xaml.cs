@@ -87,26 +87,31 @@ namespace LogViewer
             recentFileList = new RecentFileList(new XmlPersister(ApplicationAttributes.Get()));
             InitializeComponent();
             menu1.DataContext = this;
-            listView1.ItemsSource = Entries;
+            logitemsView.ItemsSource = Entries;
             countpanel.DataContext = Count;
             textboxFileName.DataContext = filec.ObservableFileName;
-            listView1.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ListView1_HeaderClicked));
+            logitemsView.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(logitemsView_HeaderClicked));
 
             recentFileList.MenuClick += (s, e) => OpenFile(e.Filepath);
             Title = string.Format("LogViewer  v.{0}", Assembly.GetExecutingAssembly().GetName().Version);
             _currentLogItemWindow = new LogItemWindow();
             _currentLogItemWindow.InitializeComponent();
 
-            this.Loaded+=new RoutedEventHandler(Window1_Loaded);
+            this.Loaded+=new RoutedEventHandler(OverviewWindow_Loaded);
+            this.Closed += OverviewWindow_Closed;
         }
 
+        void OverviewWindow_Closed(object sender, EventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
 
         private void OpenFile(string fileName)
         {
             this.fileName = fileName;
         }
 
-        private void Window1_Loaded(object sender, RoutedEventArgs args) 
+        private void OverviewWindow_Loaded(object sender, RoutedEventArgs args) 
         {
             if (((App)App.Current).Args.Any() && File.Exists(((App)App.Current).Args.First()))
             {
@@ -114,9 +119,9 @@ namespace LogViewer
             }
         }
 
-        private void listView1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void logitems_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            LogEntryViewModel logentry = this.listView1.SelectedItem as LogEntryViewModel;
+            LogEntryViewModel logentry = this.logitemsView.SelectedItem as LogEntryViewModel;
             if (null != logentry)
             {
                 Selected = logentry;
@@ -125,7 +130,7 @@ namespace LogViewer
 
         private ListSortDirection _Direction = ListSortDirection.Descending;
 
-        private void ListView1_HeaderClicked(object sender, RoutedEventArgs e)
+        private void logitemsView_HeaderClicked(object sender, RoutedEventArgs e)
         {
             GridViewColumnHeader header = e.OriginalSource as GridViewColumnHeader;
             ListView source = e.Source as ListView;
@@ -138,7 +143,7 @@ namespace LogViewer
             dataView.Refresh();
         }
 
-        private void listView1_Drop(object sender, DragEventArgs e)
+        private void logitems_Drop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -185,14 +190,14 @@ namespace LogViewer
             {
                 if (Direction == 0)
                 {
-                    for (int i = CurrentIndex + 1; i < listView1.Items.Count; i++)
+                    for (int i = CurrentIndex + 1; i < logitemsView.Items.Count; i++)
                     {
-                        LogEntryViewModel item = (LogEntryViewModel)listView1.Items[i];
+                        LogEntryViewModel item = (LogEntryViewModel)logitemsView.Items[i];
                         if (item.Message.Contains(textBoxFind.Text))
                         {
-                            listView1.SelectedIndex = i;
-                            listView1.ScrollIntoView(listView1.SelectedItem);
-                            ListViewItem lvi = listView1.ItemContainerGenerator.ContainerFromIndex(i) as ListViewItem;
+                            logitemsView.SelectedIndex = i;
+                            logitemsView.ScrollIntoView(logitemsView.SelectedItem);
+                            ListViewItem lvi = logitemsView.ItemContainerGenerator.ContainerFromIndex(i) as ListViewItem;
                             lvi.BringIntoView();
                             lvi.Focus();
                             CurrentIndex = i;
@@ -202,14 +207,14 @@ namespace LogViewer
                 }
                 else
                 {
-                    for (int i = CurrentIndex - 1; i > 0 && i < listView1.Items.Count; i--)
+                    for (int i = CurrentIndex - 1; i > 0 && i < logitemsView.Items.Count; i--)
                     {
-                        LogEntryViewModel item = (LogEntryViewModel)listView1.Items[i];
+                        LogEntryViewModel item = (LogEntryViewModel)logitemsView.Items[i];
                         if (item.Message.Contains(textBoxFind.Text))
                         {
-                            listView1.SelectedIndex = i;
-                            listView1.ScrollIntoView(listView1.SelectedItem);
-                            ListViewItem lvi = listView1.ItemContainerGenerator.ContainerFromIndex(i) as ListViewItem;
+                            logitemsView.SelectedIndex = i;
+                            logitemsView.ScrollIntoView(logitemsView.SelectedItem);
+                            ListViewItem lvi = logitemsView.ItemContainerGenerator.ContainerFromIndex(i) as ListViewItem;
                             lvi.BringIntoView();
                             lvi.Focus();
                             CurrentIndex = i;
@@ -218,16 +223,6 @@ namespace LogViewer
                     }
                 }
             }
-        }
-
-        private void buttonFindNext_Click(object sender, RoutedEventArgs e)
-        {
-            Find(0);
-        }
-
-        private void buttonFindPrevious_Click(object sender, RoutedEventArgs e)
-        {
-            Find(1);
         }
 
         private void textBoxFind_KeyDown(object sender, KeyEventArgs e)

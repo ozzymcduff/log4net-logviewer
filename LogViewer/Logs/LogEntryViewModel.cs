@@ -7,13 +7,32 @@ namespace LogViewer.Logs
 {
     public class LogEntryViewModel
     {
+        public static ImageType ParseImageType(string level)
+        {
+            switch (level)
+            {
+                case "ERROR":
+                    return ImageType.Error;
+                case "INFO":
+                    return ImageType.Info;
+                case "DEBUG":
+                    return ImageType.Debug;
+                case "WARN":
+                    return ImageType.Warn;
+                case "FATAL":
+                    return ImageType.Fatal;
+                default:
+                    return ImageType.Custom;
+            }
+        }
+	
         private readonly LogEntry _logentry;
         public LogEntryViewModel(LogEntry logentry)
         {
             _logentry = logentry;
         }
 
-        public LogViewer.LogEntry.ImageType Image { get { return _logentry.Image; } set { } }
+        public ImageType Image { get { return ParseImageType (_logentry.Data.Level.Name); } set { } }
 
         public string Level
         {
@@ -33,11 +52,6 @@ namespace LogViewer.Logs
         public DateTime TimeStamp
         {
             get { return _logentry.Data.TimeStamp; }
-            set { }
-        }
-        public int Item
-        {
-            get { return _logentry.Item; }
             set { }
         }
         public string HostName
@@ -80,11 +94,34 @@ namespace LogViewer.Logs
 
         public string File
         {
-            get { return LocationInfo().FileName; }
+            get 
+            {
+                const int MaxPathLength = 30;
+                return FileUtil.ShortenPathname(LocationInfo().FileName, MaxPathLength);
+            }
             set { }
+        }
+        public string FirstPartOfMessage { get { return FirstPartOf(_logentry.Data.Message); } set { } }
+
+        private string FirstPartOf(string p)
+        {
+            if (string.IsNullOrEmpty(p))
+                return string.Empty;
+            var firstline = p.Split(new[] { '\n', '\r' },StringSplitOptions.RemoveEmptyEntries)
+                .First();
+            return firstline;
         }
         public string Message { get { return _logentry.Data.Message; } set { } }
         public string Throwable { get { return _logentry.Data.ExceptionString; } set { } }
+    }
+    public enum ImageType
+    {
+        Debug = 0,
+        Error = 1,
+        Fatal = 2,
+        Info = 3,
+        Warn = 4,
+        Custom = 5
     }
 
 }

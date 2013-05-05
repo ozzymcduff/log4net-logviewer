@@ -9,71 +9,62 @@
     <UserControl.Resources>
         <local:ImageTypeToImageSourceConverter x:Key="ImageTypeToImageSourceConverter" />
     </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid  Margin="15,0,15,10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="10"/>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="10"/>
-            </Grid.RowDefinitions>
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal">
+            <Image Name="levelImage" Width="16" Height="16" Source="{Binding Image, Converter={StaticResource ImageTypeToImageSourceConverter}}" />
+            <ContentControl  Name="textBoxLevel" Content="{Binding Level}" />
+        </StackPanel>
 
-            <!-- Row 1-->
-            <Image Name="image1" Width="16" Height="16" Grid.Column="0" Grid.Row="1" Source="{Binding Image, Converter={StaticResource ImageTypeToImageSourceConverter}}" />
-            <TextBox Name="textBoxLevel" Height="23" Grid.Column="1" Grid.Row="1" Text="{Binding Level}" />
-            <Label Name="label1" Height="28" Grid.Column="2" Grid.Row="1">Time Stamp</Label>
-            <TextBox Name="textBoxTimeStamp" Height="23" Grid.Column="3" Grid.Row="1" Text="{Binding TimeStamp}" />
-            <Label Name="label2" Height="28" Grid.Column="4" Grid.Row="1">Machine Name</Label>
-            <TextBox Name="textBoxMachineName" Height="23" Grid.Column="5" Grid.Row="1" Text="{Binding MachineName}"/>
-            <Label Name="labelThread" Grid.Column="6" Grid.Row="1">Thread</Label>
-            <TextBox Name="textBoxThread" Grid.Column="7" Grid.Row="1" Text="{Binding Thread}"/>
+        <StackPanel Orientation="Horizontal">
+            <Label Name="labelMessage">Message:</Label>
+            <Grid>
+                <TextBlock Name="textBoxMessage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding Message}" />
+            </Grid>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Label Name="labelThrowable">Throwable:</Label>
+            <Grid>
+                <TextBlock Name="textBoxThrowable" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding Throwable}"/>
+            </Grid>
+        </StackPanel>
+        <GroupBox Header="Location">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <!--<local:LabelAndText x:Name="classL" Label="Class:" Text="{Binding Class}" />-->
+                    <Label Name="labelClass" >Class:</Label>
+                    <TextBlock Name="textBoxClass" Text="{Binding Class}"/>
+                    <Label Name="labelMethod" >Method:</Label>
+                    <TextBlock Name="textBoxMethod" Text="{Binding Method}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Name="labelFile" >File:</Label>
+                    <TextBlock Name="textBoxfile" Text="{Binding File}"/>
+                    <Label Name="labelLine" >Line:</Label>
+                    <TextBlock Name="textBoxLine" Text="{Binding Line}"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
 
-            <!-- Row 2 -->
-            <Label Name="labelItem" Height="28" Grid.Column="0" Grid.Row="2">Item</Label>
-            <TextBox Name="textBoxItem" Height="23" Grid.Column="1" Grid.Row="2" Text="{Binding Item}" />
-            <Label Name="label4" Height="28" Grid.Column="2" Grid.Row="2">Host Name</Label>
-            <TextBox Name="textBoxHostName" Height="23" Grid.Column="3" Grid.Row="2" Text="{Binding HostName}"/>
-            <Label Name="label5" Height="28" Grid.Column="4" Grid.Row="2">User Name</Label>
-            <TextBox Name="textBoxUserName" Height="23" Grid.Column="5" Grid.Row="2" Text="{Binding UserName}"/>
-            <Label Name="label6" Height="28" Grid.Column="6" Grid.Row="2">App</Label>
-            <TextBox Name="textBoxApp" Height="23" Grid.Column="7" Grid.Row="2" Text="{Binding App}"/>
+        <GroupBox Header="Execution environment">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Name="labelHostName" >Host Name:</Label>
+                    <TextBlock Name="textBoxHostName" Text="{Binding HostName}"/>
+                    <Label Name="labelUserName" >User Name:</Label>
+                    <TextBlock Name="textBoxUserName" Text="{Binding UserName}"/>
+                    <Label Name="labelApp" >App:</Label>
+                    <TextBlock Name="textBoxApp" Text="{Binding App}"/>
+                </StackPanel>
 
-            <!-- Row 3-->
-            <Label Name="label7" Height="28" Grid.Column="0" Grid.Row="3">Class</Label>
-            <TextBox Name="textBoxClass" Height="23" Grid.Column="1" Grid.Row="3" Text="{Binding Class}"/>
-            <Label Name="label8" Height="28" Grid.Column="2" Grid.Row="3">Method</Label>
-            <TextBox Name="textBoxMethod" Height="23" Grid.Column="3" Grid.Row="3" Text="{Binding Method}"/>
-            <Label Name="label9" Height="28" Grid.Column="4" Grid.Row="3">Line</Label>
-            <TextBox Name="textBoxLine" Height="23" Grid.Column="5" Grid.Row="3" Text="{Binding Line}"/>
-
-            <!-- Row 4-->
-            <Label Name="labelFile" Height="23" Grid.Column="0" Grid.Row="4">File</Label>
-            <TextBox Name="textBoxfile" Height="28" Grid.Column="1" Grid.ColumnSpan="7" Grid.Row="4" Text="{Binding File}"/>
-
-        </Grid>
-        <TabControl Name="tabControl1" Grid.Row="2" Margin="15,0,15,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <TabItem Header="Message">
-                <TextBox Name="textBoxMessage" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" BorderThickness="0" Text="{Binding Message}" />
-            </TabItem>
-            <TabItem Header="Throwable">
-                <TextBox Name="textBoxThrowable" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" BorderThickness="0" Text="{Binding Throwable}"/>
-            </TabItem>
-        </TabControl>
-    </Grid>
+                <StackPanel Orientation="Horizontal">
+                    <Label Name="labelTimeStamp" >Time Stamp:</Label>
+                    <TextBlock Name="textBoxTimeStamp" Text="{Binding TimeStamp}" />
+                    <Label Name="labelMachineName" >Machine Name:</Label>
+                    <TextBlock Name="textBoxMachineName" Text="{Binding MachineName}"/>
+                    <Label Name="labelThread" >Thread:</Label>
+                    <TextBlock Name="textBoxThread" Text="{Binding Thread}"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+    </StackPanel>
 </UserControl>

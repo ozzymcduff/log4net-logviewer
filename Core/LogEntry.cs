@@ -16,20 +16,6 @@ namespace LogViewer
                 return null;
             }
         }
-	    public enum ImageType
-		{
-			Debug = 0,
-			Error = 1,
-			Fatal = 2,
-			Info = 3,
-			Warn = 4,
-			Custom = 5
-		}
-
-
-		public int Item { get; set; }
-
-	    public ImageType Image { get; set; }
 
         public string MachineName 
         {
@@ -53,26 +39,6 @@ namespace LogViewer
             }
         }
 
-        public string Class
-        {
-            get { return Data.LocationInfo.ClassName; }
-        }
-
-        public string Method
-        {
-            get { return Data.LocationInfo.MethodName; }
-        }
-
-        public string File
-        {
-            get { return Data.LocationInfo.FileName; }
-        }
-
-        public string Line
-        {
-            get { return Data.LocationInfo.LineNumber; }
-        }
-
 	    public LogEntry ()
 		{
             this.Data = new LoggingEventData();
@@ -82,10 +48,7 @@ namespace LogViewer
 		    Data.Message = string.Empty;
 		    Data.ThreadName = string.Empty;
 
-		    Image = ImageType.Custom;
-
 		    Data.TimeStamp = new DateTime (1970, 1, 1, 0, 0, 0, 0);
-		    Item = 0;
 		}
 
 	    public static Level GetLevel(string level)

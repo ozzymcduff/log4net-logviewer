@@ -12,24 +12,6 @@ namespace LogViewer
 	{
 		private static readonly DateTime _dt = new DateTime (1970, 1, 1, 0, 0, 0, 0);
 
-		public static LogEntry.ImageType ParseImageType (string level)
-		{
-			switch (level) {
-			case "ERROR":
-				return LogEntry.ImageType.Error;
-			case "INFO":
-				return LogEntry.ImageType.Info;
-			case "DEBUG":
-				return LogEntry.ImageType.Debug;
-			case "WARN":
-				return LogEntry.ImageType.Warn;
-			case "FATAL":
-				return LogEntry.ImageType.Fatal;
-			default:
-				return LogEntry.ImageType.Custom;
-			}
-		}
-	
 		class Names
 		{
 			public Object @event;
@@ -125,7 +107,6 @@ namespace LogViewer
 								}
 								else if (Object.ReferenceEquals (xmlreader.LocalName, names.level)) {
 								    logentry.Data.Level = LogEntry.GetLevel(xmlreader.Value);
-								    logentry.Image = LogEntryParser.ParseImageType (logentry.Data.Level.Name);
 								} else if (Object.ReferenceEquals (xmlreader.LocalName, names.logger))
 								{
 								    logentry.Data.LoggerName = xmlreader.Value;

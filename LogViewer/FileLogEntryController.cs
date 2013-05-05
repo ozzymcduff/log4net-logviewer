@@ -38,7 +38,6 @@ namespace LogViewer
         private WrappedDispatcher wrappedDispatcher;
 
         private Watcher watcher = null;
-        private int itemindex = 1;
         public Observable<string> ObservableFileName { get; private set; }
         public string FileName
         {
@@ -51,7 +50,6 @@ namespace LogViewer
                 ObservableFileName.Value = value;
                 if (null == watcher || !watcher.File.FileNameMatch(value))
                 {
-                    itemindex = 1;
                     if (watcher != null)
                     {
                         watcher.Dispose();
@@ -79,7 +77,6 @@ namespace LogViewer
         {
             watcher.Reset();
             Entries.Clear();
-            itemindex = 1;
             watcher.Read();
         }
     }
