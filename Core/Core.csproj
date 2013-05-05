@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\Extensions.cs" />
     <Compile Include="Infrastructure\FileUtil.cs" />
     <Compile Include="LogEntryParser.cs" />
     <Compile Include="LogEntry.cs" />

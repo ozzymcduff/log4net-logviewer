@@ -45,6 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Core\Infrastructure\Extensions.cs">
+      <Link>Infrastructure\Extensions.cs</Link>
+    </Compile>
     <Compile Include="..\Core\Infrastructure\FileUtil.cs">
       <Link>Infrastructure\FileUtil.cs</Link>
     </Compile>

@@ -87,6 +87,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\Core\Infrastructure\Extensions.cs">
+      <Link>Infrastructure\Extensions.cs</Link>
+    </Compile>
     <Compile Include="..\Core\Infrastructure\Watcher.cs">
       <Link>Infrastructure\Watcher.cs</Link>
     </Compile>

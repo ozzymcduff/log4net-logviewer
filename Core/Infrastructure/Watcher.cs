@@ -9,6 +9,7 @@ namespace LogViewer.Infrastructure
 {
     public interface ILogFileReader : IDisposable
     {
+        IFileWithPosition File { get; }
         Action<LogEntry> logentry { get; set; }
         Action outOfBounds { get; set; }
         void Init();
@@ -28,7 +29,7 @@ namespace LogViewer.Infrastructure
     }
     public abstract class LogFileReaderBase : ILogFileReader
     {
-        public LogFileReaderBase(FileWithPosition file, LogEntryParser parser = null, IInvoker invoker = null)
+        public LogFileReaderBase(IFileWithPosition file, LogEntryParser parser = null, IInvoker invoker = null)
         {
             this.File = file;
             this.parser = parser ?? new LogEntryParser();
@@ -37,7 +38,7 @@ namespace LogViewer.Infrastructure
         }
         protected LogEntryParser parser;
         protected IInvoker invoker;
-        public FileWithPosition File { get; private set; }
+        public IFileWithPosition File { get; private set; }
         public Action<LogEntry> logentry { get; set; }
         public Action outOfBounds { get; set; }
 
@@ -71,7 +72,7 @@ namespace LogViewer.Infrastructure
     {
         private Timer filetimer;
         private long duration;
-        public Poller(FileWithPosition file, long duration, LogEntryParser parser = null, IInvoker invoker = null)
+        public Poller(IFileWithPosition file, long duration, LogEntryParser parser = null, IInvoker invoker = null)
             :base(file,parser,invoker)
         {
             this.duration = duration;
@@ -111,7 +112,7 @@ namespace LogViewer.Infrastructure
     {
         private FileSystemWatcher _watcher;
 
-        public Watcher(FileWithPosition file, LogEntryParser parser = null, IInvoker invoker = null)
+        public Watcher(IFileWithPosition file, LogEntryParser parser = null, IInvoker invoker = null)
             :base(file,parser,invoker)
         {
         }

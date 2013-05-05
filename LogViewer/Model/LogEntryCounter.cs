@@ -9,7 +9,7 @@ using LogViewer.Logs;
 
 namespace LogViewer
 {
-    class LogEntryCounter
+    public class LogEntryCounter
     {
         public LogEntryCounter(ObservableCollection<LogEntryViewModel> entries)
         {

@@ -143,7 +143,19 @@ namespace LogViewer.Infrastructure
     public class OutOfBoundsException : Exception
     {
     }
-    public class FileWithPosition
+    public interface IFileWithPosition
+    {
+        IEnumerable<LogEntry> Read(LogEntryParser parser);
+        void ResetPosition();
+
+        string FileName { get; }
+
+        bool FileNameInFolder(string filename);
+        bool FileNameMatch(string filename);
+
+        bool FileHasBecomeLarger();
+    }
+    public class FileWithPosition : IFileWithPosition
     {
         public string FileName { get; private set; }
         private long position = 0;

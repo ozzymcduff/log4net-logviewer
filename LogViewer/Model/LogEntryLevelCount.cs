@@ -49,5 +49,23 @@ namespace LogViewer
         {
             return y.Select(c => c.Key).Union(x.Select(c => c.Key));
         }
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as LogEntryLevelCount);
+        }
+        public bool Equals(LogEntryLevelCount obj) 
+        {
+            return counts.OrderBy(c => c.Key)
+                .SequenceEqual(obj.counts.OrderBy(c => c.Key));
+        }
+        public override int GetHashCode()
+        {
+            return counts.GetHashCode();
+        }
+        public override string ToString()
+        {
+            return String.Join(",", counts
+                .Select(c => string.Format("{0}={1}", c.Key, c.Value)));
+        }
     }
 }

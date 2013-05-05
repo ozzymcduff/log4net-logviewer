@@ -14,14 +14,12 @@ using LogViewer.Infrastructure;
 
 namespace LogViewer
 {
-    public class FileLogEntryController : DispatcherObject
+    public class FileLogEntryController 
     {
-        class WrappedDispatcher : IInvoker
+        class WrappedDispatcher : DispatcherObject, IInvoker, IWrapDispatcher
         {
-            private readonly Dispatcher Dispatcher;
-            public WrappedDispatcher(Dispatcher dispatcher)
+            public WrappedDispatcher()
             {
-                this.Dispatcher = dispatcher;
             }
 
             public void Invoke(Action threadStart)
@@ -29,15 +27,28 @@ namespace LogViewer
                 Dispatcher.BeginInvoke(DispatcherPriority.Background,
                        threadStart);
             }
+            public void BeginInvoke(DispatcherPriority dispatcherPriority, ThreadStart threadStart) 
+            {
+                Dispatcher.BeginInvoke(dispatcherPriority,
+                       threadStart);
+            }
         }
-        public FileLogEntryController()
+        Func<string, LogEntryParser, IWrapDispatcher, ILogFileReader> watcherFactory;
+
+        public FileLogEntryController(IWrapDispatcher dispatcher = null, Func<string, LogEntryParser, IWrapDispatcher, ILogFileReader> watcherFactory = null)
         {
             Entries = new ObservableCollection<LogEntryViewModel>();
             ObservableFileName = new Observable<string>();
             ObservableSelected = new Observable<LogEntryViewModel>();
             ObservableFileName.PropertyChanged += ObservableFileName_PropertyChanged;
-            wrappedDispatcher = new WrappedDispatcher(this.Dispatcher);
+            this.watcherFactory = watcherFactory??CreateWatcher;
+            wrappedDispatcher = dispatcher ?? new WrappedDispatcher();
             ObservableCurrentIndex = new Observable<int>();
+        }
+
+        private static ILogFileReader CreateWatcher(string value, LogEntryParser parser, IWrapDispatcher wrappedDispatcher)
+        {
+            return new Watcher(new FileWithPosition(value), parser, wrappedDispatcher);
         }
 
         void ObservableFileName_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -50,10 +61,10 @@ namespace LogViewer
                     watcher.Dispose();
                     watcher = null;
                 }
-                watcher = new Watcher(new FileWithPosition(value), parser, wrappedDispatcher);
+                watcher = watcherFactory(value, parser, wrappedDispatcher);
                 watcher.logentry = AddToEntries;
                 watcher.outOfBounds = OutOfBounds;
-                Dispatcher.BeginInvoke(DispatcherPriority.Background,
+                wrappedDispatcher.BeginInvoke(DispatcherPriority.Background,
                   new ThreadStart(() =>
                   {
                       Entries.Clear();
@@ -61,9 +72,9 @@ namespace LogViewer
                 watcher.Init();
             }
         }
-        private WrappedDispatcher wrappedDispatcher;
+        private IWrapDispatcher wrappedDispatcher;
 
-        private Watcher watcher = null;
+        private ILogFileReader watcher = null;
         public Observable<string> ObservableFileName { get; private set; }
         public string FileName
         {
@@ -114,27 +125,8 @@ namespace LogViewer
             }
         }
     }
-    public static class IEnumerableExtensions
+    public interface IWrapDispatcher : IInvoker
     {
-        public static T Next<T>(this IList<T> that, int index, Func<T, bool> accept) 
-        {
-            for (int i = index+1; i < that.Count; i++)
-            {
-                var item = that[i];
-                if (accept(item))
-                    return item;
-            }
-            return default(T);
-        }
-        public static T Previous<T>(this IList<T> that, int index, Func<T, bool> accept)
-        {
-            for (int i = index - 1; 0<i; i--)
-            {
-                var item = that[i];
-                if (accept(item))
-                    return item;
-            }
-            return default(T);
-        }
+        void BeginInvoke(DispatcherPriority dispatcherPriority, ThreadStart threadStart);
     }
 }
