@@ -19,7 +19,7 @@ namespace LogViewer.Infrastructure
         }
         public static T Previous<T>(this IList<T> that, int index, Func<T, bool> accept)
         {
-            for (int i = index - 1; 0 < i; i--)
+            for (int i = index - 1; 0 <= i; i--)
             {
                 var item = that[i];
                 if (accept(item))

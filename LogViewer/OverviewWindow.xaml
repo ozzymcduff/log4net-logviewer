@@ -6,7 +6,8 @@
     SizeToContent="WidthAndHeight"
     ResizeMode="CanResizeWithGrip" 
     AllowDrop="True"
-    Closing="Window_Closing">
+    Closing="Window_Closing"
+    KeyDown="Window_KeyDown">
     <DockPanel>
         <Grid DockPanel.Dock="Top">
 
@@ -55,13 +56,13 @@
                            FontWeight="Normal"
                            HorizontalAlignment="Stretch"
                            BorderThickness="0"
-                           Margin="2,2,2,2" Width="400" Text="{Binding Value}" />
+                           Margin="2,2,2,2" Width="400" Text="{Binding Path=FileName}" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Image Name="image2" Width="16" Height="16" Margin="2" Source="/LogViewer;component/Resources/Images/find.png" VerticalAlignment="Center"/>
                     <Label Name="label3" Content="Find:" VerticalAlignment="Center"/>
                     <TextBox Height="20" Name="textBoxFind" Width="120" VerticalAlignment="Center" AcceptsReturn="False" KeyDown="textBoxFind_KeyDown" />
-                    <local:CountPanel Grid.Column="2" x:Name="countpanel" Orientation="Horizontal" HorizontalAlignment="Right" />
+                    <local:CountPanel Grid.Column="2" x:Name="countpanel" Orientation="Horizontal" HorizontalAlignment="Right" DataContext="{Binding Path=Counter.Count}" />
                 </StackPanel>
             </Grid>
         </Grid>
@@ -71,11 +72,22 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition MinHeight="300"/>
+                <RowDefinition MinHeight="300"/>
             </Grid.RowDefinitions>
             <!-- List View -->
-            <Border BorderThickness="4,4,4,4" Margin="0,0,0,0">
+            <Border Grid.Row="0" BorderThickness="4,4,4,4" Margin="0,0,0,0">
                 <local:LogListView x:Name="loglistview"></local:LogListView>
             </Border>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="500*" />
+                    <ColumnDefinition Width="16" />
+                </Grid.ColumnDefinitions>
+                <Image Name="previous" Width="16" Height="16" Margin="2" Source="/LogViewer;component/Resources/Images/arrow_left.png" VerticalAlignment="Center" Grid.Column="0"/>
+                <local:LogItemViewer x:Name="logitemviewer" Grid.Column="1" DataContext="{Binding Path=Selected}"/>
+                <Image HorizontalAlignment="Right" Name="Next" Width="16" Height="16" Margin="2" Source="/LogViewer;component/Resources/Images/arrow_right.png" VerticalAlignment="Center" Grid.Column="2"/>
+            </Grid>
 
         </Grid>
     </DockPanel>

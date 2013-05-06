@@ -14,8 +14,16 @@ using LogViewer.Infrastructure;
 
 namespace LogViewer
 {
-    public class FileLogEntryController 
+    public class FileLogEntryController : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void NotifyPropertyChanged(string property)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
+
         class WrappedDispatcher : DispatcherObject, IInvoker, IWrapDispatcher
         {
             public WrappedDispatcher()
@@ -35,15 +43,14 @@ namespace LogViewer
         }
         Func<string, LogEntryParser, IWrapDispatcher, ILogFileReader> watcherFactory;
 
-        public FileLogEntryController(IWrapDispatcher dispatcher = null, Func<string, LogEntryParser, IWrapDispatcher, ILogFileReader> watcherFactory = null)
+        public FileLogEntryController(IWrapDispatcher dispatcher = null, Func<string, LogEntryParser, IWrapDispatcher, ILogFileReader> watcherFactory = null, RecentFileList recentFileList=null)
         {
             Entries = new ObservableCollection<LogEntryViewModel>();
-            ObservableFileName = new Observable<string>();
-            ObservableSelected = new Observable<LogEntryViewModel>();
-            ObservableFileName.PropertyChanged += ObservableFileName_PropertyChanged;
+            FileNameChanged += ObservableFileName_PropertyChanged;
             this.watcherFactory = watcherFactory??CreateWatcher;
             wrappedDispatcher = dispatcher ?? new WrappedDispatcher();
-            ObservableCurrentIndex = new Observable<int>();
+            Counter = new LogEntryCounter(Entries);
+            this.recentFileList = recentFileList??new RecentFileList(new XmlPersister(ApplicationAttributes.Get()));
         }
 
         private static ILogFileReader CreateWatcher(string value, LogEntryParser parser, IWrapDispatcher wrappedDispatcher)
@@ -53,7 +60,7 @@ namespace LogViewer
 
         void ObservableFileName_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var value = ((Observable<string>)sender).Value;
+            var value = _filename;
             if (null == watcher || !watcher.File.FileNameMatch(value))
             {
                 if (watcher != null)
@@ -71,21 +78,37 @@ namespace LogViewer
                   }));
                 watcher.Init();
             }
+            recentFileList.AddFilenameToRecent(value);
+        }
+        public ObservableCollection<RecentFile> FileList 
+        { 
+            get
+            {
+                return this.recentFileList.FileList;
+            }
         }
         private IWrapDispatcher wrappedDispatcher;
 
         private ILogFileReader watcher = null;
-        public Observable<string> ObservableFileName { get; private set; }
+        private string _filename;
         public string FileName
         {
             get
             {
-                return ObservableFileName.Value;
+                return _filename;
             }
             set
             {
-                ObservableFileName.Value = value;
+                _filename = value;
+                NotifyFileNameChanged();
             }
+        }
+        public event PropertyChangedEventHandler FileNameChanged;
+        public void NotifyFileNameChanged()
+        {
+            NotifyPropertyChanged("FileName");
+            if (FileNameChanged != null)
+                FileNameChanged(this, new PropertyChangedEventArgs("FileName"));
         }
         private void AddToEntries(LogEntry entry)
         {
@@ -99,14 +122,27 @@ namespace LogViewer
             Entries.Clear();
             watcher.Read();
         }
-        public Observable<LogEntryViewModel> ObservableSelected { get; set; }
+        private LogEntryViewModel _selected;
         public LogEntryViewModel Selected
         {
-            get { return ObservableSelected.Value; }
-            set { ObservableSelected.Value = value; }
+            get { return _selected; }
+            set 
+            { 
+                _selected = value; 
+                NotifyPropertyChanged("Selected"); 
+            }
         }
-        public Observable<int> ObservableCurrentIndex { get; set; }
-        public int CurrentIndex { get { return ObservableCurrentIndex.Value; } set { ObservableCurrentIndex.Value = value; } }
+        private int _currentIndex;
+        private RecentFileList recentFileList;
+        public int CurrentIndex 
+        { 
+            get { return _currentIndex; }
+            set 
+            {
+                _currentIndex = value; 
+                NotifyPropertyChanged("CurrentIndex"); 
+            } 
+        }
 
         public void SelectNextEntry(Func<LogEntryViewModel, bool> accept) 
         {
@@ -124,6 +160,9 @@ namespace LogViewer
                 Selected = previous;
             }
         }
+        public LogEntryCounter Counter { get; set; }
+
+
     }
     public interface IWrapDispatcher : IInvoker
     {

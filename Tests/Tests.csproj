@@ -56,6 +56,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\ExtensionTests.cs" />
     <Compile Include="Infrastructure\FileTests.cs" />
     <Compile Include="Log4JTests.cs" />
     <Compile Include="Log4NetTests.cs" />

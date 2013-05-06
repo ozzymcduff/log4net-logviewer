@@ -29,38 +29,23 @@ namespace LogViewer
     public partial class OverviewWindow : Window
     {
         private FileLogEntryController filec;
-        private LogEntryCounter lcount;
-        private RecentFileList recentFileList;
-        private LogItemWindow _currentLogItemWindow;
         
         public OverviewWindow()
         {
             filec = new FileLogEntryController();
-            lcount = new LogEntryCounter(filec.Entries);
-            recentFileList = new RecentFileList(new XmlPersister(ApplicationAttributes.Get()));
             
             Title = string.Format("LogViewer  v.{0}", Assembly.GetExecutingAssembly().GetName().Version);
-            _currentLogItemWindow = new LogItemWindow();
-            _currentLogItemWindow.InitializeComponent();
-            _currentLogItemWindow.Controller = filec;
             this.Loaded += new RoutedEventHandler(OverviewWindow_Loaded);
             this.Closed += OverviewWindow_Closed;
 
             InitializeComponent();
-
-            menu1.DataContext = recentFileList;
-            loglistview.DataContext = filec;
-            countpanel.DataContext = lcount.Count;
-            textboxFileName.DataContext = filec.ObservableFileName;
-
-            filec.ObservableFileName.PropertyChanged += ObservableFileName_PropertyChanged;
+            this.DataContext = filec;
+            filec.FileNameChanged += ObservableFileName_PropertyChanged;
         }
 
         void ObservableFileName_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var send = (Observable<string>)sender;
-            ((App)App.Current).AddFilenameToRecent(send.Value);
-            recentFileList.AddFilenameToRecent(send.Value);
+            ((App)App.Current).AddFilenameToRecent(filec.FileName);
         }
 
         void OverviewWindow_Closed(object sender, EventArgs e)
@@ -83,8 +68,6 @@ namespace LogViewer
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (null != this._currentLogItemWindow)
-                this._currentLogItemWindow.Close();
         }
 
         private void MenuFileOpen_Click(object sender, RoutedEventArgs e)
@@ -120,5 +103,35 @@ namespace LogViewer
                 this.filec.FileName = context.Filepath;
             }
         }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Up:
+                case Key.Left:
+                    filec.SelectPreviousEntry(entry => true);
+                    break;
+                case Key.Down:
+                case Key.Right:
+                    filec.SelectNextEntry(entry => true);
+                    break;
+                case Key.PageDown:
+                    //GetNextPage
+                    break;
+                case Key.PageUp:
+                    //GetPreviousPage
+                    break;
+                case Key.Home:
+                    //GetTop
+                    break;
+                case Key.End:
+                    //GetBottom
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 }

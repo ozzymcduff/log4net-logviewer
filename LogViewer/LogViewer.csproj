@@ -109,10 +109,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LogItemWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="LogListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -143,9 +139,6 @@
     <Compile Include="Model\FileLogEntryController.cs" />
     <Compile Include="LabelAndText.xaml.cs">
       <DependentUpon>LabelAndText.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="LogItemWindow.xaml.cs">
-      <DependentUpon>LogItemWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="LogListView.xaml.cs">
       <DependentUpon>LogListView.xaml</DependentUpon>

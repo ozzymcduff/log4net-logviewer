@@ -20,11 +20,6 @@ namespace LogViewer
     /// </summary>
     public partial class LogItemViewer : UserControl
     {
-        public LogEntryViewModel Selected
-        {
-            get { return (LogEntryViewModel)this.DataContext; }
-            set { this.DataContext = value; }
-        }
         public LogItemViewer()
         {
             InitializeComponent();

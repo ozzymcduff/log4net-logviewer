@@ -17,43 +17,16 @@ using System.Windows.Shapes;
 
 namespace LogViewer
 {
-    /// <summary>
-    /// Interaction logic for LogListView.xaml
-    /// </summary>
     public partial class LogListView : UserControl
     {
-
         public FileLogEntryController filec
         {
             get { return (FileLogEntryController)this.DataContext; }
         }
-        private int CurrentIndex { get { return filec.CurrentIndex; } set { filec.CurrentIndex = value; } }
         public LogListView()
         {
             InitializeComponent();
             logitemsView.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(logitemsView_HeaderClicked));
-            logitemsView.SelectionChanged +=logitemsView_SelectionChanged;
-            this.DataContextChanged += LogListView_DataContextChanged;
-        }
-
-        void LogListView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (filec != null)
-            {
-                filec.ObservableSelected.PropertyChanged += ObservableSelected_PropertyChanged;
-            }
-        }
-
-        private void ObservableSelected_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            var send = (Observable<LogEntryViewModel>)sender;
-            logitemsView.SelectedItem = send.Value;
-        }
-
-        private void logitemsView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            filec.CurrentIndex = logitemsView.SelectedIndex;
-            filec.Selected = (LogEntryViewModel) logitemsView.SelectedItem;
         }
 
         private void logitems_Drop(object sender, DragEventArgs e)
@@ -88,15 +61,6 @@ namespace LogViewer
             SortDescription description = new SortDescription(header.Content.ToString(), _Direction);
             dataView.SortDescriptions.Add(description);
             dataView.Refresh();
-        }
-
-        private void logitems_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var logentry = this.logitemsView.SelectedItem as LogEntryViewModel;
-            if (null != logentry)
-            {
-                filec.Selected = logentry;
-            }
         }
     }
 }
