@@ -14,18 +14,20 @@ namespace LogViewer
         public LogEntryCounter(ObservableCollection<LogEntryViewModel> entries)
         {
             this.Entries = entries;
-            Entries.CollectionChanged += Entries_CollectionChanged;
             Count = new Observable<LogEntryLevelCount>();
-            Count.Value = GetCount(Entries);
+            Count.Value = GetCount(Entries.ToArray());
+            Entries.CollectionChanged += Entries_CollectionChanged;
         }
 
         private readonly ObservableCollection<LogEntryViewModel> Entries;
         public Observable<LogEntryLevelCount> Count { get; private set; }
 
 
-        private LogEntryLevelCount GetCount(IEnumerable<LogEntryViewModel> entries)
+        private LogEntryLevelCount GetCount(params LogEntryViewModel[] entries)
         {
-            var counts = entries.GroupBy(e => e.Level).Select(g => new KeyValuePair<string, int>(g.Key, g.Count()));
+            var counts = entries.GroupBy(e => e.Level)
+                .Select(g => new KeyValuePair<string, int>(g.Key, g.Count()))
+                .ToArray();
             return new LogEntryLevelCount(counts);
         }
         private void Entries_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -40,7 +42,7 @@ namespace LogViewer
                             newItems.Add(item);
                         }
 
-                        Count.Value += GetCount(newItems);
+                        Count.Value += GetCount(newItems.ToArray());
                     }
                     break;
                 case NotifyCollectionChangedAction.Move:
@@ -53,14 +55,14 @@ namespace LogViewer
                             removeItems.Add(item);
                         }
 
-                        Count.Value -= GetCount(removeItems);
+                        Count.Value -= GetCount(removeItems.ToArray());
                     }
                     break;
                 case NotifyCollectionChangedAction.Replace:
                         throw new NotImplementedException();
                 case NotifyCollectionChangedAction.Reset:
                     {
-                        Count.Value = GetCount(new LogEntryViewModel[0]);
+                        Count.Value = GetCount();
                     }
                     break;
                 default:

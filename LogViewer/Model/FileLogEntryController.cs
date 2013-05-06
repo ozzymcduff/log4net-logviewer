@@ -61,6 +61,12 @@ namespace LogViewer
         void ObservableFileName_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var value = _filename;
+            WatchFile(value);
+            recentFileList.AddFilenameToRecent(value);
+        }
+
+        private void WatchFile(string value)
+        {
             if (null == watcher || !watcher.File.FileNameMatch(value))
             {
                 if (watcher != null)
@@ -78,8 +84,8 @@ namespace LogViewer
                   }));
                 watcher.Init();
             }
-            recentFileList.AddFilenameToRecent(value);
         }
+        
         public ObservableCollection<RecentFile> FileList 
         { 
             get
