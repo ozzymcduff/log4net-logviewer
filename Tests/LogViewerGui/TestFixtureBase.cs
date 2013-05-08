@@ -1,6 +1,6 @@
-﻿using log4net.Core;
+﻿using LogViewer.Model;
+using log4net.Core;
 using LogViewer;
-using LogViewer.Logs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

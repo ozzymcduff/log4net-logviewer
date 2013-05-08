@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Drawing;
@@ -9,15 +8,15 @@ using System.Windows.Interop;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Data;
-using LogViewer.Logs;
+using LogViewer.Model;
 
 namespace LogViewer
 {
     public class ImageTypeToImageSourceConverter : MarkupExtension, IValueConverter
     {
-        private static Dictionary<ImageType, BitmapSource> _ImageList =
-           new Dictionary<ImageType, BitmapSource>()
-            {
+        private static readonly Dictionary<ImageType, BitmapSource> _imageList =
+           new Dictionary<ImageType, BitmapSource>
+               {
                 {ImageType.Debug, Imaging.CreateBitmapSourceFromHIcon(SystemIcons.Question.Handle, Int32Rect.Empty, null)},
                 {ImageType.Error, Imaging.CreateBitmapSourceFromHIcon(SystemIcons.Error.Handle, Int32Rect.Empty, null)},
                 {ImageType.Fatal, Imaging.CreateBitmapSourceFromHIcon(SystemIcons.Hand.Handle, Int32Rect.Empty, null)},
@@ -29,14 +28,11 @@ namespace LogViewer
 
         private static ImageSource GetImage(ImageType image)
         {
-            return _ImageList[image];
+            return _imageList[image];
         }
         private static ImageType GetImageType(ImageSource image)
         {
-            return _ImageList.First(i => i.Value == image).Key;
-        }
-        public ImageTypeToImageSourceConverter()
-        {
+            return _imageList.First(i => i.Value == image).Key;
         }
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

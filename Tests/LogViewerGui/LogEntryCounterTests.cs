@@ -1,13 +1,13 @@
-﻿using log4net.Core;
+﻿using LogViewer.Model;
+using log4net.Core;
 using LogViewer;
-using LogViewer.Logs;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using LogVmT = LogViewer.Logs.LogEntryViewModel;
+using LogVmT = LogViewer.Model.LogEntryViewModel;
 namespace IntegrationTests.LogViewerGui
 {
     [TestFixture]

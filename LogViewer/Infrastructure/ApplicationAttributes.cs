@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 
-namespace LogViewer
+namespace LogViewer.Infrastructure
 {
     public class ApplicationAttributes
     {

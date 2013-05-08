@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using LogViewer.Logs;
+using LogViewer.Infrastructure;
 
-namespace LogViewer
+namespace LogViewer.Model
 {
     public class LogEntryCounter
     {
@@ -16,7 +14,7 @@ namespace LogViewer
             this.Entries = entries;
             Count = new Observable<LogEntryLevelCount>();
             Count.Value = GetCount(Entries.ToArray());
-            Entries.CollectionChanged += Entries_CollectionChanged;
+            Entries.CollectionChanged += EntriesCollectionChanged;
         }
 
         private readonly ObservableCollection<LogEntryViewModel> Entries;
@@ -30,7 +28,7 @@ namespace LogViewer
                 .ToArray();
             return new LogEntryLevelCount(counts);
         }
-        private void Entries_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void EntriesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {

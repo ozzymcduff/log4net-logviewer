@@ -1,10 +1,8 @@
 ﻿using LogViewer.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace LogViewer.Logs
+namespace LogViewer.Model
 {
     public class LogEntryViewModel
     {
@@ -33,47 +31,39 @@ namespace LogViewer.Logs
             _logentry = logentry;
         }
 
-        public ImageType Image { get { return ParseImageType (_logentry.Data.Level.Name); } set { } }
+        public ImageType Image { get { return ParseImageType (_logentry.Data.Level.Name); } }
 
         public string Level
         {
             get { return _logentry.Data.Level.DisplayName; }
-            set { }
         }
         public string MachineName
         {
             get { return _logentry.MachineName; }
-            set { }
         }
         public string Thread
         {
             get { return _logentry.Data.ThreadName; }
-            set { }
         }
         public DateTime TimeStamp
         {
             get { return _logentry.Data.TimeStamp; }
-            set { }
         }
         public string HostName
         {
             get { return _logentry.HostName; }
-            set { }
         }
         public string UserName
         {
             get { return _logentry.Data.UserName; }
-            set { }
         }
         public string App
         {
             get { return _logentry.Data.LoggerName; }
-            set { }
         }
         public string Class
         {
             get { return LocationInfo().ClassName; }
-            set { }
         }
 
         private log4net.Core.LocationInfo LocationInfo()
@@ -85,12 +75,10 @@ namespace LogViewer.Logs
         public string Method
         {
             get { return LocationInfo().MethodName; }
-            set { }
         }
         public string Line
         {
             get { return LocationInfo().LineNumber; }
-            set { }
         }
 
         public string File
@@ -100,7 +88,6 @@ namespace LogViewer.Logs
                 const int MaxPathLength = 30;
                 return FileUtil.ShortenPathname(LocationInfo().FileName, MaxPathLength);
             }
-            set { }
         }
         public string FirstPartOfMessage { get { return FirstPartOf(_logentry.Data.Message); } set { } }
 

@@ -27,8 +27,8 @@ namespace LogViewer.Infrastructure
         /// <summary>
         /// Shortens a pathname for display purposes.
         /// </summary>
-        /// <param labelName="pathname">The pathname to shorten.</param>
-        /// <param labelName="maxLength">The maximum number of characters to be displayed.</param>
+        /// <param name="pathname">The pathname to shorten.</param>
+        /// <param name="maxLength">The maximum number of characters to be displayed.</param>
         /// <remarks>Shortens a pathname by either removing consecutive components of a path
         /// and/or by removing characters from the end of the filename and replacing
         /// then with three elipses (...)
@@ -161,7 +161,7 @@ namespace LogViewer.Infrastructure
         private long position = 0;
         public FileWithPosition(string filename)
         {
-            this.FileName = filename;
+            FileName = filename;
         }
 
         public IEnumerable<LogEntry> Read(LogEntryParser parser)
@@ -191,19 +191,19 @@ namespace LogViewer.Infrastructure
         }
         public bool FileNameInFolder(string folder) 
         {
-            var fullpath = System.IO.Path.GetFullPath(System.IO.Path.GetDirectoryName(folder));
-            var filepath = System.IO.Path.GetFullPath(System.IO.Path.GetDirectoryName(FileName));
+            var fullpath = Path.GetFullPath(Path.GetDirectoryName(folder));
+            var filepath = System.IO.Path.GetFullPath(Path.GetDirectoryName(FileName));
             return fullpath.Equals(filepath,
                 StringComparison.InvariantCultureIgnoreCase);
         }
         public void ResetPosition()
         {
-            this.position = 0;
+            position = 0;
         }
 
         public bool Exists() 
         {
-            return System.IO.File.Exists(FileName);
+            return File.Exists(FileName);
         }
     }
 }

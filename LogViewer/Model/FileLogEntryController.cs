@@ -8,8 +8,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Threading;
 using System.Threading;
+using LogViewer.Model;
 using Timer = System.Timers.Timer;
-using LogViewer.Logs;
 using LogViewer.Infrastructure;
 
 namespace LogViewer

@@ -4,28 +4,27 @@ using System.Windows;
 using System.Windows.Shell;
 using System.Windows.Threading;
 using log4net;
-using LogViewer.Logs;
 
 namespace LogViewer
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
         private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public IEnumerable<string> Args { get; private set; }
         internal void AddFilenameToRecent(string filename)
         {
-            JumpList.AddToRecentCategory(new JumpPath() { Path = filename });
+            JumpList.AddToRecentCategory(new JumpPath { Path = filename });
         }
 
-        private void Application_Startup(object sender, StartupEventArgs e)
+        private void ApplicationStartup(object sender, StartupEventArgs e)
         {
-            this.Args = e.Args;
+            Args = e.Args;
         }
 
-        private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        private void ApplicationDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = false;
             _log.Error(e.Exception);

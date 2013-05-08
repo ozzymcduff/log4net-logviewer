@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using LogViewer.Infrastructure;
 using Microsoft.Win32;
 
 namespace LogViewer

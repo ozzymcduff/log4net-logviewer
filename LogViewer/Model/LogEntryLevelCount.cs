@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-namespace LogViewer
+
+namespace LogViewer.Model
 {
     public class LogEntryLevelCount
     {
-        private IEnumerable<KeyValuePair<string, int>> counts;
+        private readonly IEnumerable<KeyValuePair<string, int>> _counts;
         public LogEntryLevelCount(IEnumerable<KeyValuePair<string, int>> counts)
         {
-            Error = GetOrZero(counts, "Error");
-            Info = GetOrZero(counts, "Info");
-            Warn = GetOrZero(counts, "Warn");
-            Debug = GetOrZero(counts, "Debug");
-            Total = counts.Select(c => c.Value).Sum();
-            this.counts = counts;
+            var pairs = counts.ToArray();
+            Error = GetOrZero(pairs, "Error");
+            Info = GetOrZero(pairs, "Info");
+            Warn = GetOrZero(pairs, "Warn");
+            Debug = GetOrZero(pairs, "Debug");
+            Total = pairs.Select(c => c.Value).Sum();
+            this._counts = pairs;
         }
 
         public int Debug { get; private set; }
@@ -24,20 +26,20 @@ namespace LogViewer
         public static LogEntryLevelCount operator +(LogEntryLevelCount x, LogEntryLevelCount y)
         {
             var newcounts = new List<KeyValuePair<string, int>>();
-            foreach (var key in GetKeys(x.counts, y.counts))
+            foreach (var key in GetKeys(x._counts, y._counts))
             {
                 newcounts.Add(new KeyValuePair<string, int>(key,
-                    GetOrZero(x.counts, key) + GetOrZero(y.counts, key)));
+                    GetOrZero(x._counts, key) + GetOrZero(y._counts, key)));
             }
             return new LogEntryLevelCount(newcounts);
         }
         public static LogEntryLevelCount operator -(LogEntryLevelCount x, LogEntryLevelCount y)
         {
             var newcounts = new List<KeyValuePair<string, int>>();
-            foreach (var key in GetKeys(x.counts, y.counts))
+            foreach (var key in GetKeys(x._counts, y._counts))
             {
                 newcounts.Add(new KeyValuePair<string, int>(key,
-                    GetOrZero(x.counts, key) - GetOrZero(y.counts, key)));
+                    GetOrZero(x._counts, key) - GetOrZero(y._counts, key)));
             }
             return new LogEntryLevelCount(newcounts);
         }
@@ -55,16 +57,16 @@ namespace LogViewer
         }
         public bool Equals(LogEntryLevelCount obj) 
         {
-            return counts.OrderBy(c => c.Key)
-                .SequenceEqual(obj.counts.OrderBy(c => c.Key));
+            return _counts.OrderBy(c => c.Key)
+                .SequenceEqual(obj._counts.OrderBy(c => c.Key));
         }
         public override int GetHashCode()
         {
-            return counts.GetHashCode();
+            return _counts.GetHashCode();
         }
         public override string ToString()
         {
-            return String.Join(",", counts
+            return String.Join(",", _counts
                 .Select(c => string.Format("{0}={1}", c.Key, c.Value)));
         }
     }

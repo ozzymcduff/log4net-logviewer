@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Xml;
 using System.Diagnostics;
+using LogViewer.Infrastructure;
 
 namespace LogViewer
 {

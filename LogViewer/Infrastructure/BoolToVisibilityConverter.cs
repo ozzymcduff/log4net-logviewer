@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace LogViewer
+namespace LogViewer.Infrastructure
 {
     /// <summary>
     /// http://thejoyofcode.com/Five_minute_recipe_for_a_decent_BoolToVisibilityConverter.aspx
@@ -27,7 +27,7 @@ namespace LogViewer
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return TrueValue.Equals(value) ? true : false;
+            return TrueValue.Equals(value);
         }
 
         public override object ProvideValue(IServiceProvider serviceProvider)

@@ -21,7 +21,6 @@ using System.Windows.Interop;
 using System.Reflection;
 using System.Threading;
 using System.Collections.ObjectModel;
-using LogViewer.Logs;
 
 
 namespace LogViewer

@@ -2,8 +2,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     StartupUri="OverviewWindow.xaml"
-    Startup="Application_Startup"
-    DispatcherUnhandledException="Application_DispatcherUnhandledException">
+    Startup="ApplicationStartup"
+    DispatcherUnhandledException="ApplicationDispatcherUnhandledException">
     <Application.Resources>
         <ResourceDictionary>
         </ResourceDictionary>
