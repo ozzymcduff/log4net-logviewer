@@ -20,23 +20,24 @@
             <Style TargetType="{x:Type ListViewItem}">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Level}" Value="ERROR">
-                        <Setter Property="Background" Value="Red"/>
+                        <Setter Property="Background" Value="Firebrick"/>
+                        <Setter Property="Foreground" Value="White"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Level}" Value="FATAL">
+                        <Setter Property="Background" Value="Firebrick"/>
                         <Setter Property="Foreground" Value="White"/>
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Level}" Value="INFO">
-                        <Setter Property="Background" Value="Green"/>
+                        <Setter Property="Background" Value="LightBlue"/>
+                        <Setter Property="Foreground" Value="Black"/>
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Level}" Value="DEBUG">
-                        <Setter Property="Background" Value="LightGray"/>
+                        <Setter Property="Background" Value="Silver"/>
                         <Setter Property="Foreground" Value="Black"/>
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Level}" Value="WARN">
-                        <Setter Property="Background" Value="Yellow"/>
+                        <Setter Property="Background" Value="Gold"/>
                         <Setter Property="Foreground" Value="Black"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding Level}" Value="FATAL">
-                        <Setter Property="Background" Value="Red"/>
-                        <Setter Property="Foreground" Value="White"/>
                     </DataTrigger>
                 </Style.Triggers>
                 <Setter Property="Height" Value="20"/>
