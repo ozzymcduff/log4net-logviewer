@@ -145,7 +145,7 @@ namespace LogViewer.Infrastructure
     }
     public interface IFileWithPosition
     {
-        IEnumerable<LogEntry> Read(LogEntryParser parser);
+        T Read<T>(Func<Stream, T> action);
         void ResetPosition();
 
         string FileName { get; }
@@ -164,15 +164,13 @@ namespace LogViewer.Infrastructure
             FileName = filename;
         }
 
-        public IEnumerable<LogEntry> Read(LogEntryParser parser)
+        public T Read<T>(Func<Stream,T> action)
         {
-            using (var file = FileUtil.OpenReadOnly(FileName, position))
+            using (var filestream = FileUtil.OpenReadOnly(FileName, position))
             {
-                foreach (var item in parser.Parse(file))
-                {
-                    yield return item;
-                }
-                position = file.Position;
+                var val = action(filestream);
+                position = filestream.Position;
+                return val;
             }
         }
 

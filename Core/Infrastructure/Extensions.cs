@@ -25,5 +25,10 @@ namespace LogViewer.Infrastructure
             }
             return default(T);
         }
+        public static T Tap<T>(this T that, Action<T> tapaction) 
+        {
+            tapaction(that);
+            return that;
+        }
     }
 }

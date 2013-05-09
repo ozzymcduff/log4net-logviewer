@@ -13,14 +13,13 @@ namespace LogViewer
     {
         public string Filepath { get; set; }
         public Stream Stream { get; set; }
-        private readonly ApplicationAttributes attr;
-        public XmlPersister(ApplicationAttributes attr)
+        private readonly int _max;
+        public XmlPersister(ApplicationAttributes attr, int max)
         {
-            this.attr = attr;
+            _max = max;
             Filepath =
                 Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                // ApplicationAttributes.CompanyName + "\\" +
                     attr.ProductName + "\\" +
                     "RecentFileList.xml");
         }
@@ -35,19 +34,19 @@ namespace LogViewer
             Stream = stream;
         }
 
-        public List<string> RecentFiles(int max)
+        public List<string> RecentFiles()
         {
-            return Load(max);
+            return Load(_max);
         }
 
-        public void InsertFile(string filepath, int max)
+        public void InsertFile(string filepath)
         {
-            Update(filepath, true, max);
+            Update(filepath, true, _max);
         }
 
-        public void RemoveFile(string filepath, int max)
+        public void RemoveFile(string filepath)
         {
-            Update(filepath, false, max);
+            Update(filepath, false, _max);
         }
 
         void Update(string filepath, bool insert, int max)

@@ -150,7 +150,6 @@
       <DependentUpon>LogItemViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Observable.cs" />
-    <Compile Include="History\RegistryPersister.cs" />
     <Compile Include="Model\LogEntryViewModel.cs" />
     <Compile Include="OverviewWindow.xaml.cs">
       <DependentUpon>OverviewWindow.xaml</DependentUpon>

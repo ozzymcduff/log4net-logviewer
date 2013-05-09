@@ -22,10 +22,10 @@ namespace IntegrationTests
             if (File.Exists(file)) { File.Delete(file); }
             File.WriteAllText(file, _buffer);
             var files = new List<LogEntry>();
-            using (var watcher = new Watcher(new FileWithPosition(file))
+            using (var watcher = new Watcher(new FileWithPosition(file)).Tap(w=>
             {
-                logentry = l => { files.Add(l); }
-            })
+                w.LogEntry += l => { files.Add(l); };
+            }))
             {
                 watcher.Init();
                 Assert.That(files.Count, Is.EqualTo(1));
@@ -43,11 +43,11 @@ namespace IntegrationTests
             File.WriteAllText(file, _buffer);
             var outofbounds = 0;
             var files = new List<LogEntry>();
-            using (var watcher = new Watcher(new FileWithPosition(file))
+            using (var watcher = new Watcher(new FileWithPosition(file)).Tap(w=>
             {
-                logentry = l => { files.Add(l); },
-                outOfBounds = () => { outofbounds++; }
-            })
+                w.LogEntry += l => { files.Add(l); };
+                w.OutOfBounds += () => { outofbounds++; };
+            }))
             {
                 watcher.Init();
 

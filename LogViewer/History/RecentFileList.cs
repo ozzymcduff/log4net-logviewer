@@ -16,13 +16,10 @@ namespace LogViewer
     {
         private readonly IPersist Persister;
 
-        public int MaxNumberOfFiles { get; set; }
-
         public RecentFileList(IPersist persister)
         {
             this.Persister = persister;
 
-            MaxNumberOfFiles = 9;
             this.FileList = new ObservableCollection<RecentFile>();
             LoadRecent();
         }
@@ -31,7 +28,7 @@ namespace LogViewer
         {
             this.FileList.Clear();
             var index = 0;
-            foreach (var file in Persister.RecentFiles(MaxNumberOfFiles).Select(r => new RecentFile(++index, r)).ToArray())
+            foreach (var file in Persister.RecentFiles().Select(r => new RecentFile(++index, r)).ToArray())
             {
                 this.FileList.Add(file);
             }
@@ -41,7 +38,7 @@ namespace LogViewer
 
         internal void AddFilenameToRecent(string filepath)
         {
-            Persister.InsertFile(filepath, MaxNumberOfFiles);
+            Persister.InsertFile(filepath);
             LoadRecent();
         }
     }

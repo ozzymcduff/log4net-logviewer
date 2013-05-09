@@ -4,13 +4,11 @@ using System.IO;
 
 namespace LogViewer.Infrastructure
 {
-    public interface ILogFileReader : IDisposable
+    public interface ILogFileWatcher : IDisposable
     {
-        IFileWithPosition File { get; }
-        Action<LogEntry> logentry { get; set; }
-        Action outOfBounds { get; set; }
+        event Action<LogEntry> LogEntry;
+        event Action OutOfBounds;
         void Init();
-        void Read();
         void Reset();
     }
     public interface IInvoker
@@ -24,9 +22,9 @@ namespace LogViewer.Infrastructure
             run();
         }
     }
-    public abstract class LogFileReaderBase : ILogFileReader
+    public abstract class LogFileWatcherBase : ILogFileWatcher
     {
-        public LogFileReaderBase(IFileWithPosition file, LogEntryParser parser = null, IInvoker invoker = null)
+        public LogFileWatcherBase(IFileWithPosition file, LogEntryParser parser = null, IInvoker invoker = null)
         {
             this.File = file;
             this.parser = parser ?? new LogEntryParser();
@@ -36,14 +34,27 @@ namespace LogViewer.Infrastructure
         protected LogEntryParser parser;
         protected IInvoker invoker;
         public IFileWithPosition File { get; private set; }
-        public Action<LogEntry> logentry { get; set; }
-        public Action outOfBounds { get; set; }
+        
+        public event Action<LogEntry> LogEntry;
+        public event Action OutOfBounds;
 
         public abstract void Init();
+
+        protected void InvokeLogEntry(LogEntry entry)
+        {
+            LogEntry(entry);
+        }
+        protected bool TryInvokeOutOfBounds() 
+        {
+            if (null == OutOfBounds) return false;
+            OutOfBounds();
+            return true;
+        }
 
         public void Reset()
         {
             this.File.ResetPosition();
+            this.Read();
         }
         public void Read()
         {
@@ -51,21 +62,21 @@ namespace LogViewer.Infrastructure
             {
                 try
                 {
-                    foreach (var item in File.Read(parser))
+                    foreach (var item in File.Read(stream => { return parser.Parse(stream); }))
                     {
-                        logentry(item);
+                        LogEntry(item);
                     }
                 }
                 catch (OutOfBoundsException)
                 {
-                    outOfBounds();
+                    OutOfBounds();
                 }
             });
         }
 
         public abstract void Dispose();
     }
-    public class Poller : LogFileReaderBase
+    public class Poller : LogFileWatcherBase
     {
         private Timer filetimer;
         private long duration;
@@ -86,9 +97,9 @@ namespace LogViewer.Infrastructure
             {
                 invoker.Invoke(() =>
                 {
-                    foreach (var item in File.Read(parser))
+                    foreach (var item in File.Read(stream => { return parser.Parse(stream); }))
                     {
-                        logentry(item);
+                        InvokeLogEntry(item);
                     }
                 });
             }
@@ -105,7 +116,7 @@ namespace LogViewer.Infrastructure
 
     }
 
-    public class Watcher : LogFileReaderBase
+    public class Watcher : LogFileWatcherBase
     {
         private FileSystemWatcher _watcher;
 
@@ -131,18 +142,14 @@ namespace LogViewer.Infrastructure
                 {
                     try
                     {
-                        foreach (var item in File.Read(parser))
+                        foreach (var item in File.Read(stream => { return parser.Parse(stream); }))
                         {
-                            logentry(item);
+                            InvokeLogEntry(item);
                         }
                     }
                     catch (OutOfBoundsException)
                     {
-                        if (null != outOfBounds)
-                        {
-                            outOfBounds();
-                        }
-                        else
+                        if (!TryInvokeOutOfBounds())
                         {
                             throw;
                         }

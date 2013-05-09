@@ -18,7 +18,7 @@ namespace LogViewer.Model
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
 
-        class WrappedDispatcher : DispatcherObject, IInvoker, IWrapDispatcher
+        class WrappedDispatcher : DispatcherObject, IInvoker
         {
             public WrappedDispatcher()
             {
@@ -29,47 +29,35 @@ namespace LogViewer.Model
                 Dispatcher.BeginInvoke(DispatcherPriority.Background,
                        threadStart);
             }
-            public void BeginInvoke(DispatcherPriority dispatcherPriority, ThreadStart threadStart) 
-            {
-                Dispatcher.BeginInvoke(dispatcherPriority,
-                       threadStart);
-            }
         }
-        Func<string, LogEntryParser, IWrapDispatcher, ILogFileReader> watcherFactory;
+        Func<string, LogEntryParser, ILogFileWatcher> watcherFactory;
 
-        public FileLogEntryController(IWrapDispatcher dispatcher = null, Func<string, LogEntryParser, IWrapDispatcher, ILogFileReader> watcherFactory = null, RecentFileList recentFileList=null)
+        public FileLogEntryController(IInvoker dispatcher = null, Func<string, LogEntryParser, ILogFileWatcher> createLogFileWatcher = null, IPersist persist = null)
         {
             Entries = new ObservableCollection<LogEntryViewModel>();
-            this.watcherFactory = watcherFactory??CreateWatcher;
+            this.watcherFactory = createLogFileWatcher??CreateLogFileWatcher;
             wrappedDispatcher = dispatcher ?? new WrappedDispatcher();
             Counter = new LogEntryCounter(Entries);
-            this.recentFileList = recentFileList??new RecentFileList(new XmlPersister(ApplicationAttributes.Get()));
+            this.recentFileList = new RecentFileList(persist?? new XmlPersister(ApplicationAttributes.Get(),9));
         }
 
-        private static ILogFileReader CreateWatcher(string value, LogEntryParser parser, IWrapDispatcher wrappedDispatcher)
+        private ILogFileWatcher CreateLogFileWatcher(string value, LogEntryParser parser)
         {
             return new Watcher(new FileWithPosition(value), parser, wrappedDispatcher);
         }
 
         private void WatchFile(string value)
         {
-            if (null == watcher || !watcher.File.FileNameMatch(value))
+            if (watcher != null)
             {
-                if (watcher != null)
-                {
-                    watcher.Dispose();
-                    watcher = null;
-                }
-                watcher = watcherFactory(value, parser, wrappedDispatcher);
-                watcher.logentry = AddToEntries;
-                watcher.outOfBounds = OutOfBounds;
-                wrappedDispatcher.BeginInvoke(DispatcherPriority.Background,
-                  new ThreadStart(() =>
-                  {
-                      Entries.Clear();
-                  }));
-                watcher.Init();
+                watcher.Dispose();
+                watcher = null;
             }
+            watcher = watcherFactory(value, parser);
+            watcher.LogEntry += AddToEntries;
+            watcher.OutOfBounds += OutOfBounds;
+            wrappedDispatcher.Invoke(() =>Entries.Clear());
+            watcher.Init();
         }
         
         public ObservableCollection<RecentFile> FileList 
@@ -79,9 +67,9 @@ namespace LogViewer.Model
                 return this.recentFileList.FileList;
             }
         }
-        private IWrapDispatcher wrappedDispatcher;
+        private IInvoker wrappedDispatcher;
 
-        private ILogFileReader watcher = null;
+        private ILogFileWatcher watcher = null;
         private string _filename;
         public string FileName
         {
@@ -91,11 +79,14 @@ namespace LogViewer.Model
             }
             set
             {
-                _filename = value;
-                WatchFile(value);
-                recentFileList.AddFilenameToRecent(value);
+                if (value != _filename)
+                {
+                    _filename = value;
+                    WatchFile(value);
+                    recentFileList.AddFilenameToRecent(value);
 
-                NotifyFileNameChanged();
+                    NotifyFileNameChanged();
+                }
             }
         }
         public event PropertyChangedEventHandler FileNameChanged;
@@ -113,9 +104,8 @@ namespace LogViewer.Model
         private LogEntryParser parser = new LogEntryParser();
         private void OutOfBounds() 
         {
-            watcher.Reset();
             Entries.Clear();
-            watcher.Read();
+            watcher.Reset();
         }
         private LogEntryViewModel _selected;
         public LogEntryViewModel Selected
@@ -173,9 +163,5 @@ namespace LogViewer.Model
                 Selected = last;
             }
         }
-    }
-    public interface IWrapDispatcher : IInvoker
-    {
-        void BeginInvoke(DispatcherPriority dispatcherPriority, ThreadStart threadStart);
     }
 }

@@ -7,8 +7,8 @@ namespace LogViewer
 {
     public interface IPersist
     {
-        List<string> RecentFiles(int max);
-        void InsertFile(string filepath, int max);
-        void RemoveFile(string filepath, int max);
+        List<string> RecentFiles();
+        void InsertFile(string filepath);
+        void RemoveFile(string filepath);
     }
 }
