@@ -1,5 +1,7 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -9,6 +11,8 @@ namespace LogViewer
 {
     public partial class LogListView : UserControl
     {
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+  
         public FileLogEntryController Filec
         {
             get { return (FileLogEntryController)this.DataContext; }
@@ -33,6 +37,7 @@ namespace LogViewer
                 }
                 catch (Exception ex)
                 {
+                    _log.Error("Drag and drop", ex);
                     MessageBox.Show("Error in Drag Drop: " + ex.Message);
                 }
             }
@@ -42,13 +47,13 @@ namespace LogViewer
 
         private void LogitemsViewHeaderClicked(object sender, RoutedEventArgs e)
         {
-            var header = e.OriginalSource as GridViewColumnHeader;
-            var source = e.Source as ListView;
-
+            var header = (GridViewColumnHeader)e.OriginalSource;
+            var source = (ListView)e.Source;
+            var nameOfHeader = header.Content.ToString();
             var dataView = CollectionViewSource.GetDefaultView(source.ItemsSource);
             dataView.SortDescriptions.Clear();
             _direction = _direction == ListSortDirection.Ascending ? ListSortDirection.Descending : ListSortDirection.Ascending;
-            var description = new SortDescription(header.Content.ToString(), _direction);
+            var description = new SortDescription(nameOfHeader, _direction);
             dataView.SortDescriptions.Add(description);
             dataView.Refresh();
         }

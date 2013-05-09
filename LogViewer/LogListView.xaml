@@ -46,14 +46,17 @@
         <ListView.View>
             <GridView x:Name="LogItemsGrid">
                 <GridViewColumn Header="TimeStamp" DisplayMemberBinding="{Binding TimeStamp}"/>
-                <GridViewColumn Header="">
+                <GridViewColumn Header="Level">
                     <GridViewColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Source="{Binding Path=Image, Converter={StaticResource ImageTypeToImageSourceConverter}}" Width="16" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding Path=Image, Converter={StaticResource ImageTypeToImageSourceConverter}}" Width="16" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                <TextBlock Padding="2, 0, 0, 0" Text="{Binding Level}" />
+                            </StackPanel>
                         </DataTemplate>
                     </GridViewColumn.CellTemplate>
                 </GridViewColumn>
-                <GridViewColumn Header="Level" DisplayMemberBinding="{Binding Level}"/>
+                <!--<GridViewColumn Header="Level" DisplayMemberBinding="{Binding Level}"/>-->
                 <GridViewColumn Header="Thread" DisplayMemberBinding="{Binding Thread}"/>
                 <GridViewColumn Header="Message" DisplayMemberBinding="{Binding FirstPartOfMessage}" Width="250" />
                 <GridViewColumn Header="MachineName" DisplayMemberBinding="{Binding MachineName}"/>

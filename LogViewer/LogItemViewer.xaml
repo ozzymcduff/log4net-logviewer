@@ -21,6 +21,7 @@
                 <TextBlock Name="textBoxMessage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding Message}" />
             </Grid>
         </StackPanel>
+        <Separator Height="1" Background="LightGray" />
         <StackPanel Orientation="Horizontal">
             <Label Name="labelThrowable" TextElement.FontWeight="Bold">Throwable:</Label>
             <Grid>
