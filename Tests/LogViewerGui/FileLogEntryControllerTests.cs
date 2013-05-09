@@ -39,9 +39,10 @@ namespace IntegrationTests.LogViewerGui
             {
                 OnReset();
             }
-
+            public Action OnDispose;
             public void Dispose()
             {
+                OnDispose();
             }
         }
 
@@ -91,19 +92,19 @@ namespace IntegrationTests.LogViewerGui
                 new InMemoryPersist());
             c.FileName = "test";
             Assert.That(init);
-            watcher.InvokeLogEntry(SampleLogEntry()); 
+            watcher.InvokeLogEntry(SampleLogEntry());
             Assert.That(c.Entries.Count(), Is.EqualTo(1));
         }
 
         [Test]
         public void When_getting_out_of_bounds_call_reset()
         {
-            Watcher watcher = new Watcher()
-            {
-                OnInit = () => { },
-            };
+            Watcher watcher = null;
             var c = new FileLogEntryController(new RunSameThreadInvoker(),
-                (filename, parser) => watcher,
+                (filename, parser) => watcher = new Watcher()
+                    {
+                        OnInit = () => { },
+                    },
                 new InMemoryPersist());
             c.FileName = "test";
             watcher.InvokeLogEntry(SampleLogEntry());
@@ -114,6 +115,30 @@ namespace IntegrationTests.LogViewerGui
             Assert.That(onreset);
             watcher.InvokeLogEntry(SampleLogEntry());
             Assert.That(c.Entries.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void When_setting_a_new_filename()
+        {
+            var oninit = 0;
+            var disposed = false;
+            Watcher watcher = null;
+            var c = new FileLogEntryController(new RunSameThreadInvoker(),
+                (filename, parser) =>
+                    watcher = new Watcher()
+                    {
+                        OnInit = () => { oninit++; },
+                        OnDispose = () => { disposed = true; }
+                    },
+                new InMemoryPersist());
+            c.FileName = "test";
+            watcher.InvokeLogEntry(SampleLogEntry());
+            c.FileName = "test2";
+            Assert.That(c.Entries.Count(), Is.EqualTo(0));
+            watcher.InvokeLogEntry(SampleLogEntry());
+            Assert.That(disposed);
+            Assert.That(c.Entries.Count(), Is.EqualTo(1));
+            Assert.That(oninit, Is.EqualTo(2));
         }
 
         private static LogEntry SampleLogEntry()

@@ -104,7 +104,7 @@ namespace LogViewer.Model
         private LogEntryParser parser = new LogEntryParser();
         private void OutOfBounds() 
         {
-            Entries.Clear();
+            wrappedDispatcher.Invoke(() => Entries.Clear());
             watcher.Reset();
         }
         private LogEntryViewModel _selected;
