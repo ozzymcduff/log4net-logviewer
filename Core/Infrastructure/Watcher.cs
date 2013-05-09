@@ -70,7 +70,7 @@ namespace LogViewer.Infrastructure
         private Timer filetimer;
         private long duration;
         public Poller(IFileWithPosition file, long duration, LogEntryParser parser = null, IInvoker invoker = null)
-            :base(file,parser,invoker)
+            : base(file, parser, invoker)
         {
             this.duration = duration;
         }
@@ -102,7 +102,7 @@ namespace LogViewer.Infrastructure
                 filetimer = null;
             }
         }
-     
+
     }
 
     public class Watcher : LogFileReaderBase
@@ -110,7 +110,7 @@ namespace LogViewer.Infrastructure
         private FileSystemWatcher _watcher;
 
         public Watcher(IFileWithPosition file, LogEntryParser parser = null, IInvoker invoker = null)
-            :base(file,parser,invoker)
+            : base(file, parser, invoker)
         {
         }
 
@@ -159,6 +159,6 @@ namespace LogViewer.Infrastructure
                 _watcher = null;
             }
         }
-  
+
     }
 }

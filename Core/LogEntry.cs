@@ -3,9 +3,9 @@ using log4net.Core;
 
 namespace LogViewer
 {
-	public class LogEntry
-	{
-	    public LoggingEventData Data;
+    public class LogEntry
+    {
+        public LoggingEventData Data;
         public string Identity
         {
             get
@@ -17,12 +17,12 @@ namespace LogViewer
             }
         }
 
-        public string MachineName 
+        public string MachineName
         {
             get
             {
                 var n = "log4jmachinename";
-                if (Data.Properties!=null && Data.Properties.Contains(n))
+                if (Data.Properties != null && Data.Properties.Contains(n))
                     return Data.Properties[n].ToString();
                 return null;
             }
@@ -39,20 +39,20 @@ namespace LogViewer
             }
         }
 
-	    public LogEntry ()
-		{
+        public LogEntry()
+        {
             this.Data = new LoggingEventData();
-		    Data.ExceptionString = string.Empty;
-		    Data.Domain = string.Empty;
-		    Data.UserName = string.Empty;
-		    Data.Message = string.Empty;
-		    Data.ThreadName = string.Empty;
+            Data.ExceptionString = string.Empty;
+            Data.Domain = string.Empty;
+            Data.UserName = string.Empty;
+            Data.Message = string.Empty;
+            Data.ThreadName = string.Empty;
 
-		    Data.TimeStamp = new DateTime (1970, 1, 1, 0, 0, 0, 0);
-		}
+            Data.TimeStamp = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+        }
 
-	    public static Level GetLevel(string level)
-	    {
+        public static Level GetLevel(string level)
+        {
             //Ugly
             switch (level.ToUpper())
             {
@@ -69,6 +69,6 @@ namespace LogViewer
                 default:
                     throw new NotImplementedException(level);
             }
-	    }
-	}
+        }
+    }
 }

@@ -6,7 +6,7 @@ namespace LogViewer.Infrastructure
 {
     public class FileUtil
     {
-        public static FileStream OpenReadOnly(string fileName, long position=0)
+        public static FileStream OpenReadOnly(string fileName, long position = 0)
         {
             var s = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             if (position > 0)
@@ -184,12 +184,12 @@ namespace LogViewer.Infrastructure
             }
         }
 
-        public bool FileNameMatch(string otherFileName) 
+        public bool FileNameMatch(string otherFileName)
         {
-            return !string.IsNullOrEmpty(otherFileName) && Path.GetFullPath(otherFileName).Equals(Path.GetFullPath(this.FileName), 
+            return !string.IsNullOrEmpty(otherFileName) && Path.GetFullPath(otherFileName).Equals(Path.GetFullPath(this.FileName),
                 StringComparison.InvariantCultureIgnoreCase);
         }
-        public bool FileNameInFolder(string folder) 
+        public bool FileNameInFolder(string folder)
         {
             var fullpath = Path.GetFullPath(Path.GetDirectoryName(folder));
             var filepath = System.IO.Path.GetFullPath(Path.GetDirectoryName(FileName));
@@ -201,7 +201,7 @@ namespace LogViewer.Infrastructure
             position = 0;
         }
 
-        public bool Exists() 
+        public bool Exists()
         {
             return File.Exists(FileName);
         }

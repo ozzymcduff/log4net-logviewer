@@ -12,6 +12,7 @@ using System.Threading;
 using log4net.Core;
 using log4net.Layout;
 using LogViewer.Infrastructure;
+using System.Text.RegularExpressions;
 
 namespace LogTail
 {
@@ -24,20 +25,20 @@ namespace LogTail
             int monitor = 0;
             int? lines = null;
             var watch = false;
-            PatternLayout layout=null;
-			var help = false;
+            PatternLayout layout = null;
+            var help = false;
             var p = new OptionSet() {
                 { "f|file=",   v => { files.Add(v); } },
-				{ "m|monitor=", v => { monitor=Int32.Parse(v);}},
+                { "m|monitor=", v => { monitor=ParseInterval(v);}},
                 { "w|watch", v => { watch = true;}},
                 { "l|lines=", v => { lines=Int32.Parse(v);}},
-				{ "h|?|help", v => { help = true;}},
+                { "h|?|help", v => { help = true;}},
                 { "y|layout=",v=> { layout=new PatternLayout(v);}}
             };
-			var detectedFiles = args
-				.Where(a=>!(a.StartsWith("-") || a.StartsWith("/")))
-			    .Where(a=> Uri.IsWellFormedUriString(a, UriKind.RelativeOrAbsolute))
-				.Where(a=> File.Exists(a));
+            var detectedFiles = args
+                .Where(a => !(a.StartsWith("-") || a.StartsWith("/")))
+                .Where(a => Uri.IsWellFormedUriString(a, UriKind.RelativeOrAbsolute))
+                .Where(a => File.Exists(a));
             // does not seem to work. add tests
             files.AddRange(detectedFiles);
 
@@ -51,63 +52,75 @@ namespace LogTail
             {
                 showentry = l => Console.WriteLine(l.Data.Message);
             }
-			if (help)
-			{
-				Console.WriteLine(@"Usage:
+            if (help)
+            {
+                Console.WriteLine(@"Usage:
 -f|file={a filename}
-	The file to watch, monitor or 
+    The file to watch, monitor or 
 
 -l|lines={tail x lines}	
-	Display the last x lines. Defaults to 10 lines. 
+    Display the last x lines. Defaults to 10 lines. 
 
 -y|layout={pattern layout syntax as defined in log4net.Layout.PatternLayout}
 
 -h|?|help
-	Display help
+    Display help
+
+-w|watch
+    Use file system watcher to watch file
+
+-m|monitor=seconds
+    Use polling to check for changes of the file.
 
 For instance to :
 LogTail.exe -f=logfile.xml
 LogTail.exe -file=logfile.xml
 ");
-				return;
-			}
-			
+                return;
+            }
+
             if (watch)
             {
-                Do(new Watcher(new FileWithPosition(files.Single())) 
-				{ 
-					logentry = showentry 
-				});
-				return;
+                Do(new Watcher(new FileWithPosition(files.Single()))
+                {
+                    logentry = showentry
+                });
+                return;
             }
             if (monitor > 0)
             {
-                Do(new Poller(new FileWithPosition(files.Single()), monitor) 
-				{
-					logentry = showentry 
-				});
-				return;
+                Do(new Poller(new FileWithPosition(files.Single()), monitor)
+                {
+                    logentry = showentry
+                });
+                return;
             }
-            
-            if (files.Any()){
+
+            if (files.Any())
+            {
                 TailFiles(lines ?? 10, files, showentry);
-				return;
-			}
-			else
-			{
+                return;
+            }
+            else
+            {
                 Console.WriteLine("No files, listening to standard input.");
-				using (Stream stdin = Console.OpenStandardInput())
-				using (Stream stdout = Console.OpenStandardOutput())
-				using (StreamWriter writer = new  StreamWriter(stdout))
-				{
-					var items = new LogEntryParser().Parse(stdin).ToArray();
-					foreach (var logEntry in items.Skip(items.Count() - (lines??10)))
+                using (Stream stdin = Console.OpenStandardInput())
+                using (Stream stdout = Console.OpenStandardOutput())
+                using (StreamWriter writer = new StreamWriter(stdout))
+                {
+                    var items = new LogEntryParser().Parse(stdin).ToArray();
+                    foreach (var logEntry in items.Skip(items.Count() - (lines ?? 10)))
                     {
                         writer.WriteLine(logEntry.Data.Message);
                     }
-				}
-				return;
-			}
+                }
+                return;
+            }
+        }
+
+        private static int ParseInterval(string v)
+        {
+            return Int32.Parse(v) * 1000;
         }
 
         private static void Do(ILogFileReader w)
