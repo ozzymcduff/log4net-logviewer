@@ -1,26 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Data;
 using System.IO;
-using System.Xml;
-using System.Drawing;
-using System.Windows.Threading;
 using System.ComponentModel;
-using System.Windows.Interop;
 using System.Reflection;
-using System.Threading;
-using System.Collections.ObjectModel;
+using LogViewer.Model;
+using System.Windows.Interop;
+using System.Drawing;
 
 
 namespace LogViewer
@@ -36,6 +23,8 @@ namespace LogViewer
             Title = string.Format("LogViewer  v.{0}", Assembly.GetExecutingAssembly().GetName().Version);
             this.Loaded += new RoutedEventHandler(OverviewWindow_Loaded);
             this.Closed += OverviewWindow_Closed;
+
+            this.Icon = Imaging.CreateBitmapSourceFromHIcon(SystemIcons.Question.Handle, Int32Rect.Empty, null);
 
             InitializeComponent();
             this.DataContext = filec;
@@ -122,10 +111,10 @@ namespace LogViewer
                     //GetPreviousPage
                     break;
                 case Key.Home:
-                    //GetTop
+                    filec.SelectTop();
                     break;
                 case Key.End:
-                    //GetBottom
+                    filec.SelectBottom();
                     break;
                 default:
                     break;

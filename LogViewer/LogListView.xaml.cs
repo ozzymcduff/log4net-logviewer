@@ -1,4 +1,5 @@
 ﻿using log4net;
+using LogViewer.Model;
 using System;
 using System.ComponentModel;
 using System.Reflection;
@@ -47,7 +48,8 @@ namespace LogViewer
 
         private void LogitemsViewHeaderClicked(object sender, RoutedEventArgs e)
         {
-            var header = (GridViewColumnHeader)e.OriginalSource;
+            var header = e.OriginalSource as GridViewColumnHeader;
+            if (null == header) { return; }
             var source = (ListView)e.Source;
             var nameOfHeader = header.Content.ToString();
             var dataView = CollectionViewSource.GetDefaultView(source.ItemsSource);

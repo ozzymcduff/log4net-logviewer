@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using LogViewer.Infrastructure;
+using System;
 using System.Linq;
-using System.Text;
-using System.IO;
-using System.Timers;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows.Threading;
 using System.Threading;
-using LogViewer.Model;
-using Timer = System.Timers.Timer;
-using LogViewer.Infrastructure;
+using System.Windows.Threading;
 
-namespace LogViewer
+namespace LogViewer.Model
 {
     public class FileLogEntryController : INotifyPropertyChanged
     {
@@ -46,7 +40,6 @@ namespace LogViewer
         public FileLogEntryController(IWrapDispatcher dispatcher = null, Func<string, LogEntryParser, IWrapDispatcher, ILogFileReader> watcherFactory = null, RecentFileList recentFileList=null)
         {
             Entries = new ObservableCollection<LogEntryViewModel>();
-            FileNameChanged += ObservableFileName_PropertyChanged;
             this.watcherFactory = watcherFactory??CreateWatcher;
             wrappedDispatcher = dispatcher ?? new WrappedDispatcher();
             Counter = new LogEntryCounter(Entries);
@@ -56,13 +49,6 @@ namespace LogViewer
         private static ILogFileReader CreateWatcher(string value, LogEntryParser parser, IWrapDispatcher wrappedDispatcher)
         {
             return new Watcher(new FileWithPosition(value), parser, wrappedDispatcher);
-        }
-
-        void ObservableFileName_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            var value = _filename;
-            WatchFile(value);
-            recentFileList.AddFilenameToRecent(value);
         }
 
         private void WatchFile(string value)
@@ -106,6 +92,9 @@ namespace LogViewer
             set
             {
                 _filename = value;
+                WatchFile(value);
+                recentFileList.AddFilenameToRecent(value);
+
                 NotifyFileNameChanged();
             }
         }
@@ -168,7 +157,22 @@ namespace LogViewer
         }
         public LogEntryCounter Counter { get; set; }
 
-
+        public void SelectTop()
+        {
+            var first = this.Entries.FirstOrDefault();
+            if (first!=null)
+            {
+                Selected = first;
+            }
+        }
+        public void SelectBottom()
+        {
+            var last = this.Entries.LastOrDefault();
+            if (last != null)
+            {
+                Selected = last;
+            }
+        }
     }
     public interface IWrapDispatcher : IInvoker
     {
