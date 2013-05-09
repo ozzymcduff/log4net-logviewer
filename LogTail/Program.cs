@@ -25,7 +25,7 @@ namespace LogTail
             int monitor = 0;
             int? lines = null;
             var watch = false;
-            PatternLayout layout = null;
+            LayoutSkeleton layout = null;
             var help = false;
             var p = new OptionSet() {
                 { "f|file=",   v => { files.Add(v); } },
@@ -43,15 +43,12 @@ namespace LogTail
             files.AddRange(detectedFiles);
 
             p.Parse(args);
-            Action<LogEntry> showentry;
-            if (null != layout)
+            if (layout == null)
             {
-                showentry = l => layout.Format(Console.Out, new LoggingEvent(l.Data));
+                layout = new SimpleLayout();
             }
-            else
-            {
-                showentry = l => Console.WriteLine(l.Data.Message);
-            }
+            Action<TextWriter,LogEntry> showentry = (writer, l) => layout.Format(writer, new LoggingEvent(l.Data));
+            
             if (help)
             {
                 Console.WriteLine(@"Usage:
@@ -75,6 +72,9 @@ namespace LogTail
 For instance to :
 LogTail.exe -f=logfile.xml
 LogTail.exe -file=logfile.xml
+
+If you are in powershell (or cygwin) you can do the following:
+cat yourlogfile.xml | LogTail.exe
 ");
                 return;
             }
@@ -83,7 +83,7 @@ LogTail.exe -file=logfile.xml
             {
                 Do(new Watcher(new FileWithPosition(files.Single()))
                 {
-                    logentry = showentry
+                    logentry = (entry)=>showentry(Console.Out,entry)
                 });
                 return;
             }
@@ -91,14 +91,14 @@ LogTail.exe -file=logfile.xml
             {
                 Do(new Poller(new FileWithPosition(files.Single()), monitor)
                 {
-                    logentry = showentry
+                    logentry = (entry) => showentry(Console.Out, entry)
                 });
                 return;
             }
 
             if (files.Any())
             {
-                TailFiles(lines ?? 10, files, showentry);
+                TailFiles(lines ?? 10, files, (entry) => showentry(Console.Out, entry));
                 return;
             }
             else
@@ -111,7 +111,7 @@ LogTail.exe -file=logfile.xml
                     var items = new LogEntryParser().Parse(stdin).ToArray();
                     foreach (var logEntry in items.Skip(items.Count() - (lines ?? 10)))
                     {
-                        writer.WriteLine(logEntry.Data.Message);
+                        showentry(writer, logEntry);
                     }
                 }
                 return;
