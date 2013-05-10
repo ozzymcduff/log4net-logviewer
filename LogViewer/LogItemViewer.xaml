@@ -9,52 +9,55 @@
     <UserControl.Resources>
         <local:ImageTypeToImageSourceConverter x:Key="ImageTypeToImageSourceConverter" />
     </UserControl.Resources>
-    <StackPanel Orientation="Vertical">
-        <StackPanel Orientation="Horizontal">
-            <Image Name="levelImage" Width="16" Height="16" Source="{Binding Image, Converter={StaticResource ImageTypeToImageSourceConverter}}" />
-            <ContentControl  Name="textBoxLevel" Content="{Binding Level}" />
-        </StackPanel>
+    <ScrollViewer ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Visible">
 
-        <StackPanel Orientation="Horizontal">
-            <Label Name="labelMessage" TextElement.FontWeight="Bold">Message:</Label>
-            <Grid>
-                <TextBlock Name="textBoxMessage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding Message}" />
-            </Grid>
-        </StackPanel>
-        <Separator Height="1" Background="LightGray" />
-        <StackPanel Orientation="Horizontal">
-            <Label Name="labelThrowable" TextElement.FontWeight="Bold">Throwable:</Label>
-            <Grid>
-                <TextBlock Name="textBoxThrowable" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding Throwable}"/>
-            </Grid>
-        </StackPanel>
-        <GroupBox Header="Location">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <local:LabelAndText x:Name="classL" Label="Class:" Text="{Binding Class}" />
-                    <local:LabelAndText x:Name="methodL" Label="Method:" Text="{Binding Method}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <local:LabelAndText x:Name="fileL" Label="File:" Text="{Binding File}" />
-                    <local:LabelAndText x:Name="lineL" Label="Line:" Text="{Binding Line}" />
-                </StackPanel>
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <Image Name="levelImage" Width="16" Height="16" Source="{Binding Image, Converter={StaticResource ImageTypeToImageSourceConverter}}" />
+                <TextBlock Name="textBoxLevel" Padding="2, 0, 0, 0" Text="{Binding Level}" />
             </StackPanel>
-        </GroupBox>
 
-        <GroupBox Header="Execution environment">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <local:LabelAndText x:Name="hostnamel" Label="Host name:" Text="{Binding HostName}" />
-                    <local:LabelAndText x:Name="usernamel" Label="User name:" Text="{Binding UserName}" />
-                    <local:LabelAndText x:Name="appl" Label="App:" Text="{Binding App}" />
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal">
-                    <local:LabelAndText x:Name="timestampl" Label="Time stamp:" Text="{Binding TimeStamp}" />
-                    <local:LabelAndText x:Name="machinenamel" Label="Machine name:" Text="{Binding MachineName}" />
-                    <local:LabelAndText x:Name="threadl" Label="Thread:" Text="{Binding Thread}" />
-                </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Name="labelMessage" TextElement.FontWeight="Bold">Message:</Label>
+                <Grid>
+                    <TextBlock Name="textBoxMessage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding Message}" />
+                </Grid>
             </StackPanel>
-        </GroupBox>
-    </StackPanel>
+            <Separator Height="1" Background="LightGray" />
+            <StackPanel Orientation="Horizontal">
+                <Label Name="labelThrowable" TextElement.FontWeight="Bold">Throwable:</Label>
+                <Grid>
+                    <TextBlock Name="textBoxThrowable" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{Binding Throwable}"/>
+                </Grid>
+            </StackPanel>
+            <GroupBox Header="Location">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <local:LabelAndText x:Name="classL" Label="Class:" Text="{Binding Class}" />
+                        <local:LabelAndText x:Name="methodL" Label="Method:" Text="{Binding Method}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <local:LabelAndText x:Name="fileL" Label="File:" Text="{Binding File}" />
+                        <local:LabelAndText x:Name="lineL" Label="Line:" Text="{Binding Line}" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Execution environment">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <local:LabelAndText x:Name="hostnamel" Label="Host name:" Text="{Binding HostName}" />
+                        <local:LabelAndText x:Name="usernamel" Label="User name:" Text="{Binding UserName}" />
+                        <local:LabelAndText x:Name="appl" Label="App:" Text="{Binding App}" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <local:LabelAndText x:Name="timestampl" Label="Time stamp:" Text="{Binding TimeStamp}" />
+                        <local:LabelAndText x:Name="machinenamel" Label="Machine name:" Text="{Binding MachineName}" />
+                        <local:LabelAndText x:Name="threadl" Label="Thread:" Text="{Binding Thread}" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

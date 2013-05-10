@@ -85,7 +85,7 @@
                     <ColumnDefinition Width="16" />
                 </Grid.ColumnDefinitions>
                 <Image Name="previous" Width="16" Height="16" Margin="2" Source="/LogViewer;component/Resources/Images/arrow_left.png" VerticalAlignment="Center" Grid.Column="0"/>
-                <local:LogItemViewer x:Name="logitemviewer" Grid.Column="1" DataContext="{Binding Path=Selected}"/>
+                    <local:LogItemViewer x:Name="logitemviewer" Grid.Column="1" DataContext="{Binding Path=Selected}"/>
                 <Image HorizontalAlignment="Right" Name="Next" Width="16" Height="16" Margin="2" Source="/LogViewer;component/Resources/Images/arrow_right.png" VerticalAlignment="Center" Grid.Column="2"/>
             </Grid>
 
