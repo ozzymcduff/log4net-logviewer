@@ -1,6 +1,8 @@
 Log4net-logviewer
 =================
 
+[nuget package](http://nuget.org/packages/log4net-logviewer/)
+
 Gui alternatives:
 -----------------
 - [Log2Console](http://log2console.codeplex.com/)
