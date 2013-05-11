@@ -25,11 +25,20 @@ namespace :logviewer do
     desc "create the nuget package"
     task :nugetpack => [:core_nugetpack]
 
-    task :core_nugetpack => [:core_copy_to_nuspec] do |nuget|
+    task :core_nugetpack => [:core_copy_to_nuspec, :runners_copy_to_nuspec] do |nuget|
       cd File.join(dir,"nuget") do
         sh "..\\.nuget\\NuGet.exe pack log4net-logviewer.nuspec"
       end
     end
+
+    task :runners_copy_to_nuspec => [:build] do
+      output_directory_lib = File.join(dir,"nuget/tools/")
+      mkdir_p output_directory_lib
+      ['LogTail', 'LogViewer'].each{ |project|
+        cp Dir.glob("./#{project}/bin/Debug/#{project}.exe"), output_directory_lib
+      }
+    end
+
     desc "install missing nuget packages"
     task :packages do
       FileList["**/packages.config"].each { |filepath|
