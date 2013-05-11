@@ -63,9 +63,7 @@
     <Compile Include="..\Core\LogEntryParser.cs">
       <Link>LogEntryParser.cs</Link>
     </Compile>
-    <Compile Include="..\ndesk-options-mirror\src\NDesk.Options\NDesk.Options\Options.cs">
-      <Link>Options.cs</Link>
-    </Compile>
+    <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
