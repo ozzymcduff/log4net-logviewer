@@ -38,24 +38,4 @@ namespace :logviewer do
     end
   end
 
-
-  namespace :mono do
-    desc "build on mono"
-    xbuild :build do |msb|
-      msb.properties :configuration => :Debug
-      msb.targets :rebuild
-      msb.verbosity = 'quiet'
-      msb.solution = File.join(dir, "LogTail.sln")
-    end
-
-    task :test => :build do
-      # does not work for some reason 
-      assemblies = "Tests.dll"
-      cd File.join(dir,"Tests/bin/Debug") do
-        sh "nunit-console4 #{assemblies}"
-      end
-    end
-    
-  end
-
 end
