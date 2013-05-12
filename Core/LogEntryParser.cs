@@ -5,12 +5,15 @@ using System.Text;
 using System.Xml;
 using log4net.Core;
 using log4net.Util;
+using log4net;
+using System.Reflection;
 
 namespace LogViewer
 {
     public class LogEntryParser
     {
         private static readonly DateTime _dt = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         class Names
         {
@@ -117,7 +120,7 @@ namespace LogViewer
                                     }
                                     else if (Object.ReferenceEquals(xmlreader.LocalName, names.level))
                                     {
-                                        logentry.Data.Level = LogEntry.GetLevel(xmlreader.Value);
+                                        logentry.Data.Level = GetLevel(xmlreader.Value);
                                     }
                                     else if (Object.ReferenceEquals(xmlreader.LocalName, names.logger))
                                     {
@@ -150,6 +153,11 @@ namespace LogViewer
                 }
             }
             return list;
+        }
+
+        private Level GetLevel(string level)
+        {
+            return _log.Logger.Repository.LevelMap[level];
         }
 
         private void EventChildren(XmlReader xmlreader, Names names, LogEntry logentry)

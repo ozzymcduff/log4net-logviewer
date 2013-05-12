@@ -50,25 +50,5 @@ namespace LogViewer
 
             Data.TimeStamp = new DateTime(1970, 1, 1, 0, 0, 0, 0);
         }
-
-        public static Level GetLevel(string level)
-        {
-            //Ugly
-            switch (level.ToUpper())
-            {
-                case "ERROR":
-                    return log4net.Core.Level.Error;
-                case "INFO":
-                    return log4net.Core.Level.Info;
-                case "DEBUG":
-                    return log4net.Core.Level.Debug;
-                case "WARN":
-                    return log4net.Core.Level.Warn;
-                case "FATAL":
-                    return log4net.Core.Level.Fatal;
-                default:
-                    throw new NotImplementedException(level);
-            }
-        }
     }
 }
