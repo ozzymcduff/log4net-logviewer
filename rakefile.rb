@@ -37,6 +37,12 @@ namespace :logviewer do
       ['LogTail', 'LogViewer'].each{ |project|
         cp Dir.glob("./#{project}/bin/Debug/#{project}.exe"), output_directory_lib
       }
+      cp Dir.glob("./LogTail/bin/Debug/log4net.dll"), output_directory_lib
+end
+
+    task :clean_packages do
+      rm_r(File.join(dir,"nuget/tools/"))
+      rm_r(File.join(dir,"nuget/lib/"))
     end
 
     desc "install missing nuget packages"
