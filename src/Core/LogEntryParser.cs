@@ -132,7 +132,7 @@ namespace LogViewer
                                     }
                                     else
                                     {
-                                        throw new NotImplementedException(xmlreader.LocalName);
+                                        throw new Exception("PARSE1: Expected a knwon localname but was: "+xmlreader.LocalName);
                                     }
                                 }
                                 xmlreader.MoveToElement();
@@ -143,13 +143,13 @@ namespace LogViewer
                         }
                         else
                         {
-                            Console.WriteLine(xmlreader.NodeType + ", " + xmlreader.Name + ": " + xmlreader.Value);
-                            throw new NotImplementedException();
+                            throw new Exception(string.Format("PARSE2: Expected event for localname but was: {0}{1}{2}, {3}: {4}", xmlreader.LocalName, 
+                                Environment.NewLine, xmlreader.NodeType, xmlreader.Name, xmlreader.Value));
                         }
                         break;
                     default:
-                        Console.WriteLine(xmlreader.NodeType + ", " + xmlreader.Name + ": " + xmlreader.Value);
-                        throw new NotImplementedException(xmlreader.NodeType.ToString());
+                        throw new Exception(string.Format("PARSE3: Expected whitespace or element, but was: {0}{1}{2}, {3}: {4}", xmlreader.NodeType.ToString(), 
+                            Environment.NewLine, xmlreader.NodeType, xmlreader.Name, xmlreader.Value));
                 }
             }
             return list;
@@ -196,7 +196,7 @@ namespace LogViewer
                         }
                         else
                         {
-                            throw new NotImplementedException("1! " + xmlreader.Name);
+                            throw new Exception("EVENTCHILDREN1: Expected a known name but was: " + xmlreader.Name);
                         }
                         break;
                     case XmlNodeType.EndElement:
@@ -214,11 +214,11 @@ namespace LogViewer
                         }
                         else
                         {
-                            throw new NotImplementedException("3! " + xmlreader.Name);
+                            throw new Exception("EVENTCHILDREN2: expected end element to be either event, message, throwable, exception or properties, but was: " + xmlreader.Name);
                         }
                         break;
                     default:
-                        throw new NotImplementedException("2! " + xmlreader.NodeType);
+                        throw new Exception("EVENTCHILDREN3: Expected either whitespace, element or end element but was: " + xmlreader.NodeType);
                     //break;
                 }
             }
@@ -252,7 +252,7 @@ namespace LogViewer
                     }
                     else
                     {
-                        throw new NotImplementedException(xmlreader.LocalName);
+                        throw new Exception("READLOCATIONINFO1: Expected a known localname but was: " + xmlreader.LocalName);
                     }
                 }
                 logentry.Data.LocationInfo = new LocationInfo(className, methodName, fileName, lineNumber);
@@ -275,7 +275,7 @@ namespace LogViewer
                         }
                         else
                         {
-                            throw new NotImplementedException("!");
+                            throw new Exception("READPROPERTIES1: Expected data but was: " + xmlreader.LocalName);
                         }
                         break;
                     case XmlNodeType.EndElement:
@@ -289,11 +289,11 @@ namespace LogViewer
                         }
                         else
                         {
-                            throw new NotImplementedException("! " + xmlreader.Name);
+                            throw new Exception("READPROPERTIES2: Expected localname to be data or properties: " + xmlreader.Name);
                         }
                         break;
                     default:
-                        throw new NotImplementedException("! " + xmlreader.NodeType);
+                        throw new Exception("READPROPERTIES3: Expected type to be element, whitespace or endelement but was: " + xmlreader.NodeType);
                 }
             }
         }
@@ -316,7 +316,7 @@ namespace LogViewer
                     }
                     else
                     {
-                        throw new NotImplementedException(xmlreader.LocalName);
+                        throw new Exception("READDATAATTRIBUTES1: Expected localname to be name or value: " + xmlreader.LocalName);
                     }
                 }
 
@@ -355,7 +355,7 @@ namespace LogViewer
                         }
                         else
                         {
-                            throw new NotImplementedException("!");
+                            throw new Exception("READNDC1: Expected localname to be ndc but was: " + xmlreader.LocalName);
                         }
                         break;
                     case XmlNodeType.EndElement:
@@ -363,9 +363,9 @@ namespace LogViewer
                         {
                             return;
                         }
-                        throw new NotImplementedException("! " + xmlreader.Name);
+                        throw new Exception("READNDC2: Expected localname to be ndc but was: " + xmlreader.LocalName);
                     default:
-                        throw new NotImplementedException("! " + xmlreader.NodeType);
+                        throw new Exception("READNDC2: Expected type to be whitespace, element or endelement but was: " + xmlreader.NodeType);
                 }
             }
         }
