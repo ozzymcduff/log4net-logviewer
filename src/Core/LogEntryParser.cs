@@ -174,7 +174,7 @@ namespace LogViewer
                             logentry.Data.Message = xmlreader.ReadInnerXml();
                         }
                         else if (Object.ReferenceEquals(xmlreader.LocalName, names.throwable)
-                                || Object.ReferenceEquals(xmlreader.LocalName, names.exception))
+                                 || Object.ReferenceEquals(xmlreader.LocalName, names.exception))
                         {
                             logentry.Data.ExceptionString = xmlreader.ReadInnerXml();
                         }
@@ -205,21 +205,34 @@ namespace LogViewer
                             return;
                         }
                         else if (Object.ReferenceEquals(xmlreader.LocalName, names.message)
-                              || Object.ReferenceEquals(xmlreader.LocalName, names.throwable)
-                              || Object.ReferenceEquals(xmlreader.LocalName, names.exception)
-                              || Object.ReferenceEquals(xmlreader.LocalName, names.properties)
-                          )
+                                 || Object.ReferenceEquals(xmlreader.LocalName, names.throwable)
+                                 || Object.ReferenceEquals(xmlreader.LocalName, names.exception)
+                                 || Object.ReferenceEquals(xmlreader.LocalName, names.properties)
+                            )
                         {
                             //Ignore it
                         }
                         else
                         {
-                            throw new Exception("EVENTCHILDREN2: expected end element to be either event, message, throwable, exception or properties, but was: " + xmlreader.Name);
+                            throw new Exception(
+                                "EVENTCHILDREN2: expected end element to be either event, message, throwable, exception or properties, but was: " +
+                                xmlreader.Name);
+                        }
+                        break;
+                    case XmlNodeType.Text:
+                        var readInnerXml = xmlreader.ReadInnerXml();
+                        if (!string.IsNullOrEmpty(readInnerXml))
+                        {
+                            throw new Exception(
+                                "EVENTCHILDREN3: Expected empty text but was: " +
+                                readInnerXml);
                         }
                         break;
                     default:
-                        throw new Exception("EVENTCHILDREN3: Expected either whitespace, element or end element but was: " + xmlreader.NodeType);
-                    //break;
+                        throw new Exception(
+                            "EVENTCHILDREN4: Expected either whitespace, element or end element but was: " +
+                            xmlreader.NodeType);
+                        //break;
                 }
             }
         }

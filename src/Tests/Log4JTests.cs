@@ -125,6 +125,30 @@ level=""ERROR"" thread=""7"">
         }
 
         [Test]
+        public void Parse_with_text_element()
+        {
+            var line = @"<log4j:event logger=""installrelease"" timestamp=""1388750967872"" level=""ERROR"" thread=""""><log4j:NDC></log4j:NDC><log4j:message>Caught Errno::EACCES: Permission denied - filesomething
+  C:/Ruby193/lib/ruby/gems/1.9.1/gems/someliblib/lib/libloblob/libloblob.rb:42:in `block in download'
+  C:/Ruby193/lib/ruby/gems/1.9.1/gems/someliblib/lib/libloblob/libloblob.rb:41:in `each'
+  C:/Ruby193/lib/ruby/gems/1.9.1/gems/someliblib/lib/libloblob/libloblob.rb:41:in `download'
+  install_release.rb:92:in `block in get_latest!'</log4j:message><log4j:throwable>Caught Errno::EACCES: Permission denied - file
+  C:/Ruby193/lib/ruby/gems/1.9.1/gems/someliblib/lib/libloblob/libloblob.rb:42:in `block in download'
+  C:/Ruby193/lib/ruby/gems/1.9.1/gems/someliblib/lib/libloblob/libloblob.rb:41:in `each'
+  C:/Ruby193/lib/ruby/gems/1.9.1/gems/someliblib/lib/libloblob/libloblob.rb:41:in `download'
+  install_release.rb:92:in `block in get_latest!'</log4j:throwable><log4j:locationInfo class="""" method="""" file="""" line=""""/><log4j:properties></log4j:properties></log4j:event>";
+            using (var s = new MemoryStream())
+            using (var w = new StreamWriter(s))
+            {
+                w.Write(line);
+                w.Flush();
+                s.Position = 0;
+
+                var entry = new LogEntryParser().Parse(s).Single();
+                Assert.That(entry.Data.Level.Name, Is.EqualTo("ERROR"));
+            }
+        }
+
+        [Test]
         public void Parse()
         {
             using (var s = new MemoryStream())
