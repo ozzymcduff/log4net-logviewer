@@ -33,7 +33,8 @@ namespace LogTail
                 { "w|watch", v => { watch = true;}},
                 { "l|lines=", v => { lines=Int32.Parse(v);}},
                 { "h|?|help", v => { help = true;}},
-                { "y|layout=",v=> { layout=new PatternLayout(v);}}
+                { "y|layout=",v=> { layout=new PatternLayout(v);}},
+                { "f|format=", v=> { layout = GetFormatLayout(v); }}
             };
             var detectedFiles = args
                 .Where(a => !(a.StartsWith("-") || a.StartsWith("/")))
@@ -59,6 +60,10 @@ namespace LogTail
     Display the last x lines. Defaults to 10 lines. 
 
 -y|layout={pattern layout syntax as defined in log4net.Layout.PatternLayout}
+
+-f|format={a named layout format}
+    The available formats are:
+        -f=minusminus Information delimited by newline and ----------------------
 
 -h|?|help
     Display help
@@ -148,5 +153,20 @@ cat yourlogfile.xml | LogTail.exe
                 }
             }
         }
+
+        private static LayoutSkeleton GetFormatLayout(string format)
+        {
+            switch (format)
+            {
+                case "minusminus":
+                    return
+                        new PatternLayout(
+                            "%newline----------------------BEGIN LOG----------------------%newline##date: %newline%date %newline##level: %newline%-5level %newline##logger: %newline%logger %newline########message:########%newline%message %newline########exception:########%newline %exception%newline----------------------END LOG----------------------%newline");
+                default:
+                    Console.Error.WriteLine("Unknown format '{0}'", format);
+                    return null;
+            }
+        }
+
     }
 }
