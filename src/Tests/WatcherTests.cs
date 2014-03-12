@@ -53,7 +53,7 @@ namespace IntegrationTests
 
                 File.WriteAllText(file, "");
                 Thread.Sleep(100/*750*3*/);
-                Assert.That(outofbounds, Is.EqualTo(1));
+                Assert.That(outofbounds, Is.GreaterThanOrEqualTo(1));
             }
         }
     }

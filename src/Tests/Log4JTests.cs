@@ -4,9 +4,6 @@ using LogViewer;
 using log4net;
 using NUnit.Framework;
 using System.IO;
-using System.Xml;
-using System.Text;
-using System.Collections.Generic;
 using LogViewer.Infrastructure;
 
 namespace IntegrationTests
@@ -145,6 +142,8 @@ level=""ERROR"" thread=""7"">
 
                 var entry = new LogEntryParser().Parse(s).Single();
                 Assert.That(entry.Data.Level.Name, Is.EqualTo("ERROR"));
+                Assert.That(entry.Data.Message, Is.StringContaining(@"Caught Errno::EACCES: Permission denied - filesomething"));
+                Assert.That(entry.Data.Message, Is.StringContaining(@"install_release.rb:92:in `block in get_latest!'"));
             }
         }
 
