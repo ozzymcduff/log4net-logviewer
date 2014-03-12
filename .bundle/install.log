@@ -1,0 +1,5 @@
+# Logfile created on 2014-03-12 18:53:11 +0000 by logger.rb/44203
+I, [2014-03-12T18:53:11.004049 #11157]  INFO -- : 0:  rake (10.1.1) from /usr/local/rvm/gems/ruby-2.1.0/specifications/rake-10.1.1.gemspec
+I, [2014-03-12T18:53:11.777463 #11157]  INFO -- : 0:  rubyzip (0.9.9) from /usr/local/rvm/gems/ruby-2.1.0/specifications/rubyzip-0.9.9.gemspec
+I, [2014-03-12T18:54:10.444062 #11157]  INFO -- : 0:  albacore (0.3.6) from /usr/local/rvm/gems/ruby-2.1.0/specifications/albacore-0.3.6.gemspec
+I, [2014-03-12T18:54:10.502409 #11157]  INFO -- : 0:  bundler (1.5.0) from /usr/local/rvm/gems/ruby-2.1.0@global/specifications/bundler-1.5.0.gemspec
