@@ -1,4 +1,4 @@
-Log4net-logviewer
+Log4net-logviewer [![Build Status](https://travis-ci.org/wallymathieu/log4net-logviewer.png?branch=master)](https://travis-ci.org/wallymathieu/log4net-logviewer)
 =================
 
 [nuget package](http://nuget.org/packages/log4net-logviewer/)
