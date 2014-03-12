@@ -5,6 +5,11 @@ env:
     - EnableNuGetPackageRestore=false
 
 script: 
+  - sudo apt-get update                                # run update before installing anything
+  - sudo apt-get install python-software-properties -y
+  - sudo add-apt-repository ppa:v-kukol/mono-3.2 -y
+  - sudo apt-get update
   - sudo apt-get install mono-devel nunit-console -y
   - bundle install 
+  - rake mono:install_packages
   - rake mono:test
