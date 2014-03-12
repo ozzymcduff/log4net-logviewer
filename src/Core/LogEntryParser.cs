@@ -220,13 +220,7 @@ namespace LogViewer
                         }
                         break;
                     case XmlNodeType.Text:
-                        var readInnerXml = xmlreader.ReadInnerXml();
-                        if (!string.IsNullOrEmpty(readInnerXml))
-                        {
-                            throw new Exception(
-                                "EVENTCHILDREN3: Expected empty text but was: " +
-                                readInnerXml);
-                        }
+                        // Ignore it
                         break;
                     default:
                         throw new Exception(
