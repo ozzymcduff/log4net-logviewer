@@ -3,6 +3,11 @@ desc "Nuget pack"
 task :nugetpack => ["logviewer:ms:nugetpack"]
 $dir = File.join(File.dirname(__FILE__),'src')
 $nuget = File.join(File.dirname(__FILE__),'nuget')
+
+def nunit_cmd()
+  return Dir.glob(File.join(File.dirname(__FILE__),"src","packages","NUnit.Runners.*","tools","nunit-console.exe")).first
+end
+
 namespace :ms do
   desc "build using msbuild"
   msbuild :build do |msb|
@@ -76,10 +81,17 @@ namespace :mono do
 
   desc "test with nunit"
   nunit :test => :build do |n|
-    n.command = "nunit-console"
+    #n.command = "nunit-console"
     tlib = "Tests"
-    n.assemblies "src/#{tlib}/bin/Debug/#{tlib}.dll"
+    #n.assemblies "src/#{tlib}/bin/Debug/#{tlib}.dll"
+    command = "mono --runtime=v4.0.30319 #{nunit_cmd()} -noxml  "
+    sh "#{command} src/#{tlib}/bin/Debug/#{tlib}.dll" do  |ok, res|
+      if !ok
+        abort 'Nunit failed!'
+      end
+    end
   end
+
   
   desc "Install missing NuGet packages."
   task :install_packages do |cmd|
