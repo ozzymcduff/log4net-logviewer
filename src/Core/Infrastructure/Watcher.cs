@@ -53,8 +53,8 @@ namespace LogViewer.Infrastructure
 
         public void Reset()
         {
-            this.File.ResetPosition();
-            this.Read();
+            File.ResetPosition();
+            Read();
         }
         public void Read()
         {
@@ -62,7 +62,7 @@ namespace LogViewer.Infrastructure
             {
                 try
                 {
-                    foreach (var item in File.Read(stream => { return parser.Parse(stream); }))
+                    foreach (var item in File.Read(stream => parser.Parse(stream)))
                     {
                         LogEntry(item);
                     }
@@ -97,7 +97,7 @@ namespace LogViewer.Infrastructure
             {
                 invoker.Invoke(() =>
                 {
-                    foreach (var item in File.Read(stream => { return parser.Parse(stream); }))
+                    foreach (var item in File.Read(stream => parser.Parse(stream)))
                     {
                         InvokeLogEntry(item);
                     }
@@ -128,10 +128,14 @@ namespace LogViewer.Infrastructure
         public override void Init()
         {
             Read();
-            _watcher = new FileSystemWatcher { Path = System.IO.Path.GetDirectoryName(File.FileName) };
-            _watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
+            _watcher = new FileSystemWatcher
+            {
+                Path = Path.GetDirectoryName(File.FileName),
+                NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite,
+                EnableRaisingEvents = true
+            };
             _watcher.Changed += FileHasChanged;
-            _watcher.EnableRaisingEvents = true;
+            
         }
 
         private void FileHasChanged(object sender, FileSystemEventArgs e)

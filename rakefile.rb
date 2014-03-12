@@ -80,12 +80,9 @@ namespace :mono do
   end
 
   desc "test with nunit"
-  nunit :test => :build do |n|
-    #n.command = "nunit-console"
+  task :test => :build do |n|
     tlib = "Tests"
-    #n.assemblies "src/#{tlib}/bin/Debug/#{tlib}.dll"
-    command = "mono --runtime=v4.0.30319 #{nunit_cmd()} -noxml  "
-    sh "#{command} src/#{tlib}/bin/Debug/#{tlib}.dll" do  |ok, res|
+    sh "mono --runtime=v4.0.30319 #{nunit_cmd()} src/#{tlib}/bin/Debug/#{tlib}.dll -noxml " do  |ok, res|
       if !ok
         abort 'Nunit failed!'
       end
