@@ -6,11 +6,11 @@ namespace LogViewer.Infrastructure
 {
 
 
-	public class Watcher : LogFileWatcherBase
+	public class Watcher <TLogEntry> : LogFileWatcherBase<TLogEntry>
 	{
 		private FileSystemWatcher _watcher;
 
-		public Watcher(IFileWithPosition file, LogEntryParser parser = null, IInvoker invoker = null)
+		public Watcher(IFileWithPosition file, ILogEntryParser<TLogEntry> parser, Invoker invoker=null)
 			: base(file, parser, invoker)
 		{
 		}

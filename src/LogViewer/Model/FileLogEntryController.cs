@@ -18,7 +18,7 @@ namespace LogViewer.Model
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
 
-        class WrappedDispatcher : DispatcherObject, IInvoker
+        class WrappedDispatcher : DispatcherObject
         {
             public WrappedDispatcher()
             {
@@ -30,20 +30,20 @@ namespace LogViewer.Model
                        threadStart);
             }
         }
-        Func<string, LogEntryParser, ILogFileWatcher> watcherFactory;
+        Func<string, LogEntryParser, ILogFileWatcher<LogEntry>> watcherFactory;
 
-        public FileLogEntryController(IInvoker dispatcher = null, Func<string, LogEntryParser, ILogFileWatcher> createLogFileWatcher = null, IPersist persist = null)
+        public FileLogEntryController(Invoker dispatcher = null, Func<string, LogEntryParser, ILogFileWatcher<LogEntry>> createLogFileWatcher = null, IPersist persist = null)
         {
             Entries = new ObservableCollection<LogEntryViewModel>();
             this.watcherFactory = createLogFileWatcher??CreateLogFileWatcher;
-            wrappedDispatcher = dispatcher ?? new WrappedDispatcher();
+            wrappedDispatcher = dispatcher ?? new WrappedDispatcher().Invoke;
             Counter = new LogEntryCounter(Entries);
             this.recentFileList = new RecentFileList(persist?? new XmlPersister(ApplicationAttributes.Get(),9));
         }
 
-        private ILogFileWatcher CreateLogFileWatcher(string value, LogEntryParser parser)
+        private ILogFileWatcher<LogEntry> CreateLogFileWatcher(string value, LogEntryParser parser)
         {
-            return new Watcher(new FileWithPosition(value), parser, wrappedDispatcher);
+            return new Watcher<LogEntry>(new FileWithPosition(value), parser, wrappedDispatcher);
         }
 
         private void WatchFile(string value)
@@ -67,9 +67,9 @@ namespace LogViewer.Model
                 return this.recentFileList.FileList;
             }
         }
-        private IInvoker wrappedDispatcher;
+        private Invoker wrappedDispatcher;
 
-        private ILogFileWatcher watcher = null;
+        private ILogFileWatcher<LogEntry> watcher = null;
         private string _filename;
         public string FileName
         {

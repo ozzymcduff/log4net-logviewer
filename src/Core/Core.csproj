@@ -46,7 +46,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\DirectInvoker.cs" />
+    <Compile Include="Infrastructure\FileWithPosition.cs" />
+    <Compile Include="Infrastructure\IFileWithPosition.cs" />
+    <Compile Include="Infrastructure\Invoker.cs" />
+    <Compile Include="Infrastructure\ILogEntryParser.cs" />
     <Compile Include="Infrastructure\LogFileWatcherBase.cs" />
+    <Compile Include="Infrastructure\OutOfBoundsException.cs" />
     <Compile Include="Infrastructure\Poller.cs" />
     <Compile Include="Infrastructure\Watcher.cs" />
     <Compile Include="Infrastructure\Extensions.cs" />

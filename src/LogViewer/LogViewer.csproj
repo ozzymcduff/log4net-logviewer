@@ -88,17 +88,35 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\Core\Infrastructure\DirectInvoker.cs">
+      <Link>Infrastructure\DirectInvoker.cs</Link>
+    </Compile>
     <Compile Include="..\Core\Infrastructure\Extensions.cs">
       <Link>Infrastructure\Extensions.cs</Link>
     </Compile>
     <Compile Include="..\Core\Infrastructure\FileUtil.cs">
       <Link>Infrastructure\FileUtil.cs</Link>
     </Compile>
+    <Compile Include="..\Core\Infrastructure\FileWithPosition.cs">
+      <Link>Infrastructure\FileWithPosition.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Infrastructure\IFileWithPosition.cs">
+      <Link>Infrastructure\IFileWithPosition.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Infrastructure\ILogEntryParser.cs">
+      <Link>Infrastructure\ILogEntryParser.cs</Link>
+    </Compile>
     <Compile Include="..\Core\Infrastructure\ILogFileWatcher.cs">
       <Link>Infrastructure\ILogFileWatcher.cs</Link>
     </Compile>
+    <Compile Include="..\Core\Infrastructure\Invoker.cs">
+      <Link>Infrastructure\Invoker.cs</Link>
+    </Compile>
     <Compile Include="..\Core\Infrastructure\LogFileWatcherBase.cs">
       <Link>Infrastructure\LogFileWatcherBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Infrastructure\OutOfBoundsException.cs">
+      <Link>Infrastructure\OutOfBoundsException.cs</Link>
     </Compile>
     <Compile Include="..\Core\Infrastructure\Poller.cs">
       <Link>Infrastructure\Poller.cs</Link>

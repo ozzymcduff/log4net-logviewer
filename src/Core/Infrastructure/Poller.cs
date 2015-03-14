@@ -4,11 +4,11 @@ using System.IO;
 
 namespace LogViewer.Infrastructure
 {
-	public class Poller : LogFileWatcherBase
+	public class Poller<TLogEntry> : LogFileWatcherBase<TLogEntry>
 	{
 		private Timer filetimer;
 		private long duration;
-		public Poller(IFileWithPosition file, long duration, LogEntryParser parser = null, IInvoker invoker = null)
+		public Poller(IFileWithPosition file, long duration, ILogEntryParser<TLogEntry> parser, Invoker invoker=null)
 			: base(file, parser, invoker)
 		{
 			this.duration = duration;

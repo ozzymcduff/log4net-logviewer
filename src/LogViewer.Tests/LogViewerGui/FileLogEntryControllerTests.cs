@@ -12,15 +12,15 @@ namespace IntegrationTests.LogViewerGui
     [TestFixture]
     public class FileLogEntryControllerTests : TestFixtureBase
     {
-        public class RunSameThreadInvoker : IInvoker
+        public class RunSameThreadInvoker 
         {
-            public void Invoke(System.Action run)
+            public static void Invoke(System.Action run)
             {
                 run();
             }
         }
-        public class Watcher : ILogFileWatcher
-        {
+        public class Watcher : ILogFileWatcher<LogEntry>
+		{
             public Watcher()
             {
             }
@@ -72,7 +72,7 @@ namespace IntegrationTests.LogViewerGui
         [Test]
         public void When_no_filename()
         {
-            var c = new FileLogEntryController(new RunSameThreadInvoker(),
+            var c = new FileLogEntryController(RunSameThreadInvoker.Invoke,
                 (filename, parser) => new Watcher(),
                 new InMemoryPersist());
             var entries = c.Entries.ToArray();
@@ -87,7 +87,7 @@ namespace IntegrationTests.LogViewerGui
                     {
                         OnInit = () => { init = true; },
                     };
-            var c = new FileLogEntryController(new RunSameThreadInvoker(),
+            var c = new FileLogEntryController(RunSameThreadInvoker.Invoke,
                 (filename, parser) => watcher,
                 new InMemoryPersist());
             c.FileName = "test";
@@ -100,7 +100,7 @@ namespace IntegrationTests.LogViewerGui
         public void When_getting_out_of_bounds_call_reset()
         {
             Watcher watcher = null;
-            var c = new FileLogEntryController(new RunSameThreadInvoker(),
+            var c = new FileLogEntryController(RunSameThreadInvoker.Invoke,
                 (filename, parser) => watcher = new Watcher()
                     {
                         OnInit = () => { },
@@ -123,7 +123,7 @@ namespace IntegrationTests.LogViewerGui
             var oninit = 0;
             var disposed = false;
             Watcher watcher = null;
-            var c = new FileLogEntryController(new RunSameThreadInvoker(),
+            var c = new FileLogEntryController(RunSameThreadInvoker.Invoke,
                 (filename, parser) =>
                     watcher = new Watcher()
                     {

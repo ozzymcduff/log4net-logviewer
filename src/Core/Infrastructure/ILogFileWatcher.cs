@@ -4,22 +4,11 @@ using System.IO;
 
 namespace LogViewer.Infrastructure
 {
-    public interface ILogFileWatcher : IDisposable
+    public interface ILogFileWatcher<TLogEntry> : IDisposable
     {
-        event Action<LogEntry> LogEntry;
+        event Action<TLogEntry> LogEntry;
         event Action OutOfBounds;
         void Init();
         void Reset();
-    }
-    public interface IInvoker
-    {
-        void Invoke(Action run);
-    }
-    public class DirectInvoker : IInvoker
-    {
-        public void Invoke(Action run)
-        {
-            run();
-        }
     }
 }

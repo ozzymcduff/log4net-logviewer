@@ -84,14 +84,14 @@ cat yourlogfile.xml | LogTail.exe
 
             if (watch)
             {
-                Do(new Watcher(new FileWithPosition(files.Single())).Tap(w=>{
+                Do(new Watcher<LogEntry>(new FileWithPosition(files.Single()),new LogEntryParser()).Tap(w=>{
                     w.LogEntry += (entry) => showentry(Console.Out, entry);
                 }));
                 return;
             }
             if (monitor > 0)
             {
-                Do(new Poller(new FileWithPosition(files.Single()), monitor).Tap(w =>
+                Do(new Poller<LogEntry>(new FileWithPosition(files.Single()), monitor, new LogEntryParser()).Tap(w =>
                 {
                     w.LogEntry += (entry) => showentry(Console.Out, entry);
                 }));
@@ -125,7 +125,7 @@ cat yourlogfile.xml | LogTail.exe
             return Int32.Parse(v) * 1000;
         }
 
-        private static void Do(ILogFileWatcher w)
+        private static void Do(ILogFileWatcher<LogEntry> w)
         {
             bool keepAlive = true;
             Thread workerThread = new Thread(w.Init);

@@ -4,25 +4,25 @@ using System.IO;
 
 namespace LogViewer.Infrastructure
 {
-	public abstract class LogFileWatcherBase : ILogFileWatcher
+	public abstract class LogFileWatcherBase<TLogEntry> : ILogFileWatcher<TLogEntry>
 	{
-		public LogFileWatcherBase(IFileWithPosition file, LogEntryParser parser = null, IInvoker invoker = null)
+		public LogFileWatcherBase(IFileWithPosition file, ILogEntryParser<TLogEntry> parser, Invoker invoker)
 		{
 			this.File = file;
-			this.parser = parser ?? new LogEntryParser();
-			this.invoker = invoker ?? new DirectInvoker();
-
+			this.parser = parser;
+			this.invoker = invoker ?? DirectInvoker.Invoke;
 		}
-		protected LogEntryParser parser;
-		protected IInvoker invoker;
+
+		protected ILogEntryParser<TLogEntry> parser;
+		protected Invoker invoker;
 		public IFileWithPosition File { get; private set; }
 
-		public event Action<LogEntry> LogEntry;
+		public event Action<TLogEntry> LogEntry;
 		public event Action OutOfBounds;
 
 		public abstract void Init();
 
-		protected void InvokeLogEntry(LogEntry entry)
+		protected void InvokeLogEntry(TLogEntry entry)
 		{
 			LogEntry(entry);
 		}

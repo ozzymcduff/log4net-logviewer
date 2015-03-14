@@ -19,7 +19,7 @@ namespace IntegrationTests
             if (File.Exists(file)) { File.Delete(file); }
             File.WriteAllText(file, _buffer);
             var files = new List<LogEntry>();
-            using (var watcher = new Watcher(new FileWithPosition(file)).Tap(w=>
+            using (var watcher = new Watcher<LogEntry>(new FileWithPosition(file),new LogEntryParser()).Tap(w=>
             {
                 w.LogEntry += l => { files.Add(l); };
             }))
@@ -40,7 +40,7 @@ namespace IntegrationTests
             File.WriteAllText(file, _buffer);
             var outofbounds = 0;
             var files = new List<LogEntry>();
-            using (var watcher = new Watcher(new FileWithPosition(file)).Tap(w=>
+            using (var watcher = new Watcher<LogEntry>(new FileWithPosition(file), new LogEntryParser()).Tap(w=>
             {
                 w.LogEntry += l => { files.Add(l); };
                 w.OutOfBounds += () => { outofbounds++; };
