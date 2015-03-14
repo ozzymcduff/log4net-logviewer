@@ -3,8 +3,7 @@ $dir = File.join(File.dirname(__FILE__),'src')
 $nuget = File.join(File.dirname(__FILE__),'nuget')
 
 require 'albacore'
-require_relative './src/.nuget/nuget'
-
+require 'nuget_helper'
 
 desc "build using msbuild"
 build :build do |msb|
@@ -20,7 +19,7 @@ end
 
 desc "test using console"
 test_runner :test => [:build] do |runner|
-  runner.exe = NuGet::nunit_path
+  runner.exe = NugetHelper.nunit_path
   files = Dir.glob(File.join($dir,"*Tests","bin","**","*Tests.dll"))
   runner.files = files 
 end
@@ -44,14 +43,14 @@ end
 
 task :core_nugetpack => [:core_copy_to_nuspec, :runners_copy_to_nuspec] do |nuget|
   cd $nuget do
-    NuGet::exec "pack log4net-logviewer.nuspec"
+    NugetHelper.exec "pack log4net-logviewer.nuspec"
   end
 end
 
 desc "Install missing NuGet packages."
 task :install_packages do
   cd $dir do
-    NuGet::exec("restore LogViewer.sln")
+    NugetHelper.exec("restore LogViewer.sln")
   end
 end
 
