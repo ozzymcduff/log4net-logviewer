@@ -1,4 +1,3 @@
-desc "Nuget pack"
 $dir = File.join(File.dirname(__FILE__),'src')
 $nuget = File.join(File.dirname(__FILE__),'nuget')
 
@@ -10,7 +9,7 @@ build :build do |msb|
   msb.prop :configuration, :Debug
   msb.target = [:Rebuild]
   msb.logging = 'minimal'
-  if NuGet.os == :windows
+  if NugetHelper.os == :windows
     msb.sln =File.join($dir, "LogViewer.sln")
   else
     msb.sln =File.join($dir, "LogViewer.Core.sln")
