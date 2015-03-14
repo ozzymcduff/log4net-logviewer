@@ -2,14 +2,14 @@
 using LogViewer.Infrastructure;
 using LogViewer.Model;
 using System.Linq;
-using NUnit.Framework;
 using System.Collections.Generic;
 using System;
 using log4net.Core;
+using Xunit;
+using TestAttribute = Xunit.FactAttribute;
 
 namespace IntegrationTests.LogViewerGui
 {
-    [TestFixture]
     public class FileLogEntryControllerTests : TestFixtureBase
     {
         public class RunSameThreadInvoker 
@@ -76,7 +76,7 @@ namespace IntegrationTests.LogViewerGui
                 (filename, parser) => new Watcher(),
                 new InMemoryPersist());
             var entries = c.Entries.ToArray();
-            Assert.That(entries.Count(), Is.EqualTo(0));
+            Assert.Equal(0, entries.Count());
         }
 
         [Test]
@@ -91,9 +91,9 @@ namespace IntegrationTests.LogViewerGui
                 (filename, parser) => watcher,
                 new InMemoryPersist());
             c.FileName = "test";
-            Assert.That(init);
+            Assert.True(init);
             watcher.InvokeLogEntry(SampleLogEntry());
-            Assert.That(c.Entries.Count(), Is.EqualTo(1));
+            Assert.Equal(1, c.Entries.Count());
         }
 
         [Test]
@@ -108,13 +108,13 @@ namespace IntegrationTests.LogViewerGui
                 new InMemoryPersist());
             c.FileName = "test";
             watcher.InvokeLogEntry(SampleLogEntry());
-            watcher.OnInit = Assert.Fail;
+            watcher.OnInit = ()=> { throw new Exception(); };
             var onreset = false;
             watcher.OnReset = () => { onreset = true; };
             watcher.InvokeOutOfBounds();
-            Assert.That(onreset);
+            Assert.True(onreset);
             watcher.InvokeLogEntry(SampleLogEntry());
-            Assert.That(c.Entries.Count(), Is.EqualTo(1));
+            Assert.Equal(1, c.Entries.Count());
         }
 
         [Test]
@@ -134,11 +134,11 @@ namespace IntegrationTests.LogViewerGui
             c.FileName = "test";
             watcher.InvokeLogEntry(SampleLogEntry());
             c.FileName = "test2";
-            Assert.That(c.Entries.Count(), Is.EqualTo(0));
+            Assert.Equal(0, c.Entries.Count());
             watcher.InvokeLogEntry(SampleLogEntry());
-            Assert.That(disposed);
-            Assert.That(c.Entries.Count(), Is.EqualTo(1));
-            Assert.That(oninit, Is.EqualTo(2));
+            Assert.True(disposed);
+            Assert.Equal(1, c.Entries.Count());
+            Assert.Equal(2, oninit);
         }
 
         private static LogEntry SampleLogEntry()

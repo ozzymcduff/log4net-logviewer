@@ -2,18 +2,17 @@
 using System.Linq;
 using LogViewer;
 using log4net;
-using NUnit.Framework;
+using Xunit;
 using System.IO;
 using LogViewer.Infrastructure;
-
+using TestAttribute = Xunit.FactAttribute;
 namespace IntegrationTests
 {
-    [TestFixture]
     public class Log4JTests
     {
         private static readonly string _buffer = @"<log4j:event logger=""IntegrationTests.LogTests"" timestamp=""1300902418948"" level=""ERROR"" thread=""7""><log4j:message>test</log4j:message><log4j:properties><log4j:data name=""log4net:UserName"" value=""AWESOMEMACHINE\Administrator"" /><log4j:data name=""log4jmachinename"" value=""AWESOMEMACHINE"" /><log4j:data name=""log4japp"" value=""IsolatedAppDomainHost: IntegrationTests"" /><log4j:data name=""log4net:HostName"" value=""AWESOMEMACHINE"" /></log4j:properties><log4j:locationInfo class=""IntegrationTests.LogTests"" method=""TestLog"" file=""C:\projects\LogViewer\IntegrationTests\LogTests.cs"" line=""18"" /></log4j:event>";
 
-        [Ignore("Used to generate log file"), Test]
+        //[Ignore("Used to generate log file"), Test]
         public void TestLog()
         {
             var log = LogManager.GetLogger(typeof(Log4JTests));
@@ -36,7 +35,7 @@ namespace IntegrationTests
                 s.Position = 0;
                 var entry = new LogEntryParser().Parse(s).Single();
 
-                Assert.That(entry.Data.ExceptionString, Is.EqualTo("System.Exception: test"));
+                Assert.Equal("System.Exception: test", entry.Data.ExceptionString);
             }
         }
 
@@ -70,17 +69,17 @@ level=""ERROR"" thread=""7"">
                 s.Position = 0;
 
                 var entry = new LogEntryParser().Parse(s).Single();
-                Assert.That(entry.Data.Level.Name, Is.EqualTo("ERROR"));
-                Assert.That(entry.Data.UserName, Is.EqualTo(@"AWESOMEMACHINE\Administrator"));
-                Assert.That(entry.MachineName, Is.EqualTo(@"AWESOMEMACHINE"));
-                Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
-                Assert.That(entry.Data.Domain, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
-                Assert.That(entry.Data.Message, Is.EqualTo("msg"));
-                Assert.That(entry.Class(), Is.EqualTo("IntegrationTests.LogTests"));
-                Assert.That(entry.Data.ExceptionString, Is.EqualTo("System.Exception: test"));
-                Assert.That(entry.Method(), Is.EqualTo("TestLog"));
-                Assert.That(entry.Line(), Is.EqualTo("27"));
-                Assert.That(entry.File(), Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
+                Assert.Equal("ERROR", entry.Data.Level.Name);
+                Assert.Equal(@"AWESOMEMACHINE\Administrator", entry.Data.UserName);
+                Assert.Equal(@"AWESOMEMACHINE", entry.MachineName);
+                Assert.Equal(@"AWESOMEMACHINE", entry.HostName);
+                Assert.Equal(@"IsolatedAppDomainHost: IntegrationTests", entry.Data.Domain);
+                Assert.Equal("msg", entry.Data.Message);
+                Assert.Equal("IntegrationTests.LogTests", entry.Class());
+                Assert.Equal("System.Exception: test", entry.Data.ExceptionString);
+                Assert.Equal("TestLog", entry.Method());
+                Assert.Equal("27", entry.Line());
+                Assert.Equal(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs", entry.File());
             }
         }
 
@@ -117,7 +116,7 @@ level=""ERROR"" thread=""7"">
                 s.Position = 0;
 
                 var entry = new LogEntryParser().Parse(s).Single();
-                Assert.That(entry.Data.Level.Name, Is.EqualTo("ERROR"));
+                Assert.Equal("ERROR", entry.Data.Level.Name);
             }
         }
 
@@ -141,9 +140,9 @@ level=""ERROR"" thread=""7"">
                 s.Position = 0;
 
                 var entry = new LogEntryParser().Parse(s).Single();
-                Assert.That(entry.Data.Level.Name, Is.EqualTo("ERROR"));
-                Assert.That(entry.Data.Message, Is.StringContaining(@"Caught Errno::EACCES: Permission denied - filesomething"));
-                Assert.That(entry.Data.Message, Is.StringContaining(@"install_release.rb:92:in `block in get_latest!'"));
+                Assert.Equal("ERROR", entry.Data.Level.Name);
+                Assert.True(entry.Data.Message.Contains(@"Caught Errno::EACCES: Permission denied - filesomething"));
+                Assert.True(entry.Data.Message.Contains(@"install_release.rb:92:in `block in get_latest!'"));
             }
         }
 
@@ -172,7 +171,7 @@ level=""ERROR"" thread=""7"">
 
                 var entry = new LogEntryParser().Parse(s).Single();
 
-                Assert.That(entry.Identity, Is.EqualTo("44045"));
+                Assert.Equal("44045", entry.Identity);
             }
         }
 
@@ -187,16 +186,16 @@ level=""ERROR"" thread=""7"">
                 s.Position = 0;
                 var entry = new LogEntryParser().Parse(s).Single();
 
-                Assert.That(entry.Data.Level.Name, Is.EqualTo("ERROR"));
-                Assert.That(entry.Data.UserName, Is.EqualTo(@"AWESOMEMACHINE\Administrator"));
-                Assert.That(entry.MachineName, Is.EqualTo(@"AWESOMEMACHINE"));
-                Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
-                Assert.That(entry.Data.Domain, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
-                Assert.That(entry.Data.Message, Is.EqualTo("test"));
-                Assert.That(entry.Class(), Is.EqualTo("IntegrationTests.LogTests"));
-                Assert.That(entry.Method(), Is.EqualTo("TestLog"));
-                Assert.That(entry.Line(), Is.EqualTo("18"));
-                Assert.That(entry.File(), Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
+                Assert.Equal("ERROR", entry.Data.Level.Name);
+                Assert.Equal(@"AWESOMEMACHINE\Administrator", entry.Data.UserName);
+                Assert.Equal(@"AWESOMEMACHINE", entry.MachineName);
+                Assert.Equal(@"AWESOMEMACHINE", entry.HostName);
+                Assert.Equal(@"IsolatedAppDomainHost: IntegrationTests", entry.Data.Domain);
+                Assert.Equal("test", entry.Data.Message);
+                Assert.Equal("IntegrationTests.LogTests", entry.Class());
+                Assert.Equal("TestLog", entry.Method());
+                Assert.Equal("18", entry.Line());
+                Assert.Equal(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs", entry.File());
             }
         }
 
@@ -206,8 +205,8 @@ level=""ERROR"" thread=""7"">
             using (var s = FileUtil.OpenReadOnly("test.xml"))
             {
                 var entry = new LogEntryParser().Parse(s).Single();
-                Assert.That(entry.Data.Message, Is.StringContaining("Translation for 'Detta ska jag g"));
-                Assert.That(entry.Data.Message, Is.StringContaining("ra...' in module Todo for culture sv-SE does not exist."));
+                Assert.True(entry.Data.Message.Contains("Translation for 'Detta ska jag g"), "translation");
+                Assert.True(entry.Data.Message.Contains("ra...' in module Todo for culture sv-SE does not exist."), "in module");
 
             }
         }

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NUnit.Framework;
+using Xunit;
 using LogViewer.Infrastructure;
+using TestAttribute = Xunit.FactAttribute;
+
 namespace IntegrationTests.Infrastructure
 {
-    [TestFixture]
     public class ExtensionTests
     {
         [Test]
@@ -15,7 +16,7 @@ namespace IntegrationTests.Infrastructure
             var collection = new int?[] {0,1,2,3,4};
             for (int i = 0; i < collection.Length-1; i++)
             {
-                Assert.That(collection.Next(i), Is.EqualTo(i+1), i.ToString());
+                Assert.Equal(i+1, collection.Next(i));
             }
         }
         [Test]
@@ -24,7 +25,7 @@ namespace IntegrationTests.Infrastructure
             var collection = new int?[] { 0, 1, 2, 3, 4 };
             for (int i = collection.Length-1; i >= 1; i--)
             {
-                Assert.That(collection.Previous(i), Is.EqualTo(i - 1), i.ToString());
+                Assert.Equal(i - 1, collection.Previous(i));
             }
             //Assert.That(collection.Previous(1, c => true), Is.EqualTo(0), "0");
         }

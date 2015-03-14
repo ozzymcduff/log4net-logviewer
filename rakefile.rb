@@ -18,7 +18,7 @@ end
 
 desc "test using console"
 test_runner :test => [:build] do |runner|
-  runner.exe = NugetHelper.nunit_path
+  runner.exe = NugetHelper.xunit_path
   files = Dir.glob(File.join($dir,"*Tests","bin","**","*Tests.dll"))
   runner.files = files 
 end

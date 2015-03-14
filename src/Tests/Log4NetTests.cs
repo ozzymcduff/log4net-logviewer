@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Linq;
-using NUnit.Framework;
+using Xunit;
 using System.IO;
 using LogViewer;
 using log4net.Core;
 using log4net.Layout;
 using LogViewer.Infrastructure;
+using TestAttribute = Xunit.FactAttribute;
 
 namespace IntegrationTests
 {
-    [TestFixture]
     public class Log4NetTests
     {
         private string _buffer =
@@ -38,14 +38,14 @@ username=""AWESOMEMACHINE\Administrator"">
                 w.Flush();
                 s.Position = 0;
                 var entry = new LogEntryParser().Parse(s).Single();
-                Assert.That(entry.Data.Level.Name, Is.EqualTo("ERROR"));
-                Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
-                Assert.That(entry.Data.Domain, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
-                Assert.That(entry.Data.Message, Is.EqualTo("msg"));
-                Assert.That(entry.Class(), Is.EqualTo("IntegrationTests.LogTests"));
-                Assert.That(entry.Method(), Is.EqualTo("TestLog"));
-                Assert.That(entry.Line(), Is.EqualTo("19"));
-                Assert.That(entry.File(), Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
+                Assert.Equal("ERROR", entry.Data.Level.Name);
+                Assert.Equal(@"AWESOMEMACHINE", entry.HostName);
+                Assert.Equal(@"IsolatedAppDomainHost: IntegrationTests", entry.Data.Domain);
+                Assert.Equal("msg", entry.Data.Message);
+                Assert.Equal("IntegrationTests.LogTests", entry.Class());
+                Assert.Equal("TestLog", entry.Method());
+                Assert.Equal("19", entry.Line());
+                Assert.Equal(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs", entry.File());
             }
         }
         [Test]
@@ -60,14 +60,14 @@ username=""AWESOMEMACHINE\Administrator"">
                 s.Position = 0;
 
                 var entry = new LogEntryParser().Parse(s).Single();
-                Assert.That(entry.Data.Level.Name, Is.EqualTo("ERROR"));
-                Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
-                Assert.That(entry.Data.Domain, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
-                Assert.That(entry.Data.Message, Is.EqualTo("msg"));
-                Assert.That(entry.Class(), Is.EqualTo("IntegrationTests.LogTests"));
-                Assert.That(entry.Method(), Is.EqualTo("TestLog"));
-                Assert.That(entry.Line(), Is.EqualTo("19"));
-                Assert.That(entry.File(), Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
+                Assert.Equal("ERROR", entry.Data.Level.Name);
+                Assert.Equal(@"AWESOMEMACHINE", entry.HostName);
+                Assert.Equal(@"IsolatedAppDomainHost: IntegrationTests", entry.Data.Domain);
+                Assert.Equal("msg", entry.Data.Message);
+                Assert.Equal("IntegrationTests.LogTests", entry.Class());
+                Assert.Equal("TestLog", entry.Method());
+                Assert.Equal("19", entry.Line());
+                Assert.Equal(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs", entry.File());
             }
         }
         [Test]
@@ -98,14 +98,14 @@ username=""AWESOMEMACHINE\Administrator"">
             using (var s = FileUtil.OpenReadOnly(path, position: p))
             {
                 var entry = new LogEntryParser().Parse(s).Single();
-                Assert.That(entry.Data.Level.Name, Is.EqualTo("ERROR"));
-                Assert.That(entry.HostName, Is.EqualTo(@"AWESOMEMACHINE"));
-                Assert.That(entry.Data.Domain, Is.EqualTo(@"IsolatedAppDomainHost: IntegrationTests"));
-                Assert.That(entry.Data.Message, Is.EqualTo("msg"));
-                Assert.That(entry.Class(), Is.EqualTo("IntegrationTests.LogTests"));
-                Assert.That(entry.Method(), Is.EqualTo("TestLog"));
-                Assert.That(entry.Line(), Is.EqualTo("19"));
-                Assert.That(entry.File(), Is.EqualTo(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs"));
+                Assert.Equal("ERROR", entry.Data.Level.Name);
+                Assert.Equal(@"AWESOMEMACHINE", entry.HostName);
+                Assert.Equal(@"IsolatedAppDomainHost: IntegrationTests", entry.Data.Domain);
+                Assert.Equal("msg", entry.Data.Message);
+                Assert.Equal("IntegrationTests.LogTests", entry.Class());
+                Assert.Equal("TestLog", entry.Method());
+                Assert.Equal("19", entry.Line());
+                Assert.Equal(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs", entry.File());
             }
         }
         [Test]
@@ -148,7 +148,7 @@ username=""AWESOMEMACHINE\Administrator"">
                                                                  TimeStamp = new DateTime(2001, 1, 1)
                                                              }));
             stringWriter.Flush();
-            Assert.That(stringWriter.ToString(), Is.EqualTo("2001-01-01 00:00:00,000 [thread] ERROR logger - msg" + Environment.NewLine));
+            Assert.Equal("2001-01-01 00:00:00,000 [thread] ERROR logger - msg" + Environment.NewLine, stringWriter.ToString());
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework;
+using Xunit;
 using LogViewer;
 using System.IO;
 using System.Threading;
 using LogViewer.Infrastructure;
+using TestAttribute = Xunit.FactAttribute;
+
 namespace IntegrationTests
 {
-    [TestFixture]
     public class WatcherTests
     {
         private string _buffer =
@@ -25,10 +26,10 @@ namespace IntegrationTests
             }))
             {
                 watcher.Init();
-                Assert.That(files.Count, Is.EqualTo(1));
+                Assert.Equal(1, files.Count);
                 File.AppendAllText(file, _buffer);
                 Thread.Sleep(100/*750*3*/);
-                Assert.That(files.Count, Is.EqualTo(2));
+                Assert.Equal(2, files.Count);
             }
         }
 
@@ -50,7 +51,7 @@ namespace IntegrationTests
 
                 File.WriteAllText(file, "");
                 Thread.Sleep(100/*750*3*/);
-                Assert.That(outofbounds, Is.GreaterThanOrEqualTo(1));
+                Assert.True(outofbounds>=1, "outofbounds>=1");
             }
         }
     }

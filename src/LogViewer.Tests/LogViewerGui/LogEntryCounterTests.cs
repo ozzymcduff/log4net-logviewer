@@ -1,7 +1,8 @@
 ﻿using LogViewer.Model;
 using log4net.Core;
 using LogViewer;
-using NUnit.Framework;
+using Xunit;
+using TestAttribute = Xunit.FactAttribute;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +11,6 @@ using System.Text;
 using LogVmT = LogViewer.Model.LogEntryViewModel;
 namespace IntegrationTests.LogViewerGui
 {
-    [TestFixture]
     public class LogEntryCounterTests : TestFixtureBase
     {
         [Test]
@@ -21,8 +21,7 @@ namespace IntegrationTests.LogViewerGui
                 LogVm(Level.Info)
             });
             var counter = new LogEntryCounter(col);
-            Assert.That(counter.Count.Value, 
-                Is.EqualTo(LCount(Kv("ERROR",2), Kv("INFO",1))));
+            Assert.Equal(LCount(Kv("ERROR",2), Kv("INFO",1)), counter.Count.Value);
         }
 
         [Test]
@@ -34,8 +33,7 @@ namespace IntegrationTests.LogViewerGui
             });
             var counter = new LogEntryCounter(col);
             col.Add(LogVm(Level.Debug));
-            Assert.That(counter.Count.Value,
-                Is.EqualTo(LCount(Kv("ERROR", 2), Kv("INFO", 1), Kv("DEBUG",1))));
+            Assert.Equal(LCount(Kv("ERROR", 2), Kv("INFO", 1), Kv("DEBUG",1)),counter.Count.Value);
         }
 
         [Test]
@@ -47,8 +45,7 @@ namespace IntegrationTests.LogViewerGui
             });
             var counter = new LogEntryCounter(col);
             col.Clear();
-            Assert.That(counter.Count.Value,
-                Is.EqualTo(LCount()));
+            Assert.Equal(LCount(),counter.Count.Value);
         }
     }
 }
