@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{282352
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogViewer.Tests", "LogViewer.Tests\LogViewer.Tests.csproj", "{31C6CA2D-D6F4-45CD-8C4B-0114ED47EB45}"
@@ -43,8 +44,8 @@ Global
 		{8A75D59F-1BBF-4E74-A5EA-CF04E66E4AB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A75D59F-1BBF-4E74-A5EA-CF04E66E4AB7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{8A75D59F-1BBF-4E74-A5EA-CF04E66E4AB7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{8A75D59F-1BBF-4E74-A5EA-CF04E66E4AB7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{8A75D59F-1BBF-4E74-A5EA-CF04E66E4AB7}.Debug|x86.Build.0 = Debug|Any CPU
+		{8A75D59F-1BBF-4E74-A5EA-CF04E66E4AB7}.Debug|x86.ActiveCfg = Debug|x86
+		{8A75D59F-1BBF-4E74-A5EA-CF04E66E4AB7}.Debug|x86.Build.0 = Debug|x86
 		{8A75D59F-1BBF-4E74-A5EA-CF04E66E4AB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A75D59F-1BBF-4E74-A5EA-CF04E66E4AB7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8A75D59F-1BBF-4E74-A5EA-CF04E66E4AB7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -65,8 +66,8 @@ Global
 		{3B60ECA1-CB7E-4003-BEC8-16899092CFAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B60ECA1-CB7E-4003-BEC8-16899092CFAD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{3B60ECA1-CB7E-4003-BEC8-16899092CFAD}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{3B60ECA1-CB7E-4003-BEC8-16899092CFAD}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3B60ECA1-CB7E-4003-BEC8-16899092CFAD}.Debug|x86.Build.0 = Debug|Any CPU
+		{3B60ECA1-CB7E-4003-BEC8-16899092CFAD}.Debug|x86.ActiveCfg = Debug|x86
+		{3B60ECA1-CB7E-4003-BEC8-16899092CFAD}.Debug|x86.Build.0 = Debug|x86
 		{3B60ECA1-CB7E-4003-BEC8-16899092CFAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B60ECA1-CB7E-4003-BEC8-16899092CFAD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3B60ECA1-CB7E-4003-BEC8-16899092CFAD}.Release|Mixed Platforms.ActiveCfg = Release|x86
