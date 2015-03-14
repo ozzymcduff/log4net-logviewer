@@ -19,10 +19,12 @@ namespace IntegrationTests
             var file = Path.Combine(".", "testfile1.xml");
             if (File.Exists(file)) { File.Delete(file); }
             File.WriteAllText(file, _buffer);
+            var outofbounds = 0;
             var files = new List<LogEntry>();
             using (var watcher = new Watcher<LogEntry>(new FileWithPosition(file),new LogEntryParser()).Tap(w=>
             {
                 w.LogEntry += l => { files.Add(l); };
+                w.OutOfBounds += () => { outofbounds++; };
             }))
             {
                 watcher.Init();
