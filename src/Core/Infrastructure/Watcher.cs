@@ -4,8 +4,6 @@ using System.IO;
 
 namespace LogViewer.Infrastructure
 {
-
-
 	public class Watcher <TLogEntry> : LogFileWatcherBase<TLogEntry>
 	{
 		private FileSystemWatcher _watcher;

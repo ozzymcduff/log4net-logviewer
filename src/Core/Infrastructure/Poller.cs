@@ -21,16 +21,23 @@ namespace LogViewer.Infrastructure
 		}
 		private void PollFile(Object stateInfo)
 		{
-			if (File.FileHasBecomeLarger())
+			invoker.Invoke(() =>
 			{
-				invoker.Invoke(() =>
-				{
-					foreach (var item in File.Read(stream => parser.Parse(stream)))
-					{
-						InvokeLogEntry(item);
-					}
-				});
-			}
+                try
+                {
+                    foreach (var item in File.Read(stream => { return parser.Parse(stream); }))
+                    {
+                        InvokeLogEntry(item);
+                    }
+                }
+                catch (OutOfBoundsException)
+                {
+                    if (!TryInvokeOutOfBounds())
+                    {
+                        throw;
+                    }
+                }
+			});
 		}
 
 		public override void Dispose()

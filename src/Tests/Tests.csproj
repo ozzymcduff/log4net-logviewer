@@ -76,6 +76,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestExtensions.cs" />
     <Compile Include="WatcherTests.cs" />
+    <Compile Include="PollerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
