@@ -91,6 +91,18 @@
     <Compile Include="..\Core\Infrastructure\Extensions.cs">
       <Link>Infrastructure\Extensions.cs</Link>
     </Compile>
+    <Compile Include="..\Core\Infrastructure\FileUtil.cs">
+      <Link>Infrastructure\FileUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Infrastructure\ILogFileWatcher.cs">
+      <Link>Infrastructure\ILogFileWatcher.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Infrastructure\LogFileWatcherBase.cs">
+      <Link>Infrastructure\LogFileWatcherBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Infrastructure\Poller.cs">
+      <Link>Infrastructure\Poller.cs</Link>
+    </Compile>
     <Compile Include="..\Core\Infrastructure\Watcher.cs">
       <Link>Infrastructure\Watcher.cs</Link>
     </Compile>
@@ -120,9 +132,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="..\Core\Infrastructure\FileUtil.cs">
-      <Link>Infrastructure\FileUtil.cs</Link>
-    </Compile>
     <Compile Include="..\Core\LogEntry.cs">
       <Link>Logs\LogEntry.cs</Link>
     </Compile>

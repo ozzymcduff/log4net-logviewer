@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3B60ECA1-CB7E-4003-BEC8-16899092CFAD}</ProjectGuid>
@@ -17,7 +17,7 @@
     <PackagesConfig>$(ProjectDir)/packages.config</PackagesConfig>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -27,7 +27,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -54,6 +54,15 @@
     </Compile>
     <Compile Include="..\Core\Infrastructure\FileUtil.cs">
       <Link>Infrastructure\FileUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Infrastructure\ILogFileWatcher.cs">
+      <Link>Infrastructure\ILogFileWatcher.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Infrastructure\LogFileWatcherBase.cs">
+      <Link>Infrastructure\LogFileWatcherBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Core\Infrastructure\Poller.cs">
+      <Link>Infrastructure\Poller.cs</Link>
     </Compile>
     <Compile Include="..\Core\Infrastructure\Watcher.cs">
       <Link>Infrastructure\Watcher.cs</Link>
