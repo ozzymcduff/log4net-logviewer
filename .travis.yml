@@ -11,5 +11,5 @@ script:
   - sudo apt-get update
   - sudo apt-get install mono-devel nunit-console -y
   - bundle install 
-  - rake mono:install_packages
-  - rake mono:test
+  - rake install_packages
+  - rake test

@@ -5,21 +5,23 @@ $nuget = File.join(File.dirname(__FILE__),'nuget')
 require 'albacore'
 require_relative './src/.nuget/nuget'
 
-dir = File.dirname(__FILE__)
 
 desc "build using msbuild"
-build :build => [:install_packages] do |msb|
+build :build do |msb|
   msb.prop :configuration, :Debug
   msb.target = [:Rebuild]
   msb.logging = 'minimal'
-  msb.sln =File.join(dir, "src", "LogViewer.sln")
+  if NuGet.os == :windows
+    msb.sln =File.join($dir, "LogViewer.sln")
+  else
+    msb.sln =File.join($dir, "LogViewer.Core.sln")
+  end
 end
 
 desc "test using console"
 test_runner :test => [:build] do |runner|
   runner.exe = NuGet::nunit_path
-  files = [File.join(File.dirname(__FILE__),"src","LogViewer.Tests","bin","Debug","LogViewer.Tests.dll"),
-    File.join(File.dirname(__FILE__),"src","Tests","bin","Debug","Tests.dll")]
+  files = Dir.glob(File.join($dir,"*Tests","bin","**","*Tests.dll"))
   runner.files = files 
 end
 
@@ -41,14 +43,16 @@ task :runners_copy_to_nuspec => [:build] do
 end
 
 task :core_nugetpack => [:core_copy_to_nuspec, :runners_copy_to_nuspec] do |nuget|
-  cd File.join(dir,"nuget") do
+  cd $nuget do
     NuGet::exec "pack log4net-logviewer.nuspec"
   end
 end
 
 desc "Install missing NuGet packages."
 task :install_packages do
-    NuGet::exec("restore ./src/LogViewer.sln")
+  cd $dir do
+    NuGet::exec("restore LogViewer.sln")
+  end
 end
 
 task :clean_packages do
