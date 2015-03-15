@@ -1,14 +1,13 @@
 ﻿using LogViewer.Model;
 using log4net.Core;
 using Xunit;
-using TestAttribute = Xunit.FactAttribute;
 using System.Collections.ObjectModel;
 using LogVmT = LogViewer.Model.LogEntryViewModel;
 namespace IntegrationTests.LogViewerGui
 {
 	public class LogEntryCounterTests : TestFixtureBase
     {
-        [Test]
+        [Fact]
         public void Can_count()
         {
             var col = new ObservableCollection<LogVmT>(new []{
@@ -19,7 +18,7 @@ namespace IntegrationTests.LogViewerGui
             Assert.Equal(LCount(Kv("ERROR",2), Kv("INFO",1)), counter.Count.Value);
         }
 
-        [Test]
+        [Fact]
         public void Can_add()
         {
             var col = new ObservableCollection<LogVmT>(new[]{
@@ -31,7 +30,7 @@ namespace IntegrationTests.LogViewerGui
             Assert.Equal(LCount(Kv("ERROR", 2), Kv("INFO", 1), Kv("DEBUG",1)),counter.Count.Value);
         }
 
-        [Test]
+        [Fact]
         public void Can_clear()
         {
             var col = new ObservableCollection<LogVmT>(new[]{

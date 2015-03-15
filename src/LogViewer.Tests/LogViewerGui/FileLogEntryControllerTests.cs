@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System;
 using log4net.Core;
 using Xunit;
-using TestAttribute = Xunit.FactAttribute;
 
 namespace IntegrationTests.LogViewerGui
 {
@@ -28,8 +27,9 @@ namespace IntegrationTests.LogViewerGui
             public event System.Action<LogEntry> LogEntry;
             public void InvokeOutOfBounds() { OutOfBounds(); }
             public event System.Action OutOfBounds;
+			public event Action<Exception> ExceptionOccurred;
 
-            public Action OnInit;
+			public Action OnInit;
             public void Init()
             {
                 OnInit();
@@ -69,7 +69,7 @@ namespace IntegrationTests.LogViewerGui
             }
         }
 
-        [Test]
+        [Fact]
         public void When_no_filename()
         {
             var c = new FileLogEntryController(RunSameThreadInvoker.Invoke,
@@ -79,7 +79,7 @@ namespace IntegrationTests.LogViewerGui
             Assert.Equal(0, entries.Count());
         }
 
-        [Test]
+        [Fact]
         public void When_setting_filename_should_call_init_to_read()
         {
             var init = false;
@@ -96,7 +96,7 @@ namespace IntegrationTests.LogViewerGui
             Assert.Equal(1, c.Entries.Count());
         }
 
-        [Test]
+        [Fact]
         public void When_getting_out_of_bounds_call_reset()
         {
             Watcher watcher = null;
@@ -117,7 +117,7 @@ namespace IntegrationTests.LogViewerGui
             Assert.Equal(1, c.Entries.Count());
         }
 
-        [Test]
+        [Fact]
         public void When_setting_a_new_filename()
         {
             var oninit = 0;

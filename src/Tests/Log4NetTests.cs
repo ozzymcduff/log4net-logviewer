@@ -6,7 +6,6 @@ using LogViewer;
 using log4net.Core;
 using log4net.Layout;
 using LogViewer.Infrastructure;
-using TestAttribute = Xunit.FactAttribute;
 
 namespace IntegrationTests
 {
@@ -28,7 +27,7 @@ username=""AWESOMEMACHINE\Administrator"">
 <log4net:locationInfo class=""IntegrationTests.LogTests"" 
 	method=""TestLog"" 
 	file=""C:\projects\LogViewer\IntegrationTests\LogTests.cs"" line=""19"" /></log4net:event>";
-        [Test]
+        [Fact]
         public void ParseStream()
         {
             using (var s = new MemoryStream())
@@ -48,7 +47,7 @@ username=""AWESOMEMACHINE\Administrator"">
                 Assert.Equal(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs", entry.File());
             }
         }
-        [Test]
+        [Fact]
         public void Parse3()
         {
             using (var s = new MemoryStream())
@@ -70,7 +69,7 @@ username=""AWESOMEMACHINE\Administrator"">
                 Assert.Equal(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs", entry.File());
             }
         }
-        [Test]
+        [Fact]
         public void ParseStreamAtPosition()
         {
             long p = 0;
@@ -108,7 +107,7 @@ username=""AWESOMEMACHINE\Administrator"">
                 Assert.Equal(@"C:\projects\LogViewer\IntegrationTests\LogTests.cs", entry.File());
             }
         }
-        [Test]
+        [Fact]
         public void ParseStreamAtPositionShouldThrowException()
         {
             long p = 0;
@@ -132,7 +131,7 @@ username=""AWESOMEMACHINE\Administrator"">
                 }
             });
         }
-        [Test]
+        [Fact]
         public void Test()
         {
             var layout = new PatternLayout("%date [%thread] %-5level %logger - %message%newline");

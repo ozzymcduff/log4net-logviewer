@@ -30,11 +30,6 @@ namespace LogViewer.Infrastructure
 			}
 		}
 
-		public bool FileNameMatch(string otherFileName)
-		{
-			return !string.IsNullOrEmpty(otherFileName) && Path.GetFullPath(otherFileName).Equals(Path.GetFullPath(this.FileName),
-				StringComparison.InvariantCultureIgnoreCase);
-		}
 		public bool FileNameInFolder(string folder)
 		{
 			var fullpath = Path.GetFullPath(Path.GetDirectoryName(folder));

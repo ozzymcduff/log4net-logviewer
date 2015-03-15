@@ -1,12 +1,11 @@
 ﻿using Xunit;
 using LogViewer.Infrastructure;
-using TestAttribute = Xunit.FactAttribute;
 
 namespace IntegrationTests.Infrastructure
 {
 	public class ExtensionTests
     {
-        [Test]
+        [Fact]
         public void Test_Next() 
         {
             var collection = new int?[] {0,1,2,3,4};
@@ -15,7 +14,7 @@ namespace IntegrationTests.Infrastructure
                 Assert.Equal(i+1, collection.Next(i));
             }
         }
-        [Test]
+        [Fact]
         public void Test_Previous()
         {
             var collection = new int?[] { 0, 1, 2, 3, 4 };

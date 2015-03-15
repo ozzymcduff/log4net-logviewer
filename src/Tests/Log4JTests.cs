@@ -5,7 +5,7 @@ using log4net;
 using Xunit;
 using System.IO;
 using LogViewer.Infrastructure;
-using TestAttribute = Xunit.FactAttribute;
+
 namespace IntegrationTests
 {
     public class Log4JTests
@@ -20,7 +20,7 @@ namespace IntegrationTests
             log.Error("msg", new Exception("test"));
         }
 
-        [Test]
+        [Fact]
         public void Parse2()
         {
             using (var s = new MemoryStream())
@@ -39,7 +39,7 @@ namespace IntegrationTests
             }
         }
 
-        [Test]
+        [Fact]
         public void Parse3()
         {
             using (var s = new MemoryStream())
@@ -83,7 +83,7 @@ level=""ERROR"" thread=""7"">
             }
         }
 
-        [Test]
+        [Fact]
         public void Parse_with_empty_ndc_should_not_crash_parser()
         {
             //<log4j:NDC></log4j:NDC>
@@ -120,7 +120,7 @@ level=""ERROR"" thread=""7"">
             }
         }
 
-        [Test]
+        [Fact]
         public void Parse_with_text_element()
         {
             var line = @"<log4j:event logger=""installrelease"" timestamp=""1388750967872"" level=""ERROR"" thread=""""><log4j:NDC></log4j:NDC><log4j:message>Caught Errno::EACCES: Permission denied - filesomething
@@ -146,7 +146,7 @@ level=""ERROR"" thread=""7"">
             }
         }
 
-        [Test]
+        [Fact]
         public void Parse()
         {
             using (var s = new MemoryStream())
@@ -175,7 +175,7 @@ level=""ERROR"" thread=""7"">
             }
         }
 
-        [Test]
+        [Fact]
         public void ParseStream()
         {
             using (var s = new MemoryStream())
@@ -199,7 +199,7 @@ level=""ERROR"" thread=""7"">
             }
         }
 
-        [Test]
+        [Fact]
         public void ParseFaulty()
         {
             using (var s = FileUtil.OpenReadOnly("test.xml"))
