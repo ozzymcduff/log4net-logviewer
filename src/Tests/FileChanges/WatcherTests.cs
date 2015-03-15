@@ -6,6 +6,7 @@ using System.Threading;
 using LogViewer.Infrastructure;
 using TestAttribute = Xunit.FactAttribute;
 using System.Collections.Concurrent;
+using System;
 
 namespace IntegrationTests.FileChanges
 {
@@ -21,12 +22,14 @@ namespace IntegrationTests.FileChanges
             if (File.Exists(file)) { File.Delete(file); }
             File.WriteAllText(file, _buffer);
 			var outofbounds = new ConcurrentStack<OutOfBoundsEvent>();
+			var exceptionWhileReading = new ConcurrentStack<Exception>();
 			var files = new ConcurrentQueue<LogEntry>();
 			using (var watcher = new Watcher<LogEntry>(new FileWithPosition(file),new LogEntryParser()).Tap(w=>
             {
                 w.LogEntry += l => { files.Enqueue(l); };
                 w.OutOfBounds += () => { outofbounds.Push(new OutOfBoundsEvent()); };
-            }))
+				w.ExceptionOccurred += e => { exceptionWhileReading.Push(e); };
+			}))
             {
                 watcher.Init();
                 Assert.Equal(1, files.Count);
@@ -43,12 +46,14 @@ namespace IntegrationTests.FileChanges
             if (File.Exists(file)) { File.Delete(file); }
             File.WriteAllText(file, _buffer);
 			var outofbounds = new ConcurrentStack<OutOfBoundsEvent>();
+			var exceptionWhileReading = new ConcurrentStack<Exception>();
 			var files = new ConcurrentQueue<LogEntry>();
 			using (var watcher = new Watcher<LogEntry>(new FileWithPosition(file), new LogEntryParser()).Tap(w=>
             {
                 w.LogEntry += l => { files.Enqueue(l); };
                 w.OutOfBounds += () => { outofbounds.Push(new OutOfBoundsEvent()); };
-            }))
+				w.ExceptionOccurred += e => { exceptionWhileReading.Push(e); };
+			}))
             {
                 watcher.Init();
 

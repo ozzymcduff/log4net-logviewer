@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LogViewer;
-using LogViewer.Infrastructure;
+﻿using LogViewer.Infrastructure;
 using Xunit;
 using TestAttribute = Xunit.FactAttribute;
 
 namespace IntegrationTests
 {
-    public class FileTests
+	public class FileTests
     {
         [Test]
         public void FileNameMatch() 

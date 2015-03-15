@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading;
-using System.IO;
 
 namespace LogViewer.Infrastructure
 {
@@ -19,6 +17,7 @@ namespace LogViewer.Infrastructure
 
 		public event Action<TLogEntry> LogEntry;
 		public event Action OutOfBounds;
+		public event Action<Exception> ExceptionOccurred;
 
 		public abstract void Init();
 
@@ -33,11 +32,19 @@ namespace LogViewer.Infrastructure
 			return true;
 		}
 
+		protected bool TryInvokeExceptionOccurred(Exception ex)
+		{
+			if (null == ExceptionOccurred) return false;
+			ExceptionOccurred(ex);
+			return true;
+        }
+
 		public void Reset()
 		{
 			File.ResetPosition();
 			Read();
 		}
+
 		public void Read()
 		{
 			invoker.Invoke(() =>
@@ -51,7 +58,17 @@ namespace LogViewer.Infrastructure
 				}
 				catch (OutOfBoundsException)
 				{
-					OutOfBounds();
+					if (!TryInvokeOutOfBounds())
+					{
+						throw;
+					}
+				}
+				catch (Exception e)
+				{
+					if (!TryInvokeExceptionOccurred(e))
+					{
+						throw;
+					}
 				}
 			});
 		}

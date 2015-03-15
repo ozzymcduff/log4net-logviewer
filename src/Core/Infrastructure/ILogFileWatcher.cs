@@ -8,7 +8,8 @@ namespace LogViewer.Infrastructure
     {
         event Action<TLogEntry> LogEntry;
         event Action OutOfBounds;
-        void Init();
+		event Action<Exception> ExceptionOccurred;
+		void Init();
         void Reset();
     }
 }

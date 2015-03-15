@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.IO;
 
 namespace LogViewer.Infrastructure
 {
@@ -21,23 +20,7 @@ namespace LogViewer.Infrastructure
 		}
 		private void PollFile(Object stateInfo)
 		{
-			invoker.Invoke(() =>
-			{
-                try
-                {
-                    foreach (var item in File.Read(stream => { return parser.Parse(stream); }))
-                    {
-                        InvokeLogEntry(item);
-                    }
-                }
-                catch (OutOfBoundsException)
-                {
-                    if (!TryInvokeOutOfBounds())
-                    {
-                        throw;
-                    }
-                }
-			});
+			Read();
 		}
 
 		public override void Dispose()

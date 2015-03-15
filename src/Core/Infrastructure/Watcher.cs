@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.IO;
+﻿using System.IO;
 
 namespace LogViewer.Infrastructure
 {
@@ -30,23 +28,7 @@ namespace LogViewer.Infrastructure
 		{
 			if (File.FileNameInFolder(e.FullPath))//NOTE: Is this really nec.?
 			{
-				invoker.Invoke(() =>
-				{
-					try
-					{
-						foreach (var item in File.Read(stream => { return parser.Parse(stream); }))
-						{
-							InvokeLogEntry(item);
-						}
-					}
-					catch (OutOfBoundsException)
-					{
-						if (!TryInvokeOutOfBounds())
-						{
-							throw;
-						}
-					}
-				});
+				Read();
 			}
 		}
 

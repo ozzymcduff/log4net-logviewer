@@ -1,15 +1,10 @@
 ﻿using IntegrationTests.LogViewerGui;
-using LogViewer;
 using Xunit;
 using TestAttribute = Xunit.FactAttribute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace IntegrationTests
 {
-    public class LogEntryLevelCountTests : TestFixtureBase
+	public class LogEntryLevelCountTests : TestFixtureBase
     {
         [Test]
         public void Can_equals()

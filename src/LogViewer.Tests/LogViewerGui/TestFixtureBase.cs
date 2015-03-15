@@ -1,15 +1,12 @@
 ﻿using LogViewer.Model;
 using log4net.Core;
 using LogViewer;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 
 namespace IntegrationTests.LogViewerGui
 {
-    public class TestFixtureBase
+	public class TestFixtureBase
     {
         protected static KeyValuePair<string, int> Kv(string key, int count)
         {

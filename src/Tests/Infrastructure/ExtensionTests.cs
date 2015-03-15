@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Xunit;
+﻿using Xunit;
 using LogViewer.Infrastructure;
 using TestAttribute = Xunit.FactAttribute;
 
 namespace IntegrationTests.Infrastructure
 {
-    public class ExtensionTests
+	public class ExtensionTests
     {
         [Test]
         public void Test_Next() 

@@ -1,17 +1,12 @@
 ﻿using LogViewer.Model;
 using log4net.Core;
-using LogViewer;
 using Xunit;
 using TestAttribute = Xunit.FactAttribute;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using LogVmT = LogViewer.Model.LogEntryViewModel;
 namespace IntegrationTests.LogViewerGui
 {
-    public class LogEntryCounterTests : TestFixtureBase
+	public class LogEntryCounterTests : TestFixtureBase
     {
         [Test]
         public void Can_count()
