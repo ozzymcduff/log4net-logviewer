@@ -22,14 +22,6 @@ namespace LogViewer.Infrastructure
 			}
 		}
 
-		public bool FileHasBecomeLarger()
-		{
-			using (var f = FileUtil.OpenReadOnly(FileName))
-			{
-				return (f.Length > position);
-			}
-		}
-
 		public bool FileNameInFolder(string folder)
 		{
 			var fullpath = Path.GetFullPath(Path.GetDirectoryName(folder));
@@ -37,19 +29,10 @@ namespace LogViewer.Infrastructure
 			return fullpath.Equals(filepath,
 				StringComparison.InvariantCultureIgnoreCase);
 		}
+
 		public void ResetPosition()
 		{
 			position = 0;
-		}
-
-		public bool Exists()
-		{
-			return File.Exists(FileName);
-		}
-
-		public long Position()
-		{
-			return position;
 		}
 	}
 }
