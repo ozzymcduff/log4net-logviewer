@@ -1,4 +1,5 @@
 ﻿using LogViewer;
+using System;
 
 namespace IntegrationTests
 {
@@ -23,6 +24,11 @@ namespace IntegrationTests
         {
             return that.Data.LocationInfo.LineNumber;
         }
-    }
+		public static T Tap<T>(this T that, Action<T> tapaction)
+		{
+			tapaction(that);
+			return that;
+		}
+	}
 
 }

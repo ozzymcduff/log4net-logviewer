@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LogViewer.Infrastructure
 {
-    public static class Extensions
+    internal static class Extensions
     {
         private static bool ReturnsTrue<T>(T element) { return true; }
         public static T Next<T>(this IList<T> that, int index, Func<T, bool> accept = null)
@@ -27,11 +27,6 @@ namespace LogViewer.Infrastructure
                     return item;
             }
             return default(T);
-        }
-        public static T Tap<T>(this T that, Action<T> tapaction) 
-        {
-            tapaction(that);
-            return that;
         }
     }
 }

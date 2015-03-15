@@ -84,17 +84,17 @@ cat yourlogfile.xml | LogTail.exe
 
             if (watch)
             {
-                Do(new Watcher<LogEntry>(new FileWithPosition(files.Single()),new LogEntryParser()).Tap(w=>{
-                    w.LogEntry += (entry) => showentry(Console.Out, entry);
-                }));
+				var w = new Watcher<LogEntry>(new FileWithPosition(files.Single()), new LogEntryParser());
+				w.LogEntry += (entry) => showentry(Console.Out, entry);
+
+				Do(w);
                 return;
             }
             if (monitor > 0)
             {
-                Do(new Poller<LogEntry>(new FileWithPosition(files.Single()), monitor, new LogEntryParser()).Tap(w =>
-                {
-                    w.LogEntry += (entry) => showentry(Console.Out, entry);
-                }));
+				var w = new Poller<LogEntry>(new FileWithPosition(files.Single()), monitor, new LogEntryParser());
+				w.LogEntry += (entry) => showentry(Console.Out, entry);
+				Do(w);
                 return;
             }
 
