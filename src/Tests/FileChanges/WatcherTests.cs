@@ -5,8 +5,9 @@ using System.IO;
 using System.Threading;
 using LogViewer.Infrastructure;
 using TestAttribute = Xunit.FactAttribute;
+using System.Collections.Concurrent;
 
-namespace IntegrationTests
+namespace IntegrationTests.FileChanges
 {
     public class WatcherTests
     {
@@ -19,12 +20,12 @@ namespace IntegrationTests
             var file = Path.Combine(".", "testfile1.xml");
             if (File.Exists(file)) { File.Delete(file); }
             File.WriteAllText(file, _buffer);
-            var outofbounds = 0;
-            var files = new List<LogEntry>();
-            using (var watcher = new Watcher<LogEntry>(new FileWithPosition(file),new LogEntryParser()).Tap(w=>
+			var outofbounds = new ConcurrentStack<OutOfBoundsEvent>();
+			var files = new ConcurrentQueue<LogEntry>();
+			using (var watcher = new Watcher<LogEntry>(new FileWithPosition(file),new LogEntryParser()).Tap(w=>
             {
-                w.LogEntry += l => { files.Add(l); };
-                w.OutOfBounds += () => { outofbounds++; };
+                w.LogEntry += l => { files.Enqueue(l); };
+                w.OutOfBounds += () => { outofbounds.Push(new OutOfBoundsEvent()); };
             }))
             {
                 watcher.Init();
@@ -41,19 +42,19 @@ namespace IntegrationTests
             var file = Path.Combine(".", "testfile2.xml");
             if (File.Exists(file)) { File.Delete(file); }
             File.WriteAllText(file, _buffer);
-            var outofbounds = 0;
-            var files = new List<LogEntry>();
-            using (var watcher = new Watcher<LogEntry>(new FileWithPosition(file), new LogEntryParser()).Tap(w=>
+			var outofbounds = new ConcurrentStack<OutOfBoundsEvent>();
+			var files = new ConcurrentQueue<LogEntry>();
+			using (var watcher = new Watcher<LogEntry>(new FileWithPosition(file), new LogEntryParser()).Tap(w=>
             {
-                w.LogEntry += l => { files.Add(l); };
-                w.OutOfBounds += () => { outofbounds++; };
+                w.LogEntry += l => { files.Enqueue(l); };
+                w.OutOfBounds += () => { outofbounds.Push(new OutOfBoundsEvent()); };
             }))
             {
                 watcher.Init();
 
                 File.WriteAllText(file, "");
                 Thread.Sleep(100/*750*3*/);
-                Assert.True(outofbounds>=1, "outofbounds>=1");
+                Assert.True(outofbounds.ToArray().Length >= 1, "outofbounds>=1");
             }
         }
     }

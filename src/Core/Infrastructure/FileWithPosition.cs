@@ -51,5 +51,10 @@ namespace LogViewer.Infrastructure
 		{
 			return File.Exists(FileName);
 		}
+
+		public long Position()
+		{
+			return position;
+		}
 	}
 }

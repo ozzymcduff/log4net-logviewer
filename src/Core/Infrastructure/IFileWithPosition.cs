@@ -14,5 +14,7 @@ namespace LogViewer.Infrastructure
 		bool FileNameMatch(string filename);
 
 		bool FileHasBecomeLarger();
-	}
+
+		long Position();
+    }
 }
