@@ -2,7 +2,7 @@
 
 namespace LogViewer.Infrastructure
 {
-	public class DirectInvoker 
+	internal class DirectInvoker 
 	{
 		public static void Invoke(Action run)
 		{

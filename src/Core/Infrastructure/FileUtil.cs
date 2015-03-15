@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LogViewer.Infrastructure
 {
-    public class FileUtil
+    internal class FileUtil
     {
         public static FileStream OpenReadOnly(string fileName, long position = 0)
         {
