@@ -199,7 +199,16 @@ namespace LogViewer
 						{
 							throw new Exception("EVENTCHILDREN1: Expected a known name but was: " + xmlreader.Name);
 						}
-						break;
+
+                        //Fix for issue #7
+                        if (xmlreader.NodeType == XmlNodeType.EndElement)
+                        {
+                            if (Object.ReferenceEquals(xmlreader.LocalName, names.@event))
+                            {
+                                return;
+                            }
+                        }
+                        break;
 					case XmlNodeType.EndElement:
 						if (Object.ReferenceEquals(xmlreader.LocalName, names.@event))
 						{

@@ -210,5 +210,57 @@ level=""ERROR"" thread=""7"">
 
             }
         }
+
+
+        /// <summary>
+        /// Used to reproduce issue #7
+        /// Error when reading logfile with throwable as last Event child.
+        /// In order to reproduce, the sample data must contain more than one log line.
+        /// </summary>
+        [Fact]
+        public void ParseWithThrowableAsLastChildElement()
+        {
+            using (var s = new MemoryStream())
+            using (var w = new StreamWriter(s))
+            {
+
+                var lines =
+                  @"<log4j:event 
+logger=""IntegrationTests.LogTests"" 
+timestamp=""1300909721869"" 
+level=""ERROR"" thread=""7"">
+<log4j:message>msg</log4j:message>
+<log4j:properties>
+	<log4j:data name=""log4net:UserName"" value=""AWESOMEMACHINE\Administrator"" />
+	<log4j:data name=""log4jmachinename"" value=""AWESOMEMACHINE"" />
+	<log4j:data name=""log4japp"" value=""IsolatedAppDomainHost: IntegrationTests"" />
+	<log4j:data name=""log4net:HostName"" value=""AWESOMEMACHINE"" />
+</log4j:properties>
+<log4j:locationInfo 
+	class=""IntegrationTests.LogTests"" method=""TestLog"" 
+	file=""C:\projects\LogViewer\IntegrationTests\LogTests.cs"" 
+	line=""27"" />
+<log4j:throwable>System.Exception: test</log4j:throwable></log4j:event>
+<log4j:event logger=""HomeController"" timestamp=""1361528145331"" level=""ERROR"" thread=""91"">
+<log4j:message>error</log4j:message>
+<log4j:properties>
+    <log4j:data name=""log4net:UserName"" value=""SOMEDOMAIN\someuser"" />
+    <log4j:data name=""log4net:Identity"" value=""44045"" />
+    <log4j:data name=""log4jmachinename"" value=""somemachine"" />
+    <log4j:data name=""log4japp"" value=""/LM/W3SVC/1"" />
+    <log4j:data name=""log4net:HostName"" value=""SOMEHOST"" />
+</log4j:properties>
+<log4j:locationInfo class=""MyController"" method=""Log"" file=""C:\project\MyController.cs"" line=""99"" />
+</log4j:event>";
+
+                w.Write(lines);
+                w.Flush();
+                s.Position = 0;
+
+                var entry = new LogEntryParser().Parse(s).ToList();
+                Assert.Equal(2, entry.Count);
+
+            }
+        }
     }
 }
