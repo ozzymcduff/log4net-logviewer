@@ -3,7 +3,7 @@
   <metadata>
     <id>log4net-logviewer</id>
     <title>log4net-logviewer</title>
-    <version>2.1.5</version>
+    <version>2.1.6</version>
     <authors>Oskar Gewalli</authors>
     <owners>Oskar Gewalli</owners>
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
@@ -17,7 +17,7 @@
     <dependencies>
         <dependency id="log4net" version="2.0.3" />
     </dependencies>
-    <releaseNotes>The command line tool could not be used due to parameter conflict.</releaseNotes>
+    <releaseNotes>Fix for issue where it was reading past end element.</releaseNotes>
   </metadata>
 
 </package>
