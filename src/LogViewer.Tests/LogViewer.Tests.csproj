@@ -5,21 +5,7 @@
     <AssemblyTitle>LogViewer.Tests</AssemblyTitle>
     <Product>LogViewer.Tests</Product>
     <Copyright>Copyright ©  2014</Copyright>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-  </PropertyGroup>
-  <Import Project="..\packages\xunit.runner.visualstudio.2.0.0-rc4-build1049\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.0.0-rc4-build1049\build\net20\xunit.runner.visualstudio.props')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.0.0-rc4-build1049\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.0.0-rc4-build1049\build\net20\xunit.runner.visualstudio.props'))" />
-  </Target>
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.3" />
     <PackageReference Include="xunit" Version="1.9.2" />
