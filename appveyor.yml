@@ -7,3 +7,6 @@ build_script:
 test_script:
   - dotnet test ./src/Tests
   - dotnet test ./src/LogViewer.Tests
+branches:
+  only: 
+    - master
