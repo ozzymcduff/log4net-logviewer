@@ -1,4 +1,4 @@
-Log4net-logviewer [![Build Status](https://travis-ci.org/wallymathieu/log4net-logviewer.png?branch=master)](https://travis-ci.org/wallymathieu/log4net-logviewer) [![Build status](https://ci.appveyor.com/api/projects/status/kmx7nj5b4k73yvhn)](https://ci.appveyor.com/project/wallymathieu/log4net-logviewer)
+Log4net-logviewer [![Build status](https://ci.appveyor.com/api/projects/status/1aidm7uhm1jpif6y/branch/master?svg=true)](https://ci.appveyor.com/project/wallymathieu/log4net-logviewer-dnqsm/branch/master)
 =================
 
 [nuget package](http://nuget.org/packages/log4net-logviewer/)

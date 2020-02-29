@@ -1,13 +1,8 @@
+image: Visual Studio 2019
 version: 1.0.{build}
-matrix:
-  fast_finish: true
-  allow_failures:
-    - platform: x86
-      configuration: Debug
-    - platform: AnyCPU
-      configuration: Release
 before_build:
   - dotnet restore src/LogViewer.sln
-build:
-  project: src/LogViewer.sln
-  verbosity: minimal
+build_script:
+  - dotnet build ./src/LogViewer.sln
+test_script:
+  - dotnet test ./tests/Tests
