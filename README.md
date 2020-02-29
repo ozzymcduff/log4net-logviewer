@@ -5,6 +5,7 @@ Log4net-logviewer [![Build Status](https://travis-ci.org/wallymathieu/log4net-lo
 
 Gui alternatives:
 -----------------
+
 - [Log2Console](http://log2console.codeplex.com/)
 - Chainsaw, part of the log4j package
 
@@ -14,10 +15,12 @@ I've spent a lot of time refactoring this project. Mostly the changes are to emb
 
 Where does this come from?
 --------------------------
+
 Refactored version of [logviewer](http://www.codeproject.com/KB/cs/logviewer.aspx).
 
 CLI usage
 ---------
+
 I've also made a small console application [LogTail.exe](./tree/master/LogTail). Usage:
 
     -f|file={a filename}

@@ -7,7 +7,7 @@ matrix:
     - platform: AnyCPU
       configuration: Release
 before_build:
-  - nuget restore src/LogViewer.sln
+  - dotnet restore src/LogViewer.sln
 build:
   project: src/LogViewer.sln
   verbosity: minimal

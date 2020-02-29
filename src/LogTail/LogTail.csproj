@@ -1,128 +1,47 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3B60ECA1-CB7E-4003-BEC8-16899092CFAD}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LogTail</RootNamespace>
-    <AssemblyName>LogTail</AssemblyName>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFramework>net40</TargetFramework>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <PackagesConfig>$(ProjectDir)/packages.config</PackagesConfig>
+    <AssemblyTitle>LogTail</AssemblyTitle>
+    <Product>LogTail</Product>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NDESK_OPTIONS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE;NDESK_OPTIONS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NDESK_OPTIONS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE;NDESK_OPTIONS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
+    <PackageReference Include="log4net" Version="2.0.3" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Core\Infrastructure\DirectInvoker.cs">
-      <Link>Infrastructure\DirectInvoker.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Infrastructure\Extensions.cs">
-      <Link>Infrastructure\Extensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Infrastructure\FileUtil.cs">
-      <Link>Infrastructure\FileUtil.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Infrastructure\FileWithPosition.cs">
-      <Link>Infrastructure\FileWithPosition.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Infrastructure\IFileWithPosition.cs">
-      <Link>Infrastructure\IFileWithPosition.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Infrastructure\ILogEntryParser.cs">
-      <Link>Infrastructure\ILogEntryParser.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Infrastructure\ILogFileWatcher.cs">
-      <Link>Infrastructure\ILogFileWatcher.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Infrastructure\Invoker.cs">
-      <Link>Infrastructure\Invoker.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Infrastructure\LogFileWatcherBase.cs">
-      <Link>Infrastructure\LogFileWatcherBase.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Infrastructure\OutOfBoundsException.cs">
-      <Link>Infrastructure\OutOfBoundsException.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Infrastructure\Poller.cs">
-      <Link>Infrastructure\Poller.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\Infrastructure\Watcher.cs">
-      <Link>Infrastructure\Watcher.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\LogEntry.cs">
-      <Link>LogEntry.cs</Link>
-    </Compile>
-    <Compile Include="..\Core\LogEntryParser.cs">
-      <Link>LogEntryParser.cs</Link>
-    </Compile>
-    <Compile Include="Options.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\Core\Infrastructure\DirectInvoker.cs" Link="Infrastructure\DirectInvoker.cs" />
+    <Compile Include="..\Core\Infrastructure\Extensions.cs" Link="Infrastructure\Extensions.cs" />
+    <Compile Include="..\Core\Infrastructure\FileUtil.cs" Link="Infrastructure\FileUtil.cs" />
+    <Compile Include="..\Core\Infrastructure\FileWithPosition.cs" Link="Infrastructure\FileWithPosition.cs" />
+    <Compile Include="..\Core\Infrastructure\IFileWithPosition.cs" Link="Infrastructure\IFileWithPosition.cs" />
+    <Compile Include="..\Core\Infrastructure\ILogEntryParser.cs" Link="Infrastructure\ILogEntryParser.cs" />
+    <Compile Include="..\Core\Infrastructure\ILogFileWatcher.cs" Link="Infrastructure\ILogFileWatcher.cs" />
+    <Compile Include="..\Core\Infrastructure\Invoker.cs" Link="Infrastructure\Invoker.cs" />
+    <Compile Include="..\Core\Infrastructure\LogFileWatcherBase.cs" Link="Infrastructure\LogFileWatcherBase.cs" />
+    <Compile Include="..\Core\Infrastructure\OutOfBoundsException.cs" Link="Infrastructure\OutOfBoundsException.cs" />
+    <Compile Include="..\Core\Infrastructure\Poller.cs" Link="Infrastructure\Poller.cs" />
+    <Compile Include="..\Core\Infrastructure\Watcher.cs" Link="Infrastructure\Watcher.cs" />
+    <Compile Include="..\Core\LogEntry.cs" Link="LogEntry.cs" />
+    <Compile Include="..\Core\LogEntryParser.cs" Link="LogEntryParser.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
