@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProductVersion>8.0.30703</ProductVersion>
     <RootNamespace>IntegrationTests</RootNamespace>
-    <TargetFramework>net40</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <PackagesConfig>$(ProjectDir)/packages.config</PackagesConfig>
     <AssemblyTitle>IntegrationTests</AssemblyTitle>

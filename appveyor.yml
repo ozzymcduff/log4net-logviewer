@@ -5,4 +5,5 @@ before_build:
 build_script:
   - dotnet build ./src/LogViewer.sln
 test_script:
-  - dotnet test ./tests/Tests
+  - dotnet test ./src/Tests
+  - dotnet test ./src/LogViewer.Tests

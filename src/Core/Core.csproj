@@ -3,7 +3,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <RootNamespace>LogViewer</RootNamespace>
     <AssemblyName>log4net-logviewer.core</AssemblyName>
-    <TargetFramework>net40</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <AssemblyTitle>LogViewer Core</AssemblyTitle>
     <AssemblyVersion>2.1.0.0</AssemblyVersion>
