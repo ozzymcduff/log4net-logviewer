@@ -7,7 +7,7 @@
     <Copyright>Copyright ©  2014</Copyright>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.3" />
+    <PackageReference Include="log4net" Version="2.0.10" />
     <PackageReference Include="xunit" Version="1.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.0.0-rc4-build1049" />
   </ItemGroup>
