@@ -16,7 +16,7 @@
     <DefineConstants>TRACE;NDESK_OPTIONS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.3" />
+    <PackageReference Include="log4net" Version="2.0.10" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Data.DataSetExtensions" />
