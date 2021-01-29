@@ -15,7 +15,7 @@
       <reference file="log4net-logviewer.core.dll" />
     </references>
     <dependencies>
-        <dependency id="log4net" version="2.0.3" />
+        <dependency id="log4net" version="2.0.10" />
     </dependencies>
     <releaseNotes>Fix for issue where it was reading past end element.</releaseNotes>
   </metadata>
